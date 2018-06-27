@@ -16,11 +16,36 @@
         <?php
          include 'nav.php';
        ?>
-        <aside >
-           
+                       <div class="content row col-md-6 d-flex justify-content-center">
+                <div class="card-deck">
+
+                    <div class="card">
+                        <div class="card-body">
+                        <img src="img/Teacher_male.png" class="img-fluid" alt="Education">
+                        <br>
+                            <h1 class="card-title">Teacher</h1>
+                            
+                            <a class="btn btn-dark float-left btn-sm col-sm-6 border" href="#">Sign Up</a>
+                            <a class="btn btn-dark float-right btn-sm col-sm-6 border" href="#">Login</a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                    <div class="card-body">
+                        <img src="img/Student_Male.png" class="img-fluid" alt="forum">
+                        
+                            <br>
+                            <h1 class="card-title">Student</h1>
+                            
+                            <a class="btn btn-dark float-left btn-sm col-sm-6 border" href="#">Sign Up</a>
+                            <a class="btn btn-dark  btn-sm float-right col-sm-6 border" href="#">Login</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             
             
-        </aside>
     </div>
  
 </body>

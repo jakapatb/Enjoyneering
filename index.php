@@ -16,20 +16,22 @@
         <?php
          include 'nav.php';
        ?>
-            <div class="content row col-md-6">
+            <div class="content row col-md-6 d-flex justify-content-center">
                 <div class="card-deck">
 
                     <div class="card">
-
                         <img src="img/education.jpg" class="img-fluid" alt="Education">
+
+
                         <div class="card-body">
                             <h1 class="card-title">Education</h1>
                             <h5 class="card-subtitle">Education page</h5>
                             <p>This for Education</p>
-                            <a class="btn btn-dark float-right btn-sm" href="education.php">Education page...</a>
-                        </div>
-                    </div>
 
+                        </div>
+
+                        <div class="card-footer"><a class="btn btn-dark float-right btn-sm" href="education.php">Education page...</a></div>
+                    </div>
                     <div class="card">
 
                         <img src="img/forum.jpg" class="img-fluid" alt="forum">
@@ -38,8 +40,9 @@
                             <h1 class="card-title">Forum</h1>
                             <h5 class="card-subtitle">forum page</h5>
                             <p>This for forum</p>
-                            <a class="btn btn-dark  btn-sm float-right" href="foum.php">forum page...</a>
                         </div>
+                        <div class="card-footer"> <a class="btn btn-dark  btn-sm float-right" href="foum.php">forum page...</a> </div>
+
                     </div>
 
                 </div>
