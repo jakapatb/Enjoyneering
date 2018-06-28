@@ -13,155 +13,157 @@
 
 <body>
     <div class="container-fluid">
+        <!-- Top menu bar -->
         <?php
          include 'nav.php';
        ?>
-           <div class="table-responsive-md">
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr >
-                        <th scope="col">หัวข้อ</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-     
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                        
-                    </tr>
-                </tbody>
-
-
-
-            </table>
-<br>
+            <!-- Forum -->
+            <div class="table-responsive-md">
                 <table class="table">
-                <thead class="thead-dark">
-                    <tr >
-                        <th scope="col">หัวข้อ</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-     
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">หัวข้อ</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                        
-                    </tr>
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
 
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
-                    <tr >
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
-                </tbody>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+
+                        </tr>
+                    </tbody>
 
 
 
-            </table>
-            <br>
+                </table>
+                <br>
                 <table class="table">
-                <thead class="thead-dark">
-                    <tr >
-                        <th scope="col">หัวข้อ</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-     
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">หัวข้อ</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                        
-                    </tr>
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
 
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
-                </tbody>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+
+                        </tr>
+
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
+                    </tbody>
 
 
 
-            </table>
-            <br>
+                </table>
+                <br>
                 <table class="table">
-                <thead class="thead-dark">
-                    <tr >
-                        <th scope="col">หัวข้อ</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-     
-                    <tr class="table-secondary">
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                    </tr>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">หัวข้อ</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>ชื่อกระทู้</td>
-                        <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
-                        <td>ตอบล่าสุด</td>
-                        
-                    </tr>
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
 
-                </tbody>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+
+                        </tr>
+
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
+                    </tbody>
 
 
 
-            </table>
-</div>
+                </table>
+                <br>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">หัวข้อ</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="table-secondary">
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>ชื่อกระทู้</td>
+                            <td>จำนวนกระทู้ <br> จำนวนคนตอบ</td>
+                            <td>ตอบล่าสุด</td>
+
+                        </tr>
+
+                    </tbody>
+
+
+
+                </table>
+            </div>
     </div>
 </body>
 

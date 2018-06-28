@@ -13,12 +13,14 @@
 
 <body>
     <div class="container-fluid">
+        <!-- Top menu bar -->
         <?php
          include 'nav.php';
        ?>
+            <!-- Card frame -->
             <div class="content row col-md-6 d-flex justify-content-center">
                 <div class="card-deck">
-
+                    <!--Card:Education -->
                     <div class="card">
                         <img src="img/education.jpg" class="img-fluid" alt="Education">
 
@@ -32,6 +34,7 @@
 
                         <div class="card-footer"><a class="btn btn-dark float-right btn-sm" href="education.php">Education page...</a></div>
                     </div>
+                    <!--Card:Forum -->
                     <div class="card">
 
                         <img src="img/forum.jpg" class="img-fluid" alt="forum">
