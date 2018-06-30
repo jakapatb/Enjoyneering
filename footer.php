@@ -1,8 +1,8 @@
 <footer class="footer">
-    
 
-    
-    
-    
-    
+
+
+
+
+
 </footer>

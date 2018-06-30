@@ -35,7 +35,7 @@
 
             </div>
             <!--TODO : creat new php page for login -->
-            <form action="action_register.php">
+            <form action="config/action_register.php">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -70,7 +70,7 @@
 
             </div>
             <!--TODO : creat new php page for create account -->
-            <form action="action_register.php">
+            <form action="config/action_register.php">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -79,7 +79,9 @@
                     </div>
                     <div class="form-group">
                         <label for="usr">Email address:</label>
-                        <input type="text" class="form-control" id="email">
+                        <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Your Email" id="email">
+                        <div class="input-group-append"><span class="input-group-text">@example.com</span></div></div>
                     </div>
                     <div class="form-group">
                         <label for="usr">Create password:</label>
