@@ -12,11 +12,12 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <!-- Top menu bar -->
-        <?php
+    <?php
          include 'nav.php';
        ?>
+        <div class="container-fluid">
+            <!-- Top menu bar -->
+
             <!-- Forum -->
             <div class="table-responsive-md">
                 <table class="table">
@@ -164,7 +165,7 @@
 
                 </table>
             </div>
-    </div>
+        </div>
 </body>
 
 </html>

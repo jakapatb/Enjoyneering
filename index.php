@@ -12,11 +12,12 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <!-- Top menu bar -->
-        <?php
+    <?php
          include 'nav.php';
        ?>
+        <div class="container-fluid">
+            <!-- Top menu bar -->
+
             <!-- Card frame -->
             <div class="content row col-md-6 d-flex justify-content-center">
                 <div class="card-deck">
@@ -50,8 +51,12 @@
 
                 </div>
             </div>
-    </div>
-
+        </div>
+        <?php
+    
+include 'footer.php';
+    
+?>
 </body>
 
 </html>
