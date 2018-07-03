@@ -8,7 +8,17 @@
     <div class="collapse navbar-collapse" id="demo">
         <!-- left menu -->
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="education.php">Education</a></li>
+
+            <!-- Education dropdown-->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="education.php" id="navbardrop" data-toggle="dropdown">Education</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="quiz.php">Quiz</a>
+                    <a class="dropdown-item" href="homework.php">Homework</a>
+                    <a class="dropdown-item" href="library.php">Library</a>
+                </div>
+            </li>
+            <!-- forum -->
             <li class="nav-item"><a class="nav-link" href="foum.php">Forum</a></li>
         </ul>
         <!-- right menu -->
@@ -80,8 +90,9 @@
                     <div class="form-group">
                         <label for="usr">Email address:</label>
                         <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Your Email" id="email">
-                        <div class="input-group-append"><span class="input-group-text">@example.com</span></div></div>
+                            <input type="text" class="form-control" placeholder="Your Email" id="email">
+                            <div class="input-group-append"><span class="input-group-text">@example.com</span></div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="usr">Create password:</label>

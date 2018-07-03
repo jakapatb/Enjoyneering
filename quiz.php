@@ -20,7 +20,7 @@
             <h2>Quiz:(Subject)</h2>
             <div class="row">
                 <!-- Zone Left:Teacher-->
-                <div class="col col-sm-3 bg-dark"><br>
+                <div class="col col-md-3 bg-dark" style="width: 10rem;"><br>
                     <div class="card">
                         <div class="card-header">
                             <h3>Teacher</h3>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="card-body">
                             <!--TODO : iamge teacher -->
-                            <img src="img/Teacher_Male.png" alt="teacher" class="img-fluid">
+                            <img src="img/person.png" alt="teacher" class="img-fluid">
 
                         </div>
                         <div class="card-footer">
@@ -40,7 +40,7 @@
                     <br>
                 </div>
                 <!-- Zone Right: Question-->
-                <div class="col bg-light">
+                <div class="col bg-light ">
                     <h2>Question <span class="badge badge-success">18/20</span></h2>
                     <p>qustion </p>
                     <!--Zone Answer-->
@@ -64,8 +64,8 @@
                     </div>
 
                     <!-- Zone countdown-->
-                    <br>
                     <div class="col">
+                        <h2>Countdown</h2>
                         <div class="progress">
                             <!--TODO add :timing form Database-->
                             <div class="progress-bar" style="width:70%; height:16px">70%</div>
@@ -81,16 +81,19 @@
 
             <!-- Zone Student 
     TODO : when student come here add that student -->
-            <h3>Student <span class="badge badge-success">3/10</span></h3>
-            <div class="col-md-12 bg-light row">
+           
+           
+           
+            <h3>Student <span class="badge badge-success">4/6</span></h3>
+            <div class="row bg-light ">
 
 
 
                 <!-- Card Student -->
-                <div class="card col col-sm-2 ">
+                <div class="card " style="width: 10rem;">
                     <div class="card-body">
                         <!--TODO : iamge student -->
-                        <img src="img/Student_Female.png" alt="student" class="img-fluid">
+                        <img src="img/person.png" alt="student" class="img-fluid">
 
                     </div>
                     <div class="card-footer">
@@ -101,10 +104,10 @@
                 </div>
 
                 <!-- Card Student -->
-                <div class="card col col-sm-2 ">
+                <div class="card bg-secondary " style="width: 10rem;">
                     <div class="card-body">
                         <!--TODO : iamge student -->
-                        <img src="img/Student_Male.png" alt="student" class="img-fluid">
+                        <img src="img/person.png" alt="student" class="img-fluid">
 
                     </div>
                     <div class="card-footer">
@@ -115,10 +118,52 @@
                 </div>
 
                 <!-- Card Student -->
-                <div class="card col col-sm-2 ">
+                <div class="card " style="width: 10rem;">
                     <div class="card-body">
                         <!--TODO : iamge student -->
-                        <img src="img/Student_Female.png" alt="student" class="img-fluid">
+                        <img src="img/person.png" alt="student" class="img-fluid">
+
+                    </div>
+                    <div class="card-footer">
+                        <!--TODO: name student -->
+                        <p> Mr.FirstName LastName </p>
+                    </div>
+
+                </div>
+
+                <!-- Card Student -->
+                <div class="card " style="width: 10rem;">
+                    <div class="card-body">
+                        <!--TODO : iamge student -->
+                        <img src="img/person.png" alt="student" class="img-fluid">
+
+                    </div>
+                    <div class="card-footer">
+                        <!--TODO: name student -->
+                        <p> Mr.FirstName LastName </p>
+                    </div>
+
+                </div>
+
+                <!-- Card Student -->
+                <div class="card  bg-secondary" style="width: 10rem;">
+                    <div class="card-body">
+                        <!--TODO : iamge student -->
+                        <img src="img/person.png" alt="student" class="img-fluid">
+
+                    </div>
+                    <div class="card-footer">
+                        <!--TODO: name student -->
+                        <p> Mr.FirstName LastName </p>
+                    </div>
+
+                </div>
+
+                <!-- Card Student -->
+                <div class="card " style="width: 10rem;">
+                    <div class="card-body">
+                        <!--TODO : iamge student -->
+                        <img src="img/person.png" alt="student" class="img-fluid">
 
                     </div>
                     <div class="card-footer">
