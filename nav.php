@@ -59,9 +59,9 @@
 
                 </div>
                 <div class="modal-footer">
-
+                    <a class=" mr-auto btn btn-primary text-light" data-toggle="modal" data-dismiss="modal" data-target="#signup">Sign up</a>
                     <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
-                    <button type="submit" class=" btn btn-primary">Sign in</button>
+                    <button type="submit" class=" btn btn-primary">Log in</button>
                 </div>
             </form>
 
@@ -104,7 +104,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-
+                    <a class=" mr-auto btn btn-primary text-light" data-toggle="modal" data-dismiss="modal" data-target="#login" >Login</a>
                     <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
                     <button type="submit" class=" btn btn-primary">Sign up</button>
                 </div>
