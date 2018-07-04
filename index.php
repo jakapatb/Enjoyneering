@@ -16,9 +16,9 @@
          include 'nav.php';
        ?>
         <div class="container">
-            <!--left column-->
             <div class="row bg-light">
-                <div class="col col-md-8" >
+                <!--left columns-->
+                <div class="col col-md-8">
                     <!-- Top slide  -->
                     <div id="topCarousel" class="carousel slide " data-ride="carousel">
                         <!-- Indicators -->
@@ -29,10 +29,18 @@
                         <!-- The slideshow -->
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="img/test2.jpg" class=" img-responsive img-fluid" alt="test2">
+                                <a href="post.php?topic=1"> <img src="img/test2.jpg" class=" img-responsive img-fluid" alt="test2"></a>
+                                <div class="carousel-caption">
+                                    <h3>Night Sky</h3>
+                                    <p>far far away</p>
+                                </div>
                             </div>
                             <div class="carousel-item ">
-                                <img src="img/test1.jpg" class=" img-responsive img-fluid" alt="test1">
+                                <a href="post.php?topic=2"><img src="img/test1.jpg" class=" img-responsive img-fluid" alt="test1"></a>
+                                <div class="carousel-caption">
+                                    <h3>Beach</h3>
+                                    <p>just wait</p>
+                                </div>
                             </div>
                         </div>
 
@@ -156,12 +164,12 @@
 
                 </div>
 
-<!-- Right columns-->
+                <!-- Right columns-->
                 <div class="col col-xl-4 bg-dark"></div>
             </div>
         </div>
-        
-    <?php
+
+        <?php
     
 include 'footer.php';
     
