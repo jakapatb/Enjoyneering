@@ -104,7 +104,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a class=" mr-auto btn btn-primary text-light" data-toggle="modal" data-dismiss="modal" data-target="#login" >Login</a>
+                    <a class=" mr-auto btn btn-primary text-light" data-toggle="modal" data-dismiss="modal" data-target="#login">Login</a>
                     <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
                     <button type="submit" class=" btn btn-primary">Sign up</button>
                 </div>

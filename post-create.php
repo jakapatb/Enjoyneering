@@ -27,14 +27,14 @@
                     <form action="#">
 
                         <div class="form-group">
-                            <label for="topic">Topic:</label>
+                            <label for="topic">Post Title:</label>
                             <input type="text" class="form-control" id="topic" placeholder="topic">
                         </div>
                         <div class="form-group">
-                            <label for="img-post">Image topic post</label>
+                            <label for="img-post">Image Title</label>
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="img-post">
-                                <label class="custom-file-label" for="custom-file">Image topic</label>
+                                <label class="custom-file-label" for="custom-file">Image Title</label>
                             </div>
                             
                         </div>

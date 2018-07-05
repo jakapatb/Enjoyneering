@@ -32,14 +32,14 @@
                                 <a href="post.php?topic=1"> <img src="img/test2.jpg" class=" img-responsive img-fluid" alt="test2"></a>
                                 <div class="carousel-caption">
                                     <h3>Night Sky</h3>
-                                    <p>far far away</p>
+                                    <p>Permanence, perseverance and persistence in spite of all obstacles, discouragements, and impossibilities: It is this, that in all things distinguishes the strong soul from the weak.</p>
                                 </div>
                             </div>
                             <div class="carousel-item ">
                                 <a href="post.php?topic=2"><img src="img/test1.jpg" class=" img-responsive img-fluid" alt="test1"></a>
                                 <div class="carousel-caption">
-                                    <h3>Beach</h3>
-                                    <p>just wait</p>
+                                    <h3>Napoleon Hill</h3>
+                                    <p>If you cannot do great things, do small things in a great way.</p>
                                 </div>
                             </div>
                         </div>

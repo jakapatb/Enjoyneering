@@ -15,7 +15,7 @@
     <?php
     include 'nav.php'; 
     ?>
-        <div class="container-fluid">
+        <div class="container">
             <!--TODO : name Subject -->
             <h2>Quiz:(Subject)</h2>
             <div class="row">

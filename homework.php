@@ -15,7 +15,7 @@
     <?php
     include 'nav.php';
     ?>
-        <div class="container-fluid">
+        <div class="container">
             <h1>Homework <span class="badge badge-success">5/8</span></h1>
             <table class="table table-striped">
                 <thead>

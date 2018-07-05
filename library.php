@@ -15,7 +15,7 @@
     <?php
          include 'nav.php';
        ?>
-        <div class="container-fluid">
+        <div class="container">
 <!--card columns -->
             <div class="card-deck">
                
