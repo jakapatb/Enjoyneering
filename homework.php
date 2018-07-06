@@ -15,7 +15,7 @@
     <?php
     include 'nav.php';
     ?>
-        <div class="container-fluid">
+        <div class="container">
             <h1>Homework <span class="badge badge-success">5/8</span></h1>
             <table class="table table-striped">
                 <thead>
@@ -23,7 +23,9 @@
                         <th>Number</th>
                         <th>Subject</th>
                         <th>Title</th>
+                        <th>Sec</th>
                         <th>Date/Time</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +33,9 @@
                         <td>1</td>
                         <td>Coding</td>
                         <td>การบ้าน</td>
+                        <td>21</td>
                         <td>6/7/2018</td>
+                        <td>Not done</td>
                     </tr>
                 </tbody>
 

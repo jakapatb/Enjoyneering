@@ -15,7 +15,7 @@
     <?php
          include 'nav.php';
        ?>
-        <div class="container-fluid">
+        <div class="container">
             <!-- Top menu bar -->
 
             <!-- Forum -->
