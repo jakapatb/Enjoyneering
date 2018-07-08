@@ -10,7 +10,7 @@ class Header extends Component{
         0 ยังไม่ล๊อกอืน
         1 ล๊อกอินแล้ว
         */
-      status:0
+      status:1
     };
   }
 render(){
@@ -28,10 +28,10 @@ render(){
   else {
     rightStatus=<ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#profile">Profile</a>
+                <a class="nav-link" href="/profile">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#logout">Logout</a>
+                <a class="nav-link" href="/action_logout">Logout</a>
             </li>
 
         </ul>;
@@ -56,7 +56,7 @@ render(){
                     </div>
                 </li>
 {/* forum */}
-                <li class="nav-item"><a class="nav-link" href="foum.php">Forum</a></li>
+                <li class="nav-item"><a class="nav-link" href="/forum">Forum</a></li>
             </ul>
     {/* right menu */}
 {rightStatus}
