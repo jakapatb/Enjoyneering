@@ -14,15 +14,20 @@ render(){
                 <form action="config/action_register.php">
                     <div class="modal-body">
 
-                        <div class="form-group">
-                            <label for="usr">Username:</label>
-                            <input type="text" class="form-control" id="usr"/>
-                        </div>
+                        
                         <div class="form-group">
                             <label for="usr">Email address:</label>
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Your Email" id="email"/>
                                 <div class="input-group-append"><span class="input-group-text">@example.com</span></div>
+                            </div>
+                            <div class="form-group">
+                            <label for="usr">Firstname:</label>
+                                <input type="text" class="form-control" id="fname"/>
+                            </div>
+                            <div class="form-group">
+                            <label for="usr">Lastname:</label>
+                                <input type="text" class="form-control" id="lname"/>
                             </div>
                         </div>
                         <div class="form-group">

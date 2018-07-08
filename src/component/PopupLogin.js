@@ -16,7 +16,7 @@ return(
                   <div class="modal-body">
 
                       <div class="form-group">
-                          <label for="usr">Username:</label>
+                          <label for="usr">E-mail:</label>
                           <input type="text" class="form-control" id="usr"/>
                       </div>
                       <div class="form-group">
