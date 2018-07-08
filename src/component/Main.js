@@ -8,6 +8,7 @@ import Post from './Post';
 import PostCreate from './PostCreate';
 import Profile from './Profile';
 import EditProfile from './EditProfile';
+import Tag from './Tag';
 const Main = () => (
 <main>
   <Switch>
@@ -19,6 +20,7 @@ const Main = () => (
     <Route path='/post-create' component={PostCreate}/>
     <Route path='/profile' component={Profile}/>
     <Route path='/edit-profile' component={EditProfile}/>
+    <Route path='/tag' component={Tag}/>
   </Switch>
 </main>
 )

@@ -16,8 +16,7 @@ return(
               {/* author */}
               <h5>By: Jakkapat Boonroj</h5>
               {/* Tag */}
-              <h5>Tag:<span class="badge badge-dark">education</span>
-                  <span class="badge badge-dark">life</span>
+              <h5>Tag:<a href="/tag#education"><span class="badge badge-dark">Education</span></a> <a href="/tag#life"><span class="badge badge-dark">Life</span></a>
               </h5>
               {/* date/time */}
               <h5>Date: 5/7/2018 6:29</h5>
