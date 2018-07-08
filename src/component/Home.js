@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import LittlePost from './LittlePost';
+import Rightnav from './Rightnav';
+import './home.css';
 class Home extends Component {
   render() {
     return (<div class="container">
-      <div class="row bg-light">
+      <div class="bg-light">
         {/* left columns */}
-        <div class="col col-md-8">
+        <div class="col">
           {/* Top slide */}
           <div id="topCarousel" class="carousel slide " data-ride="carousel">
             {/* Indicators */}
@@ -18,7 +20,7 @@ class Home extends Component {
               <div class="carousel-item active">
                 <a href="post">
                   <img src="img/test2.jpg" class=" img-responsive img-fluid" alt="test2"/></a>
-                <div class="carousel-caption">
+                <div class="carousel-caption ">
                   <h3>Night Sky</h3>
                   <p>Permanence, perseverance and persistence in spite of all obstacles, discouragements, and impossibilities: It is this, that in all things distinguishes the strong soul from the weak.</p>
                 </div>
@@ -68,9 +70,6 @@ class Home extends Component {
           </div>
 
         </div>
-
-        {/* Right columns */}
-        <div class="col col-xl-4 bg-dark"></div>
       </div>
     </div>);
   }
