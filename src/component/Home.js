@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import LittlePost from './LittlePost';
-import Rightnav from './Rightnav';
+
 import './home.css';
 class Home extends Component {
   render() {
