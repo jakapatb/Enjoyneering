@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import PopupLogin from './PopupLogin';
 import PopupRegister from './PopupRegister';
-
+import {Link} from 'react-router-dom';
 class Header extends Component{
   constructor(){
     super();
@@ -10,28 +10,28 @@ class Header extends Component{
         0 ยังไม่ล๊อกอืน
         1 ล๊อกอินแล้ว
         */
-      status:0
+      status:1
     };
   }
 render(){
   var rightStatus;
-  if(this.state.status==0){
+  if(this.state.status===0){
     rightStatus=<ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" data-target="#login">Login</a>
+            <Link class="nav-link" data-toggle="modal" data-target="#login">Login</Link>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" data-target="#signup">Sign up</a>
+            <Link class="nav-link" data-toggle="modal" data-target="#signup">Sign up</Link>
         </li>
     </ul>;
   }
   else {
     rightStatus=<ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
+                <Link class="nav-link" to="/profile">Profile</Link>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/action_logout">Logout</a>
+                <Link class="nav-link" to="/action_logout">Logout</Link>
             </li>
 
         </ul>;
@@ -40,7 +40,7 @@ render(){
   return(
 <div>
     <nav class="navbar navbar-expand-md bg-dark navbar-dark ">
-        <a class="navbar-brand" href="/">Enjoyneering</a>
+        <Link class="navbar-brand" to="/">Enjoyneering</Link>
         <button type="button" data-toggle="collapse" data-target="#demo" class="navbar-toggler btn btn-dark border border-secondary btn-sm"><span class="navbar-toggler-icon"></span></button>
 
         <div class="collapse navbar-collapse" id="demo">
@@ -48,15 +48,16 @@ render(){
             <ul class="navbar-nav mr-auto">
   {/* Education dropdown*/}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="education.php" id="navbardrop" data-toggle="dropdown">Education</a>
+                    <Link class="nav-link dropdown-toggle" to="education.php" id="navbardrop" data-toggle="dropdown">Education</Link>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/quiz">Quiz</a>
-                        <a class="dropdown-item" href="/homework">Homework</a>
-                        <a class="dropdown-item" href="/library">Library</a>
+                        <Link class="dropdown-item" to="/quiz">Quiz</Link>
+                        <Link class="dropdown-item" to="/tag">Posts</Link>
+                        <Link class="dropdown-item" to="/homework">Homework</Link>
+                        <Link class="dropdown-item" to="/library">Library</Link>
                     </div>
                 </li>
 {/* forum */}
-                <li class="nav-item"><a class="nav-link" href="/forum">Forum</a></li>
+                <li class="nav-item"><Link class="nav-link" to="/forum">Forum</Link></li>
             </ul>
     {/* right menu */}
 {rightStatus}

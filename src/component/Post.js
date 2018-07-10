@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Comment from './Comment';
 import './post.css';
 class Post extends Component {
   render() {
@@ -35,9 +36,10 @@ class Post extends Component {
           <h2>This is test Topic 1</h2>
           <p>This is test content 1 and i dont know what to say anything,that so bored</p>
           {/* Comment */}
-          <div class="card-deck">
+          <div class="">
             <h2>Comment</h2>
-
+          <Comment/>
+        <Comment/>
           </div>
 
         </div>

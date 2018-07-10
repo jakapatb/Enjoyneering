@@ -39,7 +39,7 @@ return(
                   </div>
                   <div class="modal-body">
                       <p>information</p>
-                      <img class="img-fluid" src="img/forum.jpg"/>
+                      <img class="img-fluid" src="img/forum.jpg" alt="homework"/>
                   </div>
                   <form action="config/action_homework.php">
                       <div class="modal-footer">

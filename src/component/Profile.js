@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import {Link} from 'react-router-dom';
 class Profile extends Component {
   render() {
     return (<div class="container">
@@ -8,7 +8,7 @@ class Profile extends Component {
         {/* rightinfo Image Profile */}
         <div class="col col-md-4">
 
-          <img src="img/59010187.jpg" alt="image-profile" class="rounded img-fluid"/>
+          <img src="img/59010187.jpg" alt="profile" class="rounded img-fluid"/>
           <br/>
 
         </div>
@@ -36,7 +36,7 @@ class Profile extends Component {
 
             </div>
           </div>
-          <a class="btn btn-block btn-primary " href="/edit-profile">Edit Profile</a>
+          <Link class="btn btn-block btn-primary " to="/edit-profile">Edit Profile</Link>
         </div>
       </div>
 

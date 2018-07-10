@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React from 'react';
 import {Switch,Route} from 'react-router-dom';
 import Home from './Home';
 import Quiz from './Quiz';
@@ -9,6 +9,9 @@ import PostCreate from './PostCreate';
 import Profile from './Profile';
 import EditProfile from './EditProfile';
 import Tag from './Tag';
+import Calendar from './Calendar';
+
+const Notfound= () => <h1>404 Not Found :(</h1>
 const Main = () => (
 <main>
   <Switch>
@@ -21,7 +24,9 @@ const Main = () => (
     <Route path='/profile' component={Profile}/>
     <Route path='/edit-profile' component={EditProfile}/>
     <Route path='/tag' component={Tag}/>
-  </Switch>
+    <Route path='/calendar' component={Calendar}/>
+    <Route component={Notfound}/>
+</Switch>
 </main>
 )
-export default Main
+export default Main;

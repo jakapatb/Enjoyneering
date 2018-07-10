@@ -5,7 +5,6 @@ render(){
 
   return(
     <div class="container">
-<h1>Edit Profile</h1>
 <div class="col bg-light">
   <h1>Your Profile</h1>
   <div class="row">

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './littlepost.css';
+import {Link} from 'react-router-dom';
 class LittlePost extends Component {
   render() {
     return (
@@ -12,7 +13,7 @@ class LittlePost extends Component {
 
         {/* Right Content */}
         <div class="">
-          <h4>  <a href="/post" class="nav-link">Night Sky </a></h4>
+          <h4>  <Link to="/post" class="nav-link">Night Sky </Link></h4>
           <i class="fa fa-quote-left"></i>
           Permanence, perseverance and persistence in spite of all obstacles, discouragements, and impossibilities: It is this, that in all things distinguishes the strong soul from the weak.
           <i class="fa fa-quote-right"></i>
