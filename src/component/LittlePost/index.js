@@ -12,11 +12,9 @@ class LittlePost extends Component {
         {/* left image */}
 
         {/* Right Content */}
-        <div class="">
-          <h4>  <Link to="/post" class="nav-link">Night Sky </Link></h4>
-          <i class="fa fa-quote-left"></i>
-          Permanence, perseverance and persistence in spite of all obstacles, discouragements, and impossibilities: It is this, that in all things distinguishes the strong soul from the weak.
-          <i class="fa fa-quote-right"></i>
+        <div class="rightCon">
+          <h4>  <Link to="/post" class="nav-link">{this.props.title}</Link></h4>
+          <p>{this.props.content}</p>
           <p class="lead text-primary">Thomas Carlyle</p>
           <p>hello world this is max,Im Newbie Web developer</p>
 

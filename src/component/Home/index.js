@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import LittlePost from './LittlePost';
+import LittlePost from '../LittlePost/';
 
 import './home.css';
 class Home extends Component {
@@ -52,8 +52,8 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/> {/* Card:Education */}
-            <LittlePost/>
-            <LittlePost/>
+            <LittlePost title="Night Sky" content="123"/>
+            <LittlePost title="Little Finger" content="456"/>
 
           </div>
 
@@ -65,8 +65,8 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/>
-            <LittlePost/>
-            <LittlePost/>
+            <LittlePost title="far far away" content="789"/>
+            <LittlePost title="along with them" content="hiii"/>
           </div>
 
         </div>

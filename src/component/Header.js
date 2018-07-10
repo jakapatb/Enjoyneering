@@ -50,8 +50,9 @@ render(){
                 <li class="nav-item dropdown">
                     <Link class="nav-link dropdown-toggle" to="education.php" id="navbardrop" data-toggle="dropdown">Education</Link>
                     <div class="dropdown-menu">
-                        <Link class="dropdown-item" to="/quiz">Quiz</Link>
                         <Link class="dropdown-item" to="/tag">Posts</Link>
+                        <Link class="dropdown-item" to="/course">Course</Link>
+                        <Link class="dropdown-item" to="/quiz">Quiz</Link>
                         <Link class="dropdown-item" to="/homework">Homework</Link>
                         <Link class="dropdown-item" to="/library">Library</Link>
                     </div>

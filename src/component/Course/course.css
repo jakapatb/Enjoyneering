@@ -1,0 +1,8 @@
+.img-course{
+  object-fit:fill;
+  max-height: 250px;
+}
+.col{
+  padding-right: 0px;
+  padding-left: 0px;
+}
