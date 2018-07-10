@@ -57,7 +57,7 @@ var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Ma
     
     if(objResult)
     {
-        console.log('Mail or Username already exists!');//หาวิธีใช้alertยังไม่เจอ
+        alert('Mail or Username already exists!');
         window.history.go(-1);
     }
     else
@@ -70,7 +70,7 @@ var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Ma
             var tbl='student';
         }
     var sql = "INSERT INTO tbl ('Mail', 'Fname', 'Lname') VALUES (Mail,FName,LName)";
-        console.log('Registered!');//หาวิธีใช้alertยังไม่เจอ;
+        alert('Registered!');
        window.location=/*ไปไหนต่อวะ*/;
     }
     
