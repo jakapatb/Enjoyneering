@@ -5,13 +5,13 @@ var con = mysql.createConnection({
   password: ".......",
   database: "....."
 });//กุงงตรงนี้สัส
-    var Mail = Mail;
-    var Password = Password;
-    var ConPassword = ConPassword;
-    var FName = FName;
-    var LName = LName;
-    var Status = Status;
-    if( Mail == '')
+    var Mail = new Mail();
+    var Password = new Password();
+    var ConPassword =new ConPassword();
+    var FName = new FName();
+    var LName = new LName();
+    var Status = new Status();
+    if( Mail() == '')
     {
         console.log('Please input Mail!');
         window.history.go(-1);
