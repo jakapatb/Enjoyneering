@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 class Profile extends Component {
+  constructor(){
+    super();
+    this.state={
+      id:59010187
+    };
+  }
   render() {
     return (<div class="container">
       <br/>
@@ -28,7 +34,7 @@ class Profile extends Component {
             {/* right info */}
             <div class="col col-md-6 ">
               <h3>Student ID</h3>
-              <p>59010187</p>
+              <p>{this.state.id}</p>
               <h3>Major</h3>
               <p>Infomation Engineering</p>
               <h3>Email</h3>
