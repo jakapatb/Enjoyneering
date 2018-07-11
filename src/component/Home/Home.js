@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import LittlePost from '../LittlePost/';
+import LittlePost from '../LittlePost/LittlePost';
 
 import './home.css';
 class Home extends Component {

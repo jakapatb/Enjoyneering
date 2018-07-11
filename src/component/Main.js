@@ -1,16 +1,16 @@
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
-import Home from './Home/';
+import Home from './Home/Home';
 import Quiz from './Quiz';
 import Homework from './Homework';
 import Library from './Library';
-import Post from './Post/';
+import Post from './Post/Post';
 import PostCreate from './PostCreate';
-import Profile from './Profile';
+import Profile from './Profile/Profile';
 import EditProfile from './EditProfile';
 import Tag from './Tag';
 import Cal from './Cal';
-import Course from './Course/';
+import Course from './Course/Course';
 
 const Notfound= () => <h1>404 Not Found :(</h1>
 const Main = () => (

@@ -18,10 +18,10 @@ render(){
   if(this.state.status===0){
     rightStatus=<ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <Link class="nav-link" data-toggle="modal" data-target="#login">Login</Link>
+            <Link class="nav-link" data-toggle="modal" data-target="#login" to="#login">Login</Link>
         </li>
         <li class="nav-item">
-            <Link class="nav-link" data-toggle="modal" data-target="#signup">Sign up</Link>
+            <Link class="nav-link" data-toggle="modal" data-target="#signup" to="#signup">Sign up</Link>
         </li>
     </ul>;
   }

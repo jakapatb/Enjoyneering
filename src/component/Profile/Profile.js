@@ -1,51 +1,49 @@
 import React, {Component} from 'react';
+import './profile.css';
 import {Link} from 'react-router-dom';
 class Profile extends Component {
   constructor(){
     super();
     this.state={
-      id:59010187
+      id:59010187,
+      name:'Mr.Jakkapat Boonroj',
+      degree:'Bachelor of Engineering',
+      date:'19/01/1997',
+      major:'Infomation Engineering',
+      email:'max.jakkapat@gmail.com'
     };
   }
   render() {
     return (<div class="container">
       <br/>
-      <div class="row">
+
         {/* rightinfo Image Profile */}
-        <div class="col col-md-4">
-
-          <img src="img/59010187.jpg" alt="profile" class="rounded img-fluid"/>
-          <br/>
-
-        </div>
+          <img src="img/59010187.jpg" alt="profile" class="rounded img-profile float-left"/>
         {/* left info Profile */}
-        <div class="col bg-light">
+        <div class="bg-light blog-profile">
           <h1>Your Profile</h1>
           <div class="row">
             {/* left info */}
-            <div class="col col-md-6 ">
+            <div class="col blog-info">
               <h3>Name</h3>
-              <p>Mr.Jakkapat Boonroj</p>
+              <p>{this.state.name}</p>
               <h3>Degree</h3>
-              <p>Bachelor of Engineering</p>
+              <p>{this.state.degree}</p>
               <h3>Date of Birth</h3>
-              <p>19/01/1997</p>
+              <p>{this.state.date}</p>
             </div>
             {/* right info */}
-            <div class="col col-md-6 ">
+            <div class="col col-md-6 blog-info">
               <h3>Student ID</h3>
               <p>{this.state.id}</p>
               <h3>Major</h3>
-              <p>Infomation Engineering</p>
+              <p>{this.state.major}</p>
               <h3>Email</h3>
-              <p>max.jakkapat@gmail.com</p>
-
+              <p>{this.state.email}</p>
             </div>
           </div>
-          <Link class="btn btn-block btn-primary " to="/edit-profile">Edit Profile</Link>
         </div>
-      </div>
-
+<Link class="btn btn-block btn-primary " to="/edit-profile">Edit Profile</Link>
 
 {/* Real Time Schedule */}
       <div class=" bg-dark col-md-12">

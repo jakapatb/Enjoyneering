@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Post from './Post/';
 class PostCreate extends Component {
 
   constructor() {

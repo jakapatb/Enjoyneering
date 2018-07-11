@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
-import LittlePost from './LittlePost/';
+import LittlePost from './LittlePost/LittlePost';
 
 class Tag extends Component {
   constructor() {
