@@ -8,4 +8,4 @@ class Cal extends Component {
     );
   }
 }
-export default Calendar;
+export default Cal;
