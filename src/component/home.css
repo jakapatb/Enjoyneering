@@ -1,0 +1,7 @@
+.carousel {overflow:hidden;
+ height:300px;
+}
+.carousel-caption {
+    top: 5em;
+    bottom: auto;
+}
