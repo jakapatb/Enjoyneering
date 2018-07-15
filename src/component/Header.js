@@ -10,7 +10,7 @@ class Header extends Component{
         0 ยังไม่ล๊อกอืน
         1 ล๊อกอินแล้ว
         */
-      status:0
+      status:1
     };
   }
 render(){

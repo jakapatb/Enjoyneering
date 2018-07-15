@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import './course.css';
+import {Link} from 'react-router-dom';
 class Course extends Component{
   render(){
     return(
@@ -35,12 +36,13 @@ class CourseYear extends Component{
 class CourseHead extends Component{
   render(){
     return(
-      <div class="card col">
+      <div class="card col blog-course"><Link class="nav-link" to="/subject">
           <div class="card-body ">
               <h3 class="card-text">{this.props.title}</h3>
               <p class="text-primary">by Jakkapat Boonroj</p>
-          </div>
+          </div></Link>
           <img class="card-img-bottom img-course" src="img/education.jpg" alt="card"/>
+
     </div>
     );
   }

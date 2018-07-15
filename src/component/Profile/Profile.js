@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import LittleDay from './LittleDay';
 import './profile.css';
 import {Link} from 'react-router-dom';
 class Profile extends Component {
@@ -13,10 +14,16 @@ class Profile extends Component {
       email:'max.jakkapat@gmail.com'
     };
   }
-  render() {
-    return (<div class="container">
-      <br/>
 
+
+
+
+  render() {
+
+    return (
+
+      <div class="container-fuild">
+      <br/>
         {/* rightinfo Image Profile */}
           <img src="img/59010187.jpg" alt="profile" class="rounded img-profile float-left"/>
         {/* left info Profile */}
@@ -49,18 +56,33 @@ class Profile extends Component {
       <div class=" bg-dark col-md-12">
 <h2 class="text-white">Your Schedule</h2>
 
-<div class="row">
-<div class="col col-md-2 bg-primary">
-<div class=""><h4>Sun</h4></div>
-<div class=""><h4>Mon</h4></div>
-<div class=""><h4>Tue</h4></div>
-<div class=""><h4>Wed</h4></div>
-<div class=""><h4>Thu</h4></div>
-<div class=""><h4>Fri</h4></div>
-<div class=""><h4>Sat</h4></div>
-</div>
-
-</div>
+<table class="table table-striped">
+    <thead>
+        <tr >
+            <th class="text-center border">Day</th>
+            <th class="text-center border">08.00-09.00</th>
+            <th class="text-center border">09.00-10.00</th>
+            <th class="text-center border">10.00-11.00</th>
+            <th class="text-center border">11.00-12.00</th>
+            <th class="text-center border">12.00-13.00</th>
+            <th class="text-center border">13.00-14.00</th>
+            <th class="text-center border">14.00-15.00</th>
+            <th class="text-center border">15.00-16.00</th>
+            <th class="text-center border">16.00-17.00</th>
+            <th class="text-center border">17.00-18.00</th>
+            <th class="text-center border">18.00-19.00</th>
+        </tr>
+    </thead>
+    <tbody>
+      <LittleDay day="MON"/>
+      <LittleDay day="TUE"/>
+      <LittleDay day="WED"/>
+      <LittleDay day="THU"/>
+      <LittleDay day="FRI"/>
+      <LittleDay day="SAT"/>
+      <LittleDay day="SUN"/>
+    </tbody>
+    </table>
       </div>
     </div>);
   }

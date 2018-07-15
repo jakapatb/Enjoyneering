@@ -1,17 +1,17 @@
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
-import Home from './Home/Home';
-import Quiz from './Quiz';
-import Homework from './Homework';
-import Library from './Library';
-import Post from './Post/Post';
-import PostCreate from './PostCreate';
-import Profile from './Profile/Profile';
-import EditProfile from './EditProfile';
-import Tag from './Tag';
-import Cal from './Cal';
-import Course from './Course/Course';
-
+import Home from './component/Home/Home';
+import Quiz from './component/Quiz';
+import Homework from './component/Homework';
+import Library from './component/Library/Library';
+import Post from './component/Post/Post';
+import PostCreate from './component/PostCreate/PostCreate';
+import Profile from './component/Profile/Profile';
+import EditProfile from './component/EditProfile';
+import Tag from './component/Tag';
+import Cal from './component/Cal';
+import Course from './component/Course/Course';
+import Subject from './component/Subject/Subject';
 const Notfound= () => <h1>404 Not Found :(</h1>
 const Main = () => (
 <main>
@@ -27,6 +27,7 @@ const Main = () => (
     <Route path='/tag' component={Tag}/>
     <Route path='/calendar' component={Cal}/>
     <Route path='/course' component={Course}/>
+    <Route path='/subject' component={Subject}/>
     <Route component={Notfound}/>
 </Switch>
 </main>
