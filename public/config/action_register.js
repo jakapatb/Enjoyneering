@@ -1,59 +1,50 @@
-var mysql=require('mysql');
+/*var mysql=require('mysql');
 var con = mysql.createConnection({
   host: ".....",
   user: ".....",
   password: ".......",
   database: "....."
-});//กุงงตรงนี้สัส
+});//กุงงตรงนี้สัส*/
     var Mail = new Mail();
     var Password = new Password();
     var ConPassword =new ConPassword();
     var FName = new FName();
     var LName = new LName();
     var Status = new Status();
-    if( Mail() == '')
+    if( Mail() == "")
     {
-        console.log('Please input Mail!');
-        window.history.go(-1);
-        exit();
-    }//ไม่มั่นใจวะ
-/*    if($Password == "")
-    {
-        echo "<script type='text/javascript'>alert('Please input Password!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert('Please input Mail!');
+        
     }
-    if($FName == "")
+    if(Password() == "")
     {
-        echo "<script type='text/javascript'>alert('Please input First Name!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert('Please input Password!');
+
+       
     }
-    if($LName == "")
+    if(FName() == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Last Name!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert('Please input FristName!');
+ 
+       
     }
-    if($Gender == "")
+    if(LName() == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Gender!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert('Please input LastName!');
+
     }
-    if($Status == "")
+    if(Status() == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Status!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert('Please input Status!');
+
     }
-    if($_POST['txtPassword'] != $_POST['txtConPassword'])
+    if(Password() != ConPassword())
     {
-        echo "<script type='text/javascript'>alert('Password not Match!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
-    }*/
-var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Mail = Mail");
+        alert('Password not Match!');
+
+    }
+//flie base
+/*var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Mail = Mail");
     
     if(objResult)
     {
@@ -71,6 +62,7 @@ var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Ma
         }
     var sql = "INSERT INTO tbl ('Mail', 'Fname', 'Lname') VALUES (Mail,FName,LName)";
         alert('Registered!');
-       window.location=/*ไปไหนต่อวะ*/;
-    }
+       window.location=ไปไหนต่อวะ;
+}*/
+    
     
