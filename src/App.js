@@ -9,10 +9,8 @@ class App extends Component{
     firebase.initializeApp(DB_config);
   }
 render(){
-  var firebaseRef = firebase.database().ref("Post");
-  firebaseRef.once('value').then(function(dataSnapshot){
-    console.log(dataSnapshot.val());
-  });
+  
+
   return(
     <div>
     <Header/>
