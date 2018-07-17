@@ -52,7 +52,7 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/> {/* Card:Education */}
-            <LittlePost/>
+            <LittlePost id="test"/>
             <LittlePost/>
 
           </div>

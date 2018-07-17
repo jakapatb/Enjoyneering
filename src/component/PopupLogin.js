@@ -28,7 +28,7 @@ return(
                   <div class="modal-footer">
                       <button class=" mr-auto btn btn-sencondary text-black" data-toggle="modal" data-dismiss="modal" data-target="#signup">Sign up</button>
                       <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
-                      <button type="submit" class=" btn btn-primary">Log in</button>
+                      <button type="submit" class=" btn btn-primary" >Log in</button>
                   </div>
               </form>
 

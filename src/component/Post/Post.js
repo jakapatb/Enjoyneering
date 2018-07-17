@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Comment from './Comment';
 import './post.css';
-
+import firebase from 'firebase';
 class Post extends Component {
   constructor() {
     super();
@@ -13,7 +13,14 @@ class Post extends Component {
       date:"5/7/2018 6:29",
     };
   }
+
+
   render() {
+    var firebaseRef = firebase.database().ref("Post");
+    firebaseRef.once('value').then(function(dataSnapshot){
+     console.log(dataSnapshot.val());
+    });
+
     var txt=[];
     var tag=this.state.tag;
     var x;
