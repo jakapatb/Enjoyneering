@@ -35,7 +35,7 @@ function register(){
         alert("Password not Match!");
         return;
     }
-}
+
 firebase.auth().createUserWithEmailAndPassword(mail,password).catch(function(error){
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -45,4 +45,5 @@ firebase.auth().createUserWithEmailAndPassword(mail,password).catch(function(err
         alert(errorMessage);
     }
     console.log(error);
+    });
 }
