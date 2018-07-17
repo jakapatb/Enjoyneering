@@ -1,68 +1,48 @@
-/*var mysql=require('mysql');
-var con = mysql.createConnection({
-  host: ".....",
-  user: ".....",
-  password: ".......",
-  database: "....."
-});//กุงงตรงนี้สัส*/
-    var Mail = new Mail();
-    var Password = new Password();
-    var ConPassword =new ConPassword();
-    var FName = new FName();
-    var LName = new LName();
-    var Status = new Status();
-    if( Mail() == "")
+function register(){
+    var Mail = document.getElementById('mail').value;
+    var Password = document.getElementById('password').value;
+    var ConPassword =document.getElementById('Conpassword').value;
+    var FName =document.getElementById('Fname').value;
+    var LName = document.getElementById('Lname').value;
+    var Status = document.getElementById('status').value;
+    if( Mail == "")
     {
-        alert('Please input Mail!');
-        
+        alert("Please input Mail!");
+        return;
     }
-    if(Password() == "")
+    if( Password== "")
     {
-        alert('Please input Password!');
-
-       
+        alert("Please input Password!");
+        return;
     }
-    if(FName() == "")
+    if(FName == "")
     {
-        alert('Please input FristName!');
- 
-       
+        alert("Please input FristName!");
+       return;
     }
-    if(LName() == "")
+    if(LName == "")
     {
-        alert('Please input LastName!');
-
+        alert("Please input LastName!");
+        return;
     }
-    if(Status() == "")
+    if(Status == "")
     {
-        alert('Please input Status!');
-
+        alert("Please input Status!");
+        return;
     }
-    if(Password() != ConPassword())
+    if(Password != ConPassword)
     {
-        alert('Password not Match!');
-
+        alert("Password not Match!");
+        return;
     }
-//flie base
-/*var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Mail = Mail");
-    
-    if(objResult)
-    {
-        alert('Mail or Username already exists!');
-        window.history.go(-1);
+}
+firebase.auth().createUserWithEmailAndPassword(mail,password).catch(function(error){
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if(errorCode =='auto/weak-password'){
+        alert('The passwork is too weak.');
+    }else{
+        alert(errorMessage);
     }
-    else
-    {
-        var sql = "INSERT INTO ชื่อตาราง (Mail,Password,Status) VALUES (Mail,Username,Password,Status)";
-        if (Status == 'TEACHER'){
-            var tbl='teacher';
-        }
-        else{
-            var tbl='student';
-        }
-    var sql = "INSERT INTO tbl ('Mail', 'Fname', 'Lname') VALUES (Mail,FName,LName)";
-        alert('Registered!');
-       window.location=ไปไหนต่อวะ;
-}*/
-    
-    
+    console.log(error);
+}

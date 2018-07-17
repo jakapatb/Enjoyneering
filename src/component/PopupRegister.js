@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import firebase from 'firebase';
+import register from './action_register.js';
 class PopupRegister extends Component{
   constructor(props){
     super(props);
@@ -10,6 +11,7 @@ class PopupRegister extends Component{
     firebaseRef.child("Admin1").set("Root22");
     console.log('Signed Up');
   }
+  
 render(){
   return(
     <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
@@ -50,7 +52,7 @@ render(){
                     <div class="modal-footer">
                         <button class=" mr-auto btn btn-sencondary text-black" data-toggle="modal" data-dismiss="modal" data-target="#login">Login</button>
                         <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
-                        <button class=" btn btn-primary" onClick={this.signUp}>Sign up</button>
+                        <button class=" btn btn-primary" onClick="register()">Sign up</button>
                     </div>
                 </form>
 
