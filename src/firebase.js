@@ -1,4 +1,5 @@
 // Initialize Firebase
+import * as firebase from 'firebase';
 export const DB_config = {
   apiKey: "AIzaSyBc-xdIMIJ08LiTrUhzZ2WTk3a1uoLZhG8",
     authDomain: "enjoyneering-fb975.firebaseapp.com",
@@ -6,4 +7,11 @@ export const DB_config = {
     projectId: "enjoyneering-fb975",
     storageBucket: "enjoyneering-fb975.appspot.com",
     messagingSenderId: "246359451764"
+};
+
+firebase.initializeApp(DB_config);
+
+const database = firebase.database();
+export {
+  database,
 };

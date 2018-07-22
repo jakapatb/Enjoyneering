@@ -1,0 +1,67 @@
+import React, {Component} from 'react';
+import LittlePost from './LittlePost/LittlePost';
+import {database} from '../firebase';
+
+
+class Tag extends Component {
+
+  constructor(props,match) {
+    super(props);
+
+    this.state = {
+      Tag:[],
+      Post:[]
+    };
+   this.getMessage=this.getMessage.bind(this);
+   this.getPostKey=this.getPostKey.bind(this);
+  }
+
+
+
+componentDidMount(){
+this.getMessage('Tag');
+this.getPostKey();
+console.log(this.state.Post)
+}
+getMessage(element){
+  const Ref=database.ref().child(element);
+  Ref.on('value',snap=>{
+    this.setState({
+      [element]:snap.val()
+    })
+  });
+}
+getPostKey(){
+  const Ref=database.ref().child('Post/');
+  let temp = this.state.Post;
+  Ref.on('value',snap=>{
+    snap.forEach(function(childSnap){
+      let childKey = childSnap.key;
+      temp.push(childKey)
+    })
+  })
+  this.setState({
+    Post:temp
+  })
+}
+  render() {
+    return (<div class="container">
+
+      <h2>Tags:
+        {this.state.Tag.map((item) => {
+        return(
+          <button type="button" class="btn btn-info" data-toggle="button" aria-pressed="false" autocomplete="off">
+            {item}
+          </button>
+)
+      })}</h2>
+      <h2>Search:{this.props.match.params.article}</h2>
+
+      <LittlePost id="test"/>
+      {/* ไอสัส ค่าก็มาแล้ว ทำไมไม่ขึ้น*/}
+
+    </div>);
+  }
+}
+
+export default Tag;

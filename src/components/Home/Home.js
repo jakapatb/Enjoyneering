@@ -52,8 +52,8 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/> {/* Card:Education */}
-            <LittlePost title="Night Sky" content="123"/>
-            <LittlePost title="Little Finger" content="456"/>
+            <LittlePost id="test"/>
+            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
 
           </div>
 
@@ -65,8 +65,8 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/>
-            <LittlePost title="far far away" content="789"/>
-            <LittlePost title="along with them" content="hiii"/>
+            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
+            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
           </div>
 
         </div>

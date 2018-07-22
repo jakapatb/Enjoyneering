@@ -4,10 +4,7 @@ import PostPreview from './PostPreview';
 
 
 class PostCreate extends Component {
-  constructor(props) {
-    super(props);
 
-  }
   render() {
     return (<div class="container-fluid">
 

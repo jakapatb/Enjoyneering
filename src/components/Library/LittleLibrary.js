@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-import PopupLibrary from './PopupLibrary';
 import {Link} from 'react-router-dom';
 class LittleLibrary extends Component{
   constructor(props){

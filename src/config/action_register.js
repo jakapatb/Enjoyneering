@@ -54,7 +54,7 @@ var con = mysql.createConnection({
         exit();
     }*/
 var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Mail = Mail");
-    
+
     if(objResult)
     {
         alert('Mail or Username already exists!');
@@ -73,4 +73,3 @@ var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Ma
         alert('Registered!');
        window.location=/*ไปไหนต่อวะ*/;
     }
-    

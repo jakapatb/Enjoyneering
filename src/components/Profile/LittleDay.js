@@ -8,11 +8,6 @@ class LittleDay extends Component{
     };
   }
   render(){
-    function courseTime(subject,start,end){
-      var time =end-start;
-      return <td colspan={time}>{subject}</td>
-      console.log(time)
-    }
     return(
       <tr class="bg-light">
         <td class="text-center border">{this.props.day}</td>

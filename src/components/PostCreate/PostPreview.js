@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import trim from 'trim';
+
 
 class PostPreview extends Component {
   constructor(props) {

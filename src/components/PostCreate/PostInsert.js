@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import trim from 'trim';
-import firebase from 'firebase';
+
+import {database} from '../../firebase';
 class PostInsert extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.createpost = this.createpost.bind(this);
+
     this.state={
-      title:'111',
-      content:'222'
+      title:'',
+      content:''
 
     };
   }
@@ -21,7 +22,7 @@ class PostInsert extends Component {
   }
 
   createpost(){
-    let firebaseRef = firebase.database().ref("Post");
+    let firebaseRef = database.ref('Post/');
     firebaseRef.push({
       title:this.state.title,
       content:this.state.content

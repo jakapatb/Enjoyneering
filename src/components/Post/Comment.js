@@ -14,7 +14,7 @@ render(){
     <div class="card ">
 <br/>
 <p class="lead text-primary">
-    <img src="img/59010187.jpg" class="rounded-circle float-left comment" />{this.state.name}<br/>{this.state.time}</p>
+    <img src="img/59010187.jpg" class="rounded-circle float-left comment" alt="profile"/>{this.state.name}<br/>{this.state.time}</p>
     <p>{this.state.content}</p>
     </div>
   );
