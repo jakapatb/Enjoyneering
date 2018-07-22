@@ -1,9 +1,35 @@
 import React, {Component} from 'react';
 import LittlePost from '../LittlePost/LittlePost';
-
+import {database} from '../../firebase';
 import './home.css';
 class Home extends Component {
+
+  constructor(props, match) {
+    super(props);
+    this.state = {
+      Post: []
+    };
+    this.getPostKey = this.getPostKey.bind(this);
+  }
+
+  getPostKey() {
+    const Ref = database.ref().child('Post/').orderByChild('date').limitToLast(3);
+    let temp = this.state.Post;
+    Ref.once('value', snap => {
+      snap.forEach(function(childSnap) {
+        let childKey = childSnap.key
+        temp.push(childKey)
+      })
+      this.setState({Post: temp})
+    })
+  }
+
+  componentDidMount() {
+    this.getPostKey();
+  }
+
   render() {
+        let { Post} = this.state;
     return (<div class="container">
       <div class="bg-light">
         {/* left columns */}
@@ -52,8 +78,11 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/> {/* Card:Education */}
-            <LittlePost id="test"/>
-            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
+            {
+              Post.map((item) => {
+                return (<LittlePost id={item}/>)
+              })
+            }
 
           </div>
 
@@ -65,8 +94,11 @@ class Home extends Component {
           {/* Card frame */}
           <div class="content">
             <br/>
-            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
-            <LittlePost id="-LHrYY_x3A0X9Lu0z9DK"/>
+            {
+              Post.map((item) => {
+                return (<LittlePost id={item}/>)
+              })
+            }
           </div>
 
         </div>

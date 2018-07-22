@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-
 import {database} from '../../firebase';
+var moment = require('moment');
 class PostInsert extends Component {
   constructor(props) {
     super(props);
@@ -23,13 +23,16 @@ class PostInsert extends Component {
 
   createpost(){
     let firebaseRef = database.ref('Post/');
+    let time = moment().format('MMMM Do YYYY, h:mm:ss a');
     firebaseRef.push({
       title:this.state.title,
-      content:this.state.content
+      content:this.state.content,
+      date:time
     });
   }
 
   render() {
+
     return (
         <div class="col col-md-6">
           <h1>Create post</h1>
