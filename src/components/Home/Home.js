@@ -11,7 +11,7 @@ class Home extends Component {
     };
     this.getPostKey = this.getPostKey.bind(this);
   }
-
+  /*TODO เรียงตามเวลา โดยล่าสุดขึ้นก่อน ใช้LIFO*/
   getPostKey() {
     const Ref = database.ref().child('Post/').orderByChild('date').limitToLast(3);
     let temp = this.state.Post;

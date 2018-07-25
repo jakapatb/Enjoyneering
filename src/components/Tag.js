@@ -26,9 +26,9 @@ class Tag extends Component {
       this.setState({[element]: snap.val()})
     });
   }
-  /*TODO เรียงตามเวลา โดยล่าสุดขึ้นก่อน*/
+  /*TODO เรียงตามเวลา โดยล่าสุดขึ้นก่อน ใช้LIFO*/
   getPostKey() {
-    const Ref = database.ref().child('Post/').orderByChild('date').limitToLast(8);
+    const Ref = database.ref().child('Post/').orderByChild('date');
     let temp = this.state.Post;
     Ref.once('value', snap => {
       snap.forEach(function(childSnap) {
@@ -39,6 +39,7 @@ class Tag extends Component {
     })
   }
   render() {
+    console.log(this.state);
     let {Tag, Post} = this.state;
     return (<div class="container">
 

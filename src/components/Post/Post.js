@@ -1,18 +1,15 @@
 import React, {Component} from 'react';
 import Comment from './Comment';
 import './post.css';
-import {Route} from 'react-router-dom';
-import routes from '../../routes';
+import RouteWithSubRoutes from '../../RouteWithSubRoutes';
 import {database} from '../../firebase';
 
-const RouteWithSubRoutes = (route)=>(
-  <Route path={Route.path}/>
-)
 
 class Post extends Component {
   constructor(props) {
     super(props);
     this.db = database.ref().child('Post/'+this.props.match.params.article);
+    this.routes = props.routes;
     this.state={
       title:"",
       tag:[],
@@ -23,6 +20,7 @@ class Post extends Component {
   }
 
 componentDidMount(){
+
   this.db.on('value',snap =>{
     this.setState({
       title: snap.child('title').val(),
@@ -44,8 +42,9 @@ componentDidMount(){
     </a>
 
     }
-
-    return (<div class="container-fluid">
+    console.log(this.props.match.params.article)
+    return (
+      <div class="container-fluid">
       <img class="img-responsive img-fluid topImg" src="img/test2.jpg" alt="Night sky"/>
       <div class="container">
         {/* Image Topic */}
@@ -82,7 +81,9 @@ componentDidMount(){
           <Comment/>
           <Comment/>
         </div>
-        {routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
+        {this.routes.map((route,i)=>(
+          <RouteWithSubRoutes key={i} {...route} />
+        ))}
 
     </div>);
   }
