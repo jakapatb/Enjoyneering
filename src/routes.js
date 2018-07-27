@@ -41,10 +41,12 @@ const routes = [
     ]
   }, {
     path: '/course',
-    component: Course
+    component: Course,
+    routes:[]
   }, {
     path: '/subject',
-    component: Subject
+    component: Subject,
+    routes:[]
   }, {
     path: '/post/:article',
     component: Post,

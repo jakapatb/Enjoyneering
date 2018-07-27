@@ -6,23 +6,14 @@ class PostPreview extends Component {
     super(props);
     this.state={
       title:'',
-      tag:[''],
-      writer:'',
-      date:'',
-      message: 'This is test content 1 and i dont know what to say anything,that so bored'
+      content:[],
+      imgTopic:[],
+      optional:[],
     };
-
   }
 
   render() {
-    var txt=[];
-    var tag=this.state.tag;
-    var x;
-    for(x in tag){
-      txt[x]=<a href={tag[x]} >
-      <span class="badge badge-dark">{tag[x]}</span>&nbsp;
-    </a>
-    }
+
     return (
         <div class="col  bg-secondary">
           <h1>Preview</h1>
@@ -33,8 +24,6 @@ class PostPreview extends Component {
           </a>
 
           <h5>By: {this.state.writer}</h5>
-          <h5>Tag:{txt}
-          </h5>
 
           <h5>Date: {this.state.date}</h5>
           {this.state.message}

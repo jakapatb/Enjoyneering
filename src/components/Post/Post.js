@@ -15,7 +15,8 @@ class Post extends Component {
       tag:[],
       writer:"",
       date:"",
-      content:''
+      content:[],
+      imgTopic:'',
     };
   }
 
@@ -27,7 +28,8 @@ componentDidMount(){
       content: snap.child('content').val(),
       writer: snap.child('writer').val(),
       date: snap.child('date').val(),
-      tag: snap.child('tag').val()
+      tag: snap.child('tag').val(),
+      imgTopic:snap.child('imgTopic').val()
     })
   }
 );
@@ -42,10 +44,9 @@ componentDidMount(){
     </a>
 
     }
-    console.log(this.props.match.params.article)
     return (
       <div class="container-fluid">
-      <img class="img-responsive img-fluid topImg" src="img/test2.jpg" alt="Night sky"/>
+      <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
       <div class="container">
         {/* Image Topic */}
         {/* Topic */}
@@ -84,7 +85,6 @@ componentDidMount(){
         {this.routes.map((route,i)=>(
           <RouteWithSubRoutes key={i} {...route} />
         ))}
-
     </div>);
   }
 }

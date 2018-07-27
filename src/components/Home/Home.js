@@ -7,7 +7,8 @@ class Home extends Component {
   constructor(props, match) {
     super(props);
     this.state = {
-      Post: []
+      Post: [],
+      test:[]
     };
     this.getPostKey = this.getPostKey.bind(this);
   }
@@ -27,6 +28,7 @@ class Home extends Component {
   componentDidMount() {
     this.getPostKey();
   }
+
 
   render() {
         let { Post} = this.state;

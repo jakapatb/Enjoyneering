@@ -5,7 +5,7 @@ import {database} from '../../firebase';
 class LittlePost extends Component {
   constructor(props){
     super(props);
-    this.db = database.ref().child('Post/'+props.id)
+    this.getMessage = this.getMessage.bind(this);
     this.state={
       title:'',
       content:''
@@ -13,18 +13,22 @@ class LittlePost extends Component {
   }
 
 componentDidMount(){
-  this.db.on('value',snap =>{
-    this.setState({
-      title: snap.child('title').val(),
-      content: snap.child('content').val(),
-    })
-    console.log("Little"+snap.val())
-  }
-);
+  this.getMessage(this.props.id);
 }
 
+getMessage(id) {
+  const Ref = database.ref('Post/'+id);
+  Ref.on('value',snap =>{
+    this.setState({
+      title: snap.child('title').val(),
+      content: snap.child('content/0/data').val()
+    })
+  })
+
+}
 
   render() {
+    console.log(this.state);
     return (
       <div class="card mb-3">
       {/* Body */}
