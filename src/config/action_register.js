@@ -1,75 +1,49 @@
-var mysql=require('mysql');
-var con = mysql.createConnection({
-  host: ".....",
-  user: ".....",
-  password: ".......",
-  database: "....."
-});//กุงงตรงนี้สัส
-    var Mail = new Mail();
-    var Password = new Password();
-    var ConPassword =new ConPassword();
-    var FName = new FName();
-    var LName = new LName();
-    var Status = new Status();
-    if( Mail() == '')
+function register(){
+    var Mail = document.getElementById('mail').value;
+    var Password = document.getElementById('password').value;
+    var ConPassword =document.getElementById('Conpassword').value;
+    var FName =document.getElementById('Fname').value;
+    var LName = document.getElementById('Lname').value;
+    var Status = document.getElementById('status').value;
+    if( Mail == "")
     {
-        console.log('Please input Mail!');
-        window.history.go(-1);
-        exit();
-    }//ไม่มั่นใจวะ
-/*    if($Password == "")
-    {
-        echo "<script type='text/javascript'>alert('Please input Password!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert("Please input Mail!");
+        return;
     }
-    if($FName == "")
+    if( Password== "")
     {
-        echo "<script type='text/javascript'>alert('Please input First Name!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert("Please input Password!");
+        return;
     }
-    if($LName == "")
+    if(FName == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Last Name!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert("Please input FristName!");
+       return;
     }
-    if($Gender == "")
+    if(LName == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Gender!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert("Please input LastName!");
+        return;
     }
-    if($Status == "")
+    if(Status == "")
     {
-        echo "<script type='text/javascript'>alert('Please input Status!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
+        alert("Please input Status!");
+        return;
     }
-    if($_POST['txtPassword'] != $_POST['txtConPassword'])
+    if(Password != ConPassword)
     {
-        echo "<script type='text/javascript'>alert('Password not Match!');</script>";
-        echo "<script type='text/javascript'>window.history.go(-1);</script>";
-        exit();
-    }*/
-var objResult = con.query("SELECT Mail FROM ชื่อตาราง WHERE Mail = Mail");
+        alert("Password not Match!");
+        return;
+    }
 
-    if(objResult)
-    {
-        alert('Mail or Username already exists!');
-        window.history.go(-1);
+firebase.auth().createUserWithEmailAndPassword(mail,password).catch(function(error){
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if(errorCode =='auto/weak-password'){
+        alert('The passwork is too weak.');
+    }else{
+        alert(errorMessage);
     }
-    else
-    {
-        var sql = "INSERT INTO ชื่อตาราง (Mail,Password,Status) VALUES (Mail,Username,Password,Status)";
-        if (Status == 'TEACHER'){
-            var tbl='teacher';
-        }
-        else{
-            var tbl='student';
-        }
-    var sql = "INSERT INTO tbl ('Mail', 'Fname', 'Lname') VALUES (Mail,FName,LName)";
-        alert('Registered!');
-       window.location=/*ไปไหนต่อวะ*/;
-    }
+    console.log(error);
+    });
+}
