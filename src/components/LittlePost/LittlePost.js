@@ -28,7 +28,6 @@ getMessage(id) {
 }
 
   render() {
-    console.log(this.state);
     return (
       <div class="card mb-3">
       {/* Body */}
