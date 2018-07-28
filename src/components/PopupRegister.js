@@ -46,9 +46,10 @@ render(){
                     <h1>Sign up</h1>
   {/*TO DO : creat new php page for create account */}
                 </div>
+                   <form>
                     <div class="modal-body">
 
-
+                        
                         <div class="form-group">
                             <label for="usr">Email address:</label>
                             <div class="input-group mb-3">
@@ -71,6 +72,7 @@ render(){
                         <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
                         <button class=" btn btn-primary" onClick={this.handleSignUp}>Sign up</button>
                     </div>
+                   </form>
             </div>
         </div>
 
