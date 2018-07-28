@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {database} from '../../firebase';
 import AddImg from './AddImg';
-import PostPreview from './PostPreview';
 import AddContent from './AddContent';
+import AddTitle from './AddTitle';
 var moment = require('moment');
 class PostCreate extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class PostCreate extends Component {
     this.createpost = this.createpost.bind(this);
     this.addData = this.addData.bind(this);
     this.addImg = this.addImg.bind(this);
+    this.addTitle = this.addTitle.bind(this);
     this.addContent = this.addContent.bind(this);
     this.titleChange = this.titleChange.bind(this);
     this.state={
@@ -46,7 +47,7 @@ class PostCreate extends Component {
       date:time,
       imgTopic:this.state.imgTopic
     });
-    console.log(this.state)
+      window.location = '/';
   }
 
   addImg=()=>{
@@ -61,6 +62,14 @@ class PostCreate extends Component {
     this.addData(<AddContent count={this.state.content.length} onchange={this.onChange}/>);
     let cRef = this.state.content;
     var ob = [{type:'content',data:''}];
+    cRef.push.apply(cRef,ob);
+    console.log(this.state);
+  }
+
+  addTitle=()=>{
+    this.addData(<AddTitle count={this.state.content.length} onchange={this.onChange}/>);
+    let cRef = this.state.content;
+    var ob = [{type:'subtitle',data:''}];
     cRef.push.apply(cRef,ob);
     console.log(this.state);
   }
@@ -87,13 +96,14 @@ class PostCreate extends Component {
                 onChange={this.titleChange} name="title"/>
             </div>
             <AddContent count={0} onchange={this.onChange}/>
-            <div id="optional">{this.state.optional}
-            </div>
+
             <div id="btn-add-optional">
             <button onClick={this.addImg} class="btn btn-secondary">Add image</button>
+              <button onClick={this.addTitle} class="btn btn-secondary">Add Title</button>
             <button onClick={this.addContent} class="btn btn-secondary">Add Content</button>
             </div>
-
+            <div id="optional">{this.state.optional}
+            </div>
             <div class="form-group">
               <button type="submit" class="btn btn-primary" onClick={this.createpost}>submit</button>
             </div>
@@ -102,10 +112,16 @@ class PostCreate extends Component {
         </div>
         <div class="col  bg-secondary">
           <h1>Preview</h1>
-          <h1>title:{this.state.title}</h1>
-          <h1>content:{this.state.content.map((element)=>(
-            <div>{element['data']}</div>
-          ))}</h1>
+          <h1>{this.state.title}</h1>
+          {
+            this.state.content.map((element) => {
+              if (element['type'] === 'subtitle') {
+                return (<h2>{element['data']}</h2>);
+              } else if (element['type'] === 'content') {
+                return (<p>{element['data']}</p>);
+              }
+            })
+          }
   </div>
         </div>
 );

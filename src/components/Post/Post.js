@@ -3,61 +3,77 @@ import Comment from './Comment';
 import './post.css';
 import RouteWithSubRoutes from '../../RouteWithSubRoutes';
 import {database} from '../../firebase';
-
-
+import {Link} from 'react-router-dom';
 class Post extends Component {
   constructor(props) {
     super(props);
-    this.db = database.ref().child('Post/'+this.props.match.params.article);
+    this.getMessage = this.getMessage.bind(this);
+    this.id = this.props.match.params.article
     this.routes = props.routes;
-    this.state={
-      title:"",
-      tag:[],
-      writer:"",
-      date:"",
-      content:[],
-      imgTopic:'',
+    this.state = {
+      title: "",
+      tag: [],
+      writer: "",
+      date: "",
+      content: [],
+      imgTopic: ''
     };
   }
 
-componentDidMount(){
+  componentDidMount() {
+    this.getMessage(this.id);
+  }
 
-  this.db.on('value',snap =>{
-    this.setState({
-      title: snap.child('title').val(),
-      content: snap.child('content').val(),
-      writer: snap.child('writer').val(),
-      date: snap.child('date').val(),
-      tag: snap.child('tag').val(),
-      imgTopic:snap.child('imgTopic').val()
+  getMessage(id) {
+    const Ref = database.ref('Post/' + id);
+    const cRef = Ref.child('content');
+    let arr = this.state.content
+    Ref.on('value', snap => {
+      this.setState({
+        title: snap.child('title').val(),
+        date: snap.child('date').val(),
+    })
+    })
+
+    cRef.on('value', snap => {
+      snap.forEach((childSnap) => {
+        let add = [childSnap.val()];
+        arr.push.apply(arr, add);
+      })
     })
   }
-);
-}
   render() {
-    var txt=[];
-    var tag=this.state.tag;
+    var txt = [];
+    var tag = this.state.tag;
     var x;
-    for(x in tag){
-      txt[x]=<a href={tag[x]} >
-      <span class="badge badge-dark">{tag[x]}</span>&nbsp;
-    </a>
+    for (x in tag) {
+      txt[x] = <a href={tag[x]}>
+        <span class="badge badge-dark">{tag[x]}</span>&nbsp;
+      </a>
 
     }
-    return (
-      <div class="container-fluid">
+    return (<div class="container-fluid">
       <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
       <div class="container">
         {/* Image Topic */}
         {/* Topic */}
-        <a href="/post?topic=1">
+        <Link to={"/post/"+this.props.match.params.article}>
           <h1>{this.state.title}</h1>
-        </a>
+        </Link>
         <h5>Tag:{txt}
         </h5>
-        <p>By: {this.state.writer} Date: {this.state.date}</p>
+        <p>By: {this.state.writer}
+          Date: {this.state.date}</p>
         {/* Content */}
-        {this.state.content}
+        {
+          this.state.content.map((element) => {
+            if (element['type'] === 'subtitle') {
+              return (<h2>{element['data']}</h2>);
+            } else if (element['type'] === 'content') {
+              return (<p>{element['data']}</p>);
+            }
+          })
+        }
 
         {/* Quote */}
         {/* <div class="jumbotron">
@@ -67,24 +83,23 @@ componentDidMount(){
             <i class="fa fa-quote-right"></i>
           </h3>
           <p class="lead text-primary">Thomas Carlyle</p>
-        </div> */}
+        </div> */
+        }
         {/* <p>hello world this is max,Im Newbie Web developer</p>
         <h2>This is test Topic 1</h2>
-        <p>This is test content 1 and i dont know what to say anything,that so bored</p> */}
+        <p>This is test content 1 and i dont know what to say anything,that so bored</p> */
+        }
 
         {/* Comment */}
-          </div>
-        {/* <div class="container-fluid">
+      </div>
+      {/* <div class="container-fluid">
         <object class="youtube" data="https://www.youtube.com/embed/TTpMqSJ6poc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></object>
-        </div> */}
-        <div class="container">
-          <h2>Comment</h2>
-          <Comment/>
-          <Comment/>
-        </div>
-        {this.routes.map((route,i)=>(
-          <RouteWithSubRoutes key={i} {...route} />
-        ))}
+        </div> */
+      }
+      <div class="container">
+        <Comment id={this.id}/>
+      </div>
+      {this.routes.map((route, i) => (<RouteWithSubRoutes key={i} {...route}/>))}
     </div>);
   }
 }
