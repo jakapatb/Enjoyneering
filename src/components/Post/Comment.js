@@ -50,7 +50,6 @@ class Comment extends Component {
   }
 
   render() {
-    console.log(this.state.comment);
     return (<div class="card">
       <div class="card-header d-flex bg-dark">
         <div class="p-2 text-light">

@@ -4,10 +4,12 @@ import './post.css';
 import RouteWithSubRoutes from '../../RouteWithSubRoutes';
 import {database} from '../../firebase';
 import {Link} from 'react-router-dom';
+var moment = require('moment');
 class Post extends Component {
   constructor(props) {
     super(props);
     this.getMessage = this.getMessage.bind(this);
+    // this.counstView = this.counstView.bind(this);
     this.id = this.props.match.params.article
     this.routes = props.routes;
     this.state = {
@@ -16,7 +18,8 @@ class Post extends Component {
       writer: "",
       date: "",
       content: [],
-      imgTopic: ''
+      imgTopic: '',
+      view:0
     };
   }
 
@@ -24,16 +27,23 @@ class Post extends Component {
     this.getMessage(this.id);
   }
 
+  // counstView(id){
+  //   console.log("before:"+this.state.view);
+  //   const Ref = database.ref('Post/' + id);
+  //   let count ={};
+  //   let index = 9
+  //   count['/view']=index++;
+  //   Ref.update(count);
+  //   this.setState({view:index});
+  //   console.log("after:"+this.state.view);
+  // }
+
   getMessage(id) {
     const Ref = database.ref('Post/' + id);
     const cRef = Ref.child('content');
-    let arr = this.state.content
+    let arr = this.state.content;
     Ref.on('value', snap => {
-      this.setState({
-        title: snap.child('title').val(),
-        date: snap.child('date').val(),
-        tag: snap.child('tag').val()
-    })
+      this.setState({title: snap.child('title').val(), date: snap.child('date').val(), tag: snap.child('tag').val(), view: snap.child('view').val()})
     })
 
     cRef.on('value', snap => {
@@ -42,37 +52,45 @@ class Post extends Component {
         arr.push.apply(arr, add);
       })
     })
+
   }
   render() {
-    console.log(this.state);
-    var {tag} = this.state;
+
+    var {
+      tag
+    } = this.state;
     return (<div class="container-fluid">
       <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
       <div class="container">
         {/* Image Topic */}
         {/* Topic */}
-        <Link to={"/post/"+this.props.match.params.article}>
-          <h1>{this.state.title}</h1>
-        </Link>
-        <h5>Tag:{tag.map((elem=><Link to={"../search?tag="+elem}>
-          <span class="badge badge-dark">{elem}</span>
-        </Link>))
+        <div class="border rounded">
+          <Link to={"/post/" + this.props.match.params.article}>
+            <h1>{this.state.title}</h1>
+          </Link>
+          <h5>Tag:{
+              tag.map((elem =>< Link to = {
+                "../search?tag=" + elem
+              } > <span class="badge badge-dark">{elem}</span>
+            </Link>))
 
-        }
-        </h5>
-        <p>By: {this.state.writer}
-          Date: {this.state.date}</p>
-        {/* Content */}
-        {
-          this.state.content.map((element) => {
-            if (element['type'] === 'subtitle') {
-              return (<h2>{element['data']}</h2>);
-            } else if (element['type'] === 'content') {
-              return (<p>{element['data']}</p>);
             }
-          })
-        }
-
+          </h5>
+          <h5>By: {this.state.writer}
+            Date: {moment(this.state.date, 'MMMM Do YYYY, h:mm:ss a').fromNow()}</h5>
+        </div>
+        {/* Content */}
+        <div class="content">
+          {
+            this.state.content.map((element) => {
+              if (element['type'] === 'subtitle') {
+                return (<h2>{element['data']}</h2>);
+              } else if (element['type'] === 'content') {
+                return (<p>{element['data']}</p>);
+              }
+            })
+          }
+        </div>
         {/* Quote */}
         {/* <div class="jumbotron">
           <h3 class="">

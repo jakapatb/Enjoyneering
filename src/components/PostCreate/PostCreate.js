@@ -22,7 +22,8 @@ class PostCreate extends Component {
       imgTopic:[],
       optional:[],
       Tag:[],
-      postTag:[]
+      postTag:[],
+      view:0
     };
   }
 
