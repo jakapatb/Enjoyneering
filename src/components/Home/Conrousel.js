@@ -13,9 +13,6 @@ class Conrousel extends Component {
       <div class="carousel-inner">
         {
           this.props.item.map((item, index) => {
-            console.log("The current iteration is: " + index);
-            console.log("The current element is: " + item);
-            console.log("\n");
             return <ConrouselItem index={index} item={item}/>;
           })
         }

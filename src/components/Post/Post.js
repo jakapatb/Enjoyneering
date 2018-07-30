@@ -32,6 +32,7 @@ class Post extends Component {
       this.setState({
         title: snap.child('title').val(),
         date: snap.child('date').val(),
+        tag: snap.child('tag').val()
     })
     })
 
@@ -43,15 +44,8 @@ class Post extends Component {
     })
   }
   render() {
-    var txt = [];
-    var tag = this.state.tag;
-    var x;
-    for (x in tag) {
-      txt[x] = <a href={tag[x]}>
-        <span class="badge badge-dark">{tag[x]}</span>&nbsp;
-      </a>
-
-    }
+    console.log(this.state);
+    var {tag} = this.state;
     return (<div class="container-fluid">
       <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
       <div class="container">
@@ -60,7 +54,11 @@ class Post extends Component {
         <Link to={"/post/"+this.props.match.params.article}>
           <h1>{this.state.title}</h1>
         </Link>
-        <h5>Tag:{txt}
+        <h5>Tag:{tag.map((elem=><Link to={"../search?tag="+elem}>
+          <span class="badge badge-dark">{elem}</span>
+        </Link>))
+
+        }
         </h5>
         <p>By: {this.state.writer}
           Date: {this.state.date}</p>

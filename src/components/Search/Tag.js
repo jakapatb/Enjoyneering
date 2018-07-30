@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import LittlePost from './LittlePost/LittlePost';
-import {database} from '../firebase';
+import LittlePost from '../LittlePost/LittlePost';
+import {database} from '../../firebase';
 
 class Tag extends Component {
 
@@ -39,7 +39,7 @@ class Tag extends Component {
     })
   }
   render() {
-    console.log(this.state);
+    console.log(this.props);
     let {Tag, Post} = this.state;
     return (<div class="container">
 

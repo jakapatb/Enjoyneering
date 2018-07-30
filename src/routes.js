@@ -5,7 +5,7 @@ import Post from './components/Post/Post';
 import PostCreate from './components/PostCreate/PostCreate';
 import Profile from './components/Profile/Profile';
 import EditProfile from './components/EditProfile';
-import Tag from './components/Tag';
+import Tag from './components/Search/Tag';
 import Course from './components/Course/Course';
 import Subject from './components/Subject/Subject';
 import Search from './components/Search/Search';

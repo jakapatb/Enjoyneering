@@ -14,11 +14,15 @@ class PostCreate extends Component {
     this.addTitle = this.addTitle.bind(this);
     this.addContent = this.addContent.bind(this);
     this.titleChange = this.titleChange.bind(this);
+    this.getMessage = this.getMessage.bind(this);
+    this.tagSelector = this.tagSelector.bind(this);
     this.state={
       title:'',
       content:[{type:'content',data:''}],
       imgTopic:[],
       optional:[],
+      Tag:[],
+      postTag:[]
     };
   }
 
@@ -38,14 +42,25 @@ class PostCreate extends Component {
     })
   }
 
+  getMessage(element) {
+    const Ref = database.ref().child(element);
+    Ref.on('value', snap => {
+      this.setState({
+        [element]: snap.val()
+      })
+    });
+  }
+
   createpost=()=>{
+    const {title,content,imgTopic,postTag}=this.state;
     let firebaseRef = database.ref('Post/');
     let time = moment().format('MMMM Do YYYY, h:mm:ss a');
     firebaseRef.push({
-      title:this.state.title,
-      content:this.state.content,
+      title:title,
+      content:content,
       date:time,
-      imgTopic:this.state.imgTopic
+      imgTopic:imgTopic,
+      tag:postTag
     });
       window.location = '/';
   }
@@ -82,14 +97,37 @@ class PostCreate extends Component {
     });
   }
 
+  componentDidMount() {
+    this.getMessage('Tag');
+  }
+
+  tagSelector=(e)=>{
+    const {postTag} = this.state;
+    const value = e.target.value;
+    if(postTag.includes(value)){
+      postTag.splice(postTag.indexOf(value),1);
+   }
+   else{
+     postTag.push(value);
+   }
+  }
   render() {
+    const {Tag} = this.state;
 
     return (
       <div class="row">
         <div class="col col-md-6">
           <h1>Create post</h1>
 
-
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+         <h2>Tags: {
+              Tag.map((item,i) => {
+                return (<button type="radio" class="btn btn-info" id={item} value={item} name="options" autocomplete="off" onClick={this.tagSelector}>
+                  {item}
+                </button>)
+              })
+            }</h2>
+          </div>
             <div class="form-group">
               <label for="topic">Post Title:</label>
               <input type="text" class="form-control" id="topic"
@@ -98,7 +136,7 @@ class PostCreate extends Component {
             <AddContent count={0} onchange={this.onChange}/>
 
             <div id="btn-add-optional">
-            <button onClick={this.addImg} class="btn btn-secondary">Add image</button>
+            <button onClick={this.addImg} class="btn btn-secondary disabled">Add image</button>
               <button onClick={this.addTitle} class="btn btn-secondary">Add Title</button>
             <button onClick={this.addContent} class="btn btn-secondary">Add Content</button>
             </div>
