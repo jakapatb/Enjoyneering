@@ -18,6 +18,7 @@ class PostCreate extends Component {
     this.tagSelector = this.tagSelector.bind(this);
     this.state={
       title:'',
+      writer:'',
       content:[{type:'content',data:''}],
       imgTopic:[],
       optional:[],
@@ -53,11 +54,12 @@ class PostCreate extends Component {
   }
 
   createpost=()=>{
-    const {title,content,imgTopic,postTag}=this.state;
+    const {title,content,imgTopic,postTag,writer}=this.state;
     let firebaseRef = database.ref('Post/');
     let time = moment().format('MMMM Do YYYY, h:mm:ss a');
     firebaseRef.push({
       title:title,
+      writer:this.props.email,
       content:content,
       date:time,
       imgTopic:imgTopic,
@@ -116,6 +118,7 @@ class PostCreate extends Component {
     const {Tag} = this.state;
 
     return (
+      <div class="container-fluid">
       <div class="row">
         <div class="col col-md-6">
           <h1>Create post</h1>
@@ -162,6 +165,7 @@ class PostCreate extends Component {
             })
           }
   </div>
+        </div>
         </div>
 );
   }

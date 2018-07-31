@@ -9,7 +9,7 @@ import Tag from './components/Search/Tag';
 import Course from './components/Course/Course';
 import Subject from './components/Subject/Subject';
 import Search from './components/Search/Search';
-
+import PostEdit from './components/PostEdit/PostEdit';
 
 const routes = [
   {
@@ -50,6 +50,10 @@ const routes = [
   }, {
     path: '/post/:article',
     component: Post,
+    routes:[]
+  }, {
+    path: '/post-edit/:article',
+    component: PostEdit,
     routes:[]
   }
 ]

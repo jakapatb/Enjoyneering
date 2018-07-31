@@ -42,7 +42,7 @@ class Comment extends Component {
     let time = moment().format('MMMM Do YYYY, h:mm:ss a');
     if(this.state.value!==''){
     cRef.push({
-      name:'',
+      name:this.props.email,
       content:this.state.value,
       date:time
     });}

@@ -43,7 +43,7 @@ class Post extends Component {
     const cRef = Ref.child('content');
     let arr = this.state.content;
     Ref.on('value', snap => {
-      this.setState({title: snap.child('title').val(), date: snap.child('date').val(), tag: snap.child('tag').val(), view: snap.child('view').val()})
+      this.setState({title: snap.child('title').val(), date: snap.child('date').val(),writer: snap.child('writer').val(), tag: snap.child('tag').val(), view: snap.child('view').val()})
     })
 
     cRef.on('value', snap => {
@@ -55,7 +55,6 @@ class Post extends Component {
 
   }
   render() {
-
     var {
       tag
     } = this.state;
@@ -69,14 +68,14 @@ class Post extends Component {
             <h1>{this.state.title}</h1>
           </Link>
           <h5>Tag:{
-              tag.map((elem =>< Link to = {
+              tag.map((elem =><Link to = {
                 "../search?tag=" + elem
               } > <span class="badge badge-dark">{elem}</span>
             </Link>))
 
             }
           </h5>
-          <h5>By: {this.state.writer}
+          <h5>By: {this.state.writer}<br/>
             Date: {moment(this.state.date, 'MMMM Do YYYY, h:mm:ss a').fromNow()}</h5>
         </div>
         {/* Content */}
@@ -113,7 +112,7 @@ class Post extends Component {
         </div> */
       }
       <div class="container">
-        <Comment id={this.id}/>
+        <Comment id={this.id} email={this.props.email}/>
       </div>
       {this.routes.map((route, i) => (<RouteWithSubRoutes key={i} {...route}/>))}
     </div>);

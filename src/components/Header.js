@@ -22,6 +22,7 @@ class Header extends Component{
 authListener(){
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
+    this.props.get(user.email);
     this.setState({user: 0 });
   }else{
     this.setState({user: 1 });

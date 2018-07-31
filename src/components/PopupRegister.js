@@ -2,11 +2,10 @@ import React,{Component} from 'react';
 import * as firebase from 'firebase';
 //import register from '../config/action_register.js';
 class PopupRegister extends Component{
-    
-        handleSignUp=() => {
-        var email=document.getElementById('email');
-        var password=document.getElementById('password');
-        var conpassword=document.getElementById('conpassword');
+
+        handleSignUp=(e) => {
+          const {email,password,conpassword} =e.target;
+
        if(email.value.length<4){
             alert("The email is too weak.");
             return;
@@ -19,8 +18,8 @@ class PopupRegister extends Component{
             alert("Password Not Match!");
             return;
         }
-        
-        firebase.auth().createUserWithEmailAndPassword(email.value,password.value).catch(function(error){   
+
+        firebase.auth().createUserWithEmailAndPassword(email.value,password.value).catch(function(error){
         var errorCode = error.code;
         var errorMessage = error.message;
         if(errorCode == 'auth/weak-password'){
@@ -30,13 +29,9 @@ class PopupRegister extends Component{
         }
         console.log(error);
     });
-         
+      alert("Register Success.");
+      e.preventDefault();
         }
-                                                          
-                                                            
-
-
-
 render(){
   return(
     <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
@@ -46,10 +41,10 @@ render(){
                     <h1>Sign up</h1>
   {/*TO DO : creat new php page for create account */}
                 </div>
-                   <form>
+                   <form onSubmit={this.handleSignUp}>
                     <div class="modal-body">
 
-                        
+
                         <div class="form-group">
                             <label for="usr">Email address:</label>
                             <div class="input-group mb-3">
@@ -61,7 +56,7 @@ render(){
                             <label for="usr">Create password:</label>
                             <input type="password" class="form-control" id="password"/>
                         </div>
-      
+
                         <div class="form-group">
                             <label for="usr">Comfirm password:</label>
                             <input type="password" class="form-control" id="conpassword"/>
@@ -70,7 +65,7 @@ render(){
                     <div class="modal-footer">
                         <button class=" mr-auto btn btn-sencondary text-black" data-toggle="modal" data-dismiss="modal" data-target="#login">Login</button>
                         <button type="button" class="btn btn-light " data-dismiss="modal">Cancel</button>
-                        <button class=" btn btn-primary" onClick={this.handleSignUp}>Sign up</button>
+                        <button class=" btn btn-primary" type="submit">Sign up</button>
                     </div>
                    </form>
             </div>

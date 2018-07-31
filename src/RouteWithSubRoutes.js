@@ -1,13 +1,21 @@
 import {Route} from 'react-router-dom';
-import React from 'react';
+import React,{Component} from 'react';
 import routes from './routes';
-const RouteWithSubRoutes = route => (
-  <Route
-    path={route.path}
+class RouteWithSubRoutes extends Component{
+  constructor(props){
+    super(props)
+  }
+
+
+  render(){
+    return(
+    <Route
+    path={this.props.path}
+
     render={props => (
       // pass the sub-routes down to keep nesting
-      <route.component {...props} routes={route.routes} />
+      <this.props.component {...props} routes={this.props.routes} email={this.props.email}/>
     )}
-  />
-);
+  />);
+}}
 export default RouteWithSubRoutes;

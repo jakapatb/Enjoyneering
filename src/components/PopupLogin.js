@@ -28,8 +28,9 @@ constructor(props){
 login(e){
   e.preventDefault();
   firebase.auth().signInWithEmailAndPassword(this.state.email,this.state.password).then((u)=>{}).catch((error)=>{
-    console.log(error);
+    console.log(error)
   });
+
 }
 handleChange(e){
   this.setState({[e.target.name]:e.target.value});
