@@ -1,21 +1,36 @@
 import React,{Component} from 'react';
 import PopupLogin from './PopupLogin';
 import PopupRegister from './PopupRegister';
+import * as firebase from 'firebase';
 import {Link} from 'react-router-dom';
+
+
 class Header extends Component{
-  constructor(){
-    super();
+  logOut=() => {
+    firebase.auth().signOut();
+  }
+  constructor(props){
+    super(props);
     this.state={
-      /* Status Login/Logout
-        0 ยังไม่ล๊อกอืน
-        1 ล๊อกอินแล้ว
-        */
-      status:0
+      user:{},
+      /*status:1*/
     };
   }
-render(){
-  var rightStatus;
-  if(this.state.status===0){
+  componentDidMount(){
+    this.authListener();
+  }
+authListener(){
+  firebase.auth().onAuthStateChanged((user)=>{
+    if(user){
+    this.setState({user: 0 });
+  }else{
+    this.setState({user: 1 });
+  }
+});
+}
+  render(){
+    var rightStatus;
+  if(this.state.user == 1 ){
     rightStatus=<ul class="navbar-nav ml-auto">
         <li class="nav-item">
             <Link class="nav-link" data-toggle="modal" data-target="#login" to="#login">Login</Link>
@@ -31,7 +46,7 @@ render(){
                 <Link class="nav-link" to="/profile">Profile</Link>
             </li>
             <li class="nav-item">
-                <Link class="nav-link" to="/action_logout">Logout</Link>
+                <button class=" btn btn-primary" onClick={this.logOut}>Logout</button>
             </li>
 
         </ul>;
