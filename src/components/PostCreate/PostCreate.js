@@ -56,12 +56,12 @@ class PostCreate extends Component {
   createpost=()=>{
     const {title,content,imgTopic,postTag,writer}=this.state;
     let firebaseRef = database.ref('Post/');
-    let time = moment().format('MMMM Do YYYY, h:mm:ss a');
+    let time = new Date;
     firebaseRef.push({
       title:title,
-      writer:this.props.uid.name,
+      writer:this.props.uid.username,
       content:content,
-      date:time,
+      date:time.getTime(),
       imgTopic:imgTopic,
       tag:postTag
     });
@@ -122,7 +122,6 @@ class PostCreate extends Component {
       <div class="row">
         <div class="col col-md-6">
           <h1>Create post</h1>
-
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
          <h2>Tags: {
               Tag.map((item,i) => {

@@ -76,7 +76,7 @@ class Post extends Component {
             }
           </h5>
           <h5>By: {this.state.writer}<br/>
-            Date: {moment(this.state.date, 'MMMM Do YYYY, h:mm:ss a').fromNow()}</h5>
+            Date: {moment(this.state.date).fromNow()}</h5>
         </div>
         {/* Content */}
         <div class="content">

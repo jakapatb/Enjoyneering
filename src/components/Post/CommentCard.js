@@ -20,7 +20,7 @@ render(){
     <div class="card">
 <div class="card-body">
 <p class="lead text-primary">
-    <img src="img/59010187.jpg" class="rounded-circle float-left comment" alt="profile"/>{this.state.name}<br/>{moment(this.state.date,'MMMM Do YYYY, h:mm:ss a').fromNow()}</p>
+    <img src="img/59010187.jpg" class="rounded-circle float-left comment" alt="profile"/>{this.state.name}<br/>{moment(this.state.date).fromNow()}</p>
     <p>{this.state.content}</p>
     </div>
   </div>

@@ -14,6 +14,10 @@ class Header extends Component{
     this.getMessage= this.getMessage.bind(this);
     this.state={
       user:{},
+      uid:[{
+        email:'',
+        username:''
+      }]
       /*status:1*/
     };
   }
@@ -22,9 +26,10 @@ class Header extends Component{
   }
 
   getMessage(element) {
-console.log(element);
+
     const Ref = database.ref(element);
     Ref.on('value', snap => {
+      this.setState({uid:snap.val()})
        this.props.get(snap.val());
     });
 
@@ -34,7 +39,6 @@ authListener(){
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
       this.getMessage('Users/'+user.uid);
-
     this.setState({user: 0 });
   }else{
     this.setState({user: 1 });
@@ -55,6 +59,7 @@ authListener(){
   }
   else {
     rightStatus=<ul class="navbar-nav ml-auto">
+      <li class="nav-item"><h5 class=" navbar-brand">{this.state.uid.username}</h5></li>
             <li class="nav-item">
                 <Link class="nav-link" to="/profile">Profile</Link>
             </li>

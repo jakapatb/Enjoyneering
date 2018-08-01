@@ -51,7 +51,7 @@ getMessage(id) {
           {this.state.id}
           <h4>  <Link to={"/post/"+this.props.id} class="nav-link">{this.state.title}</Link></h4>
           <p>{this.state.content}</p>
-          {moment(this.state.date,'MMMM Do YYYY, h:mm:ss a').fromNow()}
+          {moment(this.state.date).fromNow()}
         {
           <h5>{this.index} Comments</h5>}
         </div>
