@@ -59,7 +59,7 @@ class PostCreate extends Component {
     let time = moment().format('MMMM Do YYYY, h:mm:ss a');
     firebaseRef.push({
       title:title,
-      writer:this.props.email,
+      writer:this.props.uid.name,
       content:content,
       date:time,
       imgTopic:imgTopic,

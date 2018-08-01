@@ -3,7 +3,7 @@ import PopupLogin from './PopupLogin';
 import PopupRegister from './PopupRegister';
 import * as firebase from 'firebase';
 import {Link} from 'react-router-dom';
-
+import {database} from '../firebase';
 
 class Header extends Component{
   logOut=() => {
@@ -11,6 +11,7 @@ class Header extends Component{
   }
   constructor(props){
     super(props);
+    this.getMessage= this.getMessage.bind(this);
     this.state={
       user:{},
       /*status:1*/
@@ -19,10 +20,21 @@ class Header extends Component{
   componentDidMount(){
     this.authListener();
   }
+
+  getMessage(element) {
+console.log(element);
+    const Ref = database.ref(element);
+    Ref.on('value', snap => {
+       this.props.get(snap.val());
+    });
+
+  }
+
 authListener(){
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
-    this.props.get(user.email);
+      this.getMessage('Users/'+user.uid);
+
     this.setState({user: 0 });
   }else{
     this.setState({user: 1 });

@@ -17,7 +17,7 @@ render(){
     <Route exact path='/' component={Home}/>
     {
       routes.map((route,i)=>(
-      <RouteWithSubRoutes key={i} {...route} email={this.props.email}/>
+      <RouteWithSubRoutes key={i} {...route} uid={this.props.uid}/>
     ))}
     <Route component={Notfound}/>
 </Switch>

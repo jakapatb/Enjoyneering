@@ -14,7 +14,7 @@ class RouteWithSubRoutes extends Component{
 
     render={props => (
       // pass the sub-routes down to keep nesting
-      <this.props.component {...props} routes={this.props.routes} email={this.props.email}/>
+      <this.props.component {...props} routes={this.props.routes} uid={this.props.uid}/>
     )}
   />);
 }}

@@ -112,7 +112,7 @@ class Post extends Component {
         </div> */
       }
       <div class="container">
-        <Comment id={this.id} email={this.props.email}/>
+        <Comment id={this.id} uid={this.props.uid}/>
       </div>
       {this.routes.map((route, i) => (<RouteWithSubRoutes key={i} {...route}/>))}
     </div>);

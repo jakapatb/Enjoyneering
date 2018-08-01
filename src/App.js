@@ -4,22 +4,22 @@ import Header from './components/Header';
 class App extends Component{
 constructor(props){
   super(props);
-  this.getEmail=this.getEmail.bind(this);
+  this.getUID=this.getUID.bind(this);
   this.state=({
-    email:''
+    uid:''
   })
 }
 
 
-getEmail=(e)=>{
-  this.setState({email:e})
+getUID=(e)=>{
+  this.setState({...e})
 }
 
 render(){
   return(
     <div>
-    <Header get={this.getEmail}/>
-    <Main email={this.state.email}/>
+    <Header get={this.getUID}/>
+      <Main uid={this.state}/>
   </div>
   );
 }

@@ -1,58 +1,91 @@
 import React,{Component} from 'react';
-
+import * as firebase from 'firebase';
+import {database} from '../firebase';
+/*import trim from 'tirm';*/
 class EditProfile extends Component{
-render(){
+  constructor(props){
+   super(props);
+   this.handleEditProfile = this.handleEditProfile.bind(this);
+   this.state = {
+     name: '',
+     ids : '',
+     degree: '',
+     major: '',
+     bdate: '',
+   };
+ }
 
+ handleEditProfile=(e) => {
+   const {name,ids,degree,major,bdate} =e.target;
+     e.preventDefault();
+       let dbCon =  database.ref('Users/').child(this.props.uid);
+     dbCon.update({
+       name: name.value,
+       ids:  ids.value,
+       degre: degree.value,
+       major: major.value,
+       bdate: bdate.value,
+     });
+   }
+render(){
+  console.log(this.props.email);
   return(
+
     <div class="container">
-<div class="col bg-light">
-  <h1>Your Profile</h1>
-  <div class="row">
+        <form onSubmit= {this.handleEditProfile}>
+         <div class="col bg-light">
+          <h1>Your Profile</h1>
+           <div class="row">
     {/* left info */}
     <div class="col col-md-6 ">
 
       <div class="form-group">
-          <label for="usr"><h3>Name</h3></label>
-          <input type="text" class="form-control" id="usr"/>
+          <label for="name"><h3>Name</h3></label>
+          <input type="text" class="form-control" id="name"
+      />
       </div>
 
       <div class="form-group">
-          <label for="usr"><h3>Degree</h3></label>
-          <input type="text" class="form-control" id="usr"/>
+          <label for="degree"><h3>Degree</h3></label>
+          <input type="text" class="form-control" id="degree"
+      />
       </div>
 
       <div class="form-group">
-          <label for="usr"><h3>Date of Birth</h3></label>
-          <input type="date" class="form-control" id="usr"/>
+          <label for="bdate"><h3>Date of Birth</h3></label>
+          <input type="date" class="form-control" id="bdate"
+
+        />
       </div>
     </div>
     {/* right info */}
     <div class="col col-md-6 ">
 
       <div class="form-group">
-          <label for="usr"><h3>Student ID</h3></label>
-          <input type="text" class="form-control" id="usr"/>
+          <label for="ids"><h3>Student ID</h3></label>
+          <input type="text" class="form-control" id="ids"
+
+
+        />
       </div>
 
       <div class="form-group">
-          <label for="usr"><h3>Major</h3></label>
-          <input type="text" class="form-control" id="usr"/>
+          <label for="major"><h3>Major</h3></label>
+          <input type="text" class="form-control" id="major"
+
+
+        />
       </div>
 
-      <div class="form-group">
-          <label for="usr"><h3>Email</h3></label>
-          <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Your Email" id="email"/>
-              <div class="input-group-append"><span class="input-group-text">@example.com</span></div>
-          </div>
-      </div>
+
 
     </div>
   </div>
-  <button class="btn btn-block btn-primary " href="#edit" >Submit</button>
+  <button class="btn btn-block btn-primary " href="#edit" type="submit">Submit</button>>
 </div>
-
+    </form>
     </div>
+
   );
 }
 }

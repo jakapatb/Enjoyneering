@@ -1,37 +1,46 @@
 import React,{Component} from 'react';
 import * as firebase from 'firebase';
-//import register from '../config/action_register.js';
+import {database} from '../firebase';
 class PopupRegister extends Component{
-
+  constructor(props){
+   super(props);
+   this.handleSignUp = this.handleSignUp.bind(this);
+ }
         handleSignUp=(e) => {
-          const {email,password,conpassword} =e.target;
+          const {username,email,password,conpassword} =e.target;
 
        if(email.value.length<4){
             alert("The email is too weak.");
             return;
         }
-       if(password.value.length<4){
+       else if(password.value.length<4){
             alert("The password is too weak.");
             return;
         }
-        if(password.value.length != conpassword.value.length){
+        else if(password.value.length != conpassword.value.length){
             alert("Password Not Match!");
             return;
         }
-
-        firebase.auth().createUserWithEmailAndPassword(email.value,password.value).catch(function(error){
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if(errorCode == 'auth/weak-password'){
-            alert('The password is too weak');
-        }else{
-            alert(errorMessage);
-        }
-        console.log(error);
-    });
-      alert("Register Success.");
+        var test = firebase.auth().createUserWithEmailAndPassword(email.value,password.value).then(function(user){
+      var user = firebase.auth().currentUser;
+      var uid = user.uid;
+      let dbCon =  database.ref('Users/').child(uid);
+      dbCon.set({
+        email:email.value,
+        username:username.value,
+      });
+    }).catch(function(error){
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if(errorCode == 'auth/weak-password'){
+        alert('The password is too weak');
+    }else{
+        alert(errorMessage);
+    }
+    console.log(error);
+});
       e.preventDefault();
-        }
+    }
 render(){
   return(
     <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
@@ -43,6 +52,10 @@ render(){
                 </div>
                    <form onSubmit={this.handleSignUp}>
                     <div class="modal-body">
+                       <div class="form-group">
+                          <label for="usr">Username:</label>
+                          <input type="text" class="form-control" id="username"/>
+                       </div>
 
 
                         <div class="form-group">
