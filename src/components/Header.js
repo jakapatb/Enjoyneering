@@ -26,13 +26,11 @@ class Header extends Component{
   }
 
   getMessage(element) {
-
     const Ref = database.ref(element);
     Ref.on('value', snap => {
       this.setState({uid:snap.val()})
        this.props.get(snap.val());
     });
-
   }
 
 authListener(){
@@ -59,12 +57,11 @@ authListener(){
   }
   else {
     rightStatus=<ul class="navbar-nav ml-auto">
-      <li class="nav-item"><h5 class=" navbar-brand">{this.state.uid.username}</h5></li>
             <li class="nav-item">
-                <Link class="nav-link" to="/profile">Profile</Link>
+                <Link class="nav-link" to="/profile">{this.state.uid.username}</Link>
             </li>
             <li class="nav-item">
-                <button class=" btn btn-primary" onClick={this.logOut}>Logout</button>
+                <Link class=" nav-link" onClick={this.logOut} to="/">Logout</Link>
             </li>
 
         </ul>;

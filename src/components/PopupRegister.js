@@ -17,11 +17,11 @@ class PopupRegister extends Component{
             alert("The password is too weak.");
             return;
         }
-        else if(password.value.length != conpassword.value.length){
+        else if(password.value.length !== conpassword.value.length){
             alert("Password Not Match!");
             return;
         }
-        var test = firebase.auth().createUserWithEmailAndPassword(email.value,password.value).then(function(user){
+      firebase.auth().createUserWithEmailAndPassword(email.value,password.value).then(function(user){
       var user = firebase.auth().currentUser;
       var uid = user.uid;
       let dbCon =  database.ref('Users/').child(uid);
@@ -32,7 +32,7 @@ class PopupRegister extends Component{
     }).catch(function(error){
     var errorCode = error.code;
     var errorMessage = error.message;
-    if(errorCode == 'auth/weak-password'){
+    if(errorCode === 'auth/weak-password'){
         alert('The password is too weak');
     }else{
         alert(errorMessage);

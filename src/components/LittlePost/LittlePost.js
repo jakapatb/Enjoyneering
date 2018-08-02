@@ -18,7 +18,12 @@ class LittlePost extends Component {
 componentDidMount(){
   this.getMessage(this.props.id);
 }
-
+componentWillReceiveProps(nextProps) {
+  if(nextProps.id!== this.props.id){
+  this.setState({...nextProps})
+  this.getMessage(nextProps.id);
+}
+}
 getMessage(id) {
   const Ref = database.ref('Post/'+id);
   Ref.on('value',snap =>{
@@ -48,7 +53,6 @@ getMessage(id) {
 
         {/* Right Content */}
         <div class="rightCon">
-          {this.state.id}
           <h4>  <Link to={"/post/"+this.props.id} class="nav-link">{this.state.title}</Link></h4>
           <p>{this.state.content}</p>
           {moment(this.state.date).fromNow()}
