@@ -18,7 +18,7 @@ class EditProfile extends Component{
  handleEditProfile=(e) => {
    const {name,ids,degree,major,bdate} =e.target;
      e.preventDefault();
-       let dbCon =  database.ref('Users/').child(this.props.uid);
+       let dbCon =  database.ref('Users/').child(this.props.uid.uid);
      dbCon.update({
        name: name.value,
        ids:  ids.value,
@@ -26,9 +26,12 @@ class EditProfile extends Component{
        major: major.value,
        bdate: bdate.value,
      });
+     window.location = '/profile';
    }
+
+
 render(){
-  console.log(this.props.email);
+  const {name,degree,bdate,ids,major}=this.props.uid.data;
   return(
 
     <div class="container">
@@ -41,19 +44,19 @@ render(){
 
       <div class="form-group">
           <label for="name"><h3>Name</h3></label>
-          <input type="text" class="form-control" id="name"
+          <input type="text" class="form-control" id="name" value={name}
       />
       </div>
 
       <div class="form-group">
           <label for="degree"><h3>Degree</h3></label>
-          <input type="text" class="form-control" id="degree"
+          <input type="text" class="form-control" id="degree" value={degree}
       />
       </div>
 
       <div class="form-group">
           <label for="bdate"><h3>Date of Birth</h3></label>
-          <input type="date" class="form-control" id="bdate"
+          <input type="date" class="form-control" id="bdate" value={bdate}
 
         />
       </div>
@@ -63,17 +66,12 @@ render(){
 
       <div class="form-group">
           <label for="ids"><h3>Student ID</h3></label>
-          <input type="text" class="form-control" id="ids"
-
-
-        />
+          <input type="text" class="form-control" id="ids" value={ids}/>
       </div>
 
       <div class="form-group">
           <label for="major"><h3>Major</h3></label>
-          <input type="text" class="form-control" id="major"
-
-
+          <input type="text" class="form-control" id="major" value={major}
         />
       </div>
 
@@ -81,7 +79,7 @@ render(){
 
     </div>
   </div>
-  <button class="btn btn-block btn-primary " href="#edit" type="submit">Submit</button>>
+  <button class="btn btn-block btn-primary " href="/profile" type="submit">Submit</button>
 </div>
     </form>
     </div>

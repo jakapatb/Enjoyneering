@@ -9,7 +9,7 @@ class Post extends Component {
   constructor(props) {
     super(props);
     this.getMessage = this.getMessage.bind(this);
-    // this.counstView = this.counstView.bind(this);
+     this.counstView = this.counstView.bind(this);
     this.id = this.props.match.params.article
     this.routes = props.routes;
     this.state = {
@@ -23,28 +23,31 @@ class Post extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     this.getMessage(this.id);
+
   }
 
-  // counstView(id){
-  //   console.log("before:"+this.state.view);
-  //   const Ref = database.ref('Post/' + id);
-  //   let count ={};
-  //   let index = 9
-  //   count['/view']=index++;
-  //   Ref.update(count);
-  //   this.setState({view:index});
-  //   console.log("after:"+this.state.view);
-  // }
+  counstView(id){
+    console.log("before:"+this.state.view);
+    const Ref = database.ref('Post/'+ id);
+    let count =this.state.view;
+    count++;
+    Ref.update({view:count});
+    this.setState({view:count});
+    console.log("after:"+this.state.view);
+  }
 
   getMessage(id) {
     const Ref = database.ref('Post/' + id);
+    let viewed=this.state.view;
     const cRef = Ref.child('content');
     let arr = this.state.content;
     Ref.on('value', snap => {
-      this.setState({title: snap.child('title').val(), date: snap.child('date').val(),writer: snap.child('writer').val(), tag: snap.child('tag').val(), view: snap.child('view').val()})
-    })
+      this.setState({view:snap.child('view').val(),title: snap.child('title').val(), date: snap.child('date').val(),
+      writer: snap.child('writer').val(), tag: snap.child('tag').val(), view: snap.child('view').val()
+    });
+  });
 
     cRef.on('value', snap => {
       snap.forEach((childSnap) => {
@@ -55,10 +58,12 @@ class Post extends Component {
 
   }
   render() {
+
     var {
       tag
     } = this.state;
     return (<div class="container-fluid">
+      {this.state.view}
       <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
       <div class="container">
         {/* Image Topic */}

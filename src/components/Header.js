@@ -25,18 +25,21 @@ class Header extends Component{
     this.authListener();
   }
 
-  getMessage(element) {
-    const Ref = database.ref(element);
+  getMessage(element,uid) {
+    const Ref = database.ref(element).child(uid);
     Ref.on('value', snap => {
-      this.setState({uid:snap.val()})
-       this.props.get(snap.val());
+      this.setState({
+        uid:snap.val()
+      })
+      this.props.get({uid:uid,data:snap.val()});
     });
   }
 
 authListener(){
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
-      this.getMessage('Users/'+user.uid);
+      this.getMessage('Users/',user.uid);
+
     this.setState({user: 0 });
   }else{
     this.setState({user: 1 });

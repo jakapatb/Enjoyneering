@@ -23,7 +23,7 @@ class PostCreate extends Component {
       imgTopic:[],
       optional:[],
       Tag:[],
-      postTag:[],
+      postTag:[''],
       view:0
     };
   }
@@ -54,12 +54,14 @@ class PostCreate extends Component {
   }
 
   createpost=()=>{
+    const {postTag,content,title}=this.state
+    if(postTag!='' && content.data!='' && title!=''){
     const {title,content,imgTopic,postTag,writer}=this.state;
     let firebaseRef = database.ref('Post/');
     let time = new Date;
     firebaseRef.push({
       title:title,
-      writer:this.props.uid.username,
+      writer:this.props.uid.data.username,
       content:content,
       date:time.getTime(),
       imgTopic:imgTopic,
@@ -67,6 +69,10 @@ class PostCreate extends Component {
     });
       window.location = '/';
   }
+  else{
+    alert('กรุณากรอกให้ครบทุกช่อง และเลือกอย่างน้อย 1 Tag');
+  }
+}
 
   addImg=()=>{
     // this.addData(<AddImg count={this.state.imgTopic.length} onchange={this.onChange}/>);

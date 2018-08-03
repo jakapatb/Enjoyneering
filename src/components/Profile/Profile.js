@@ -33,7 +33,7 @@ class Profile extends Component {
             {/* left info */}
             <div class="col blog-info">
               <h3>Name</h3>
-              <p>{this.state.name}</p>
+              <p>{this.props.uid.name}</p>
               <h3>Degree</h3>
               <p>{this.state.degree}</p>
               <h3>Date of Birth</h3>

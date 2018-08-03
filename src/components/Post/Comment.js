@@ -42,7 +42,7 @@ class Comment extends Component {
     let time = new Date;
     if(this.state.value!==''){
     cRef.push({
-      name:this.props.uid.username,
+      name:this.props.uid.data.username,
       content:this.state.value,
       date:time.getTime()
     });}
