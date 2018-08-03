@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import CommentCard from './CommentCard';
 import './comment.css';
 import {database} from '../../firebase';
-var moment = require('moment');
 class Comment extends Component {
   constructor(props) {
     super(props);
