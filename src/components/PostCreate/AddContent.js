@@ -5,6 +5,7 @@ class AddContent extends Component{
   changeContent=(e)=>{
     let name ="content";
     this.props.onchange(e.target.value,name,this.props.count);
+    
   }
 
   render(){

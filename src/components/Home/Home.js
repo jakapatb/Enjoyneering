@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LittlePost from '../LittlePost/LittlePost';
 import Conrousel from './Conrousel';
-import {database} from '../../firebase';
+import {database,getMessage} from '../../firebase';
 import './home.css';
 class Home extends Component {
 
@@ -32,6 +32,7 @@ class Home extends Component {
 
 
   render() {
+
         let { Post} = this.state;
     return (<div class="container">
       <div class="bg-light">

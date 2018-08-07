@@ -4,7 +4,6 @@ class AddTitle extends Component{
 
   changeTitle=(e)=>{
     let name ="subtitle";
-    console.log(e.target.value);
     this.props.onchange(e.target.value,name,this.props.count);
   }
 

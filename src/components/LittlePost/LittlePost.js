@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './littlepost.css';
 import {Link} from 'react-router-dom';
-import {database} from '../../firebase';
+import {database,storage} from '../../firebase';
 var moment = require('moment');
 class LittlePost extends Component {
   constructor(props){
@@ -11,30 +11,41 @@ class LittlePost extends Component {
       title:'',
       date:'',
       comment:'',
-      content:''
+      content:'',
+      img:''
     }
   }
 
 componentDidMount(){
-  this.getMessage(this.props.id);
+  this.getMessage(this.props.id,this.state);
 }
 componentWillReceiveProps(nextProps) {
   if(nextProps.id!== this.props.id){
   this.setState({...nextProps})
-  this.getMessage(nextProps.id);
+  this.getMessage(nextProps.id,this.state);
 }
 }
-getMessage(id) {
+getMessage(id,state) {
   const Ref = database.ref('Post/'+id);
   Ref.on('value',snap =>{
     this.setState({
       title: snap.child('title').val(),
       date: snap.child('date').val(),
       comment:snap.child('comment').val(),
-      content: snap.child('content/0/data').val()
+      content: snap.child('content/1/data').val(),
+      img:snap.child('content/0/data').val()
     })
   })
+            var sRef = storage.ref('Post/'+this.props.id+'/0');
+            var path = sRef.fullPath;
+            sRef.getDownloadURL().then((url)=>{
+            this.setState({img:url});
+            }).catch(function(error) {
+              console.log(error.message);
+            });
 }
+
+
 
   render() {
     if(this.state.comment!=null){
@@ -47,7 +58,7 @@ getMessage(id) {
       <div class="card mb-3">
       {/* Body */}
       <div class="row">
-      <div class="col col-md-4"><img src="img/test2.jpg" alt="" class="img-fluid"/></div>
+      <div class="col col-md-4"><img src={this.state.img} alt="" class="img-fluid" id="topic"/></div>
     <div class=" col">
         {/* left image */}
 

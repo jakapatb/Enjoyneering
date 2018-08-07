@@ -12,16 +12,14 @@ export const DB_config = {
 firebase.initializeApp(DB_config);
 
 const database = firebase.database();
+const storage =firebase.storage();
 
 const getMessage=(element)=>{
   const Ref = database.ref().child(element);
   Ref.on('value', snap => {
-    console.log(snap.val());
-    var obj = {test:'555',Tag: snap.val()};
-    console.log(obj);
-  return obj;
+  return;
   });
 }
 export {
-  database,getMessage
+  database,getMessage,storage
 };

@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import Comment from './Comment';
 import './post.css';
 import RouteWithSubRoutes from '../../RouteWithSubRoutes';
-import {database} from '../../firebase';
+import {database,storage} from '../../firebase';
 import {Link} from 'react-router-dom';
+import Icon from '@material-ui/core/Icon';
 var moment = require('moment');
 class Post extends Component {
   constructor(props) {
@@ -52,21 +53,35 @@ class Post extends Component {
         arr.push.apply(arr, add);
       })
     })
-
   }
+
+  showImage(index,data){
+    var preview=document.getElementById('image'+index);
+     var sRef = storage.ref('Post/'+this.id+'/'+data);
+  //  var sRef = storage.ref('Picture1500344731568.JPEG');
+    var path = sRef.fullPath;
+    sRef.getDownloadURL().then(function(url) {
+              preview.src = url;
+              }).catch(function(error) {
+                console.log(error.message);
+              });
+  }
+
   render() {
     var {
       tag
     } = this.state;
     return (<div class="container-fluid">
-      <img class="img-responsive img-fluid topImg" src={this.state.imgTopic} alt="Night sky"/>
+
+        {this.showImage(0,0)}
+      <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="Image preview..." id="image0"/>
       <div class="container">
-        {/* Image Topic */}
         {/* Topic */}
         <div class="border rounded">
-          <Link to={"/post/" + this.props.match.params.article}>
-            <h1>{this.state.title}</h1>
-          </Link>
+
+            <h1><Link to={"/post/" + this.props.match.params.article} class="nav-link">{this.state.title}</Link></h1>
+            <i class="material-icons">credit_card</i>
+
           <h5>Tag:{
               tag.map((elem =><Link to = {
                 "../search?tag=" + elem
@@ -81,36 +96,26 @@ class Post extends Component {
         {/* Content */}
         <div class="content">
           {
-            this.state.content.map((element) => {
+            this.state.content.map((element,i) => {
               if (element['type'] === 'subtitle') {
                 return (<h2>{element['data']}</h2>);
               } else if (element['type'] === 'content') {
                 return (<p>{element['data']}</p>);
               }
+              else if (element['type'] == 'imgTopic') {
+                if(i==0){
+                  return;
+                }
+                let temp =element['data']
+                this.showImage(i,temp)
+                return(
+                  <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="Image preview..." id={"image"+(i)}/>
+              );
+              }
             })
           }
         </div>
-        {/* Quote */}
-        {/* <div class="jumbotron">
-          <h3 class="">
-            <i class="fa fa-quote-left"></i>
-            Permanence, perseverance and persistence in spite of all obstacles, discouragements, and impossibilities: It is this, that in all things distinguishes the strong soul from the weak.
-            <i class="fa fa-quote-right"></i>
-          </h3>
-          <p class="lead text-primary">Thomas Carlyle</p>
-        </div> */
-        }
-        {/* <p>hello world this is max,Im Newbie Web developer</p>
-        <h2>This is test Topic 1</h2>
-        <p>This is test content 1 and i dont know what to say anything,that so bored</p> */
-        }
-
-        {/* Comment */}
       </div>
-      {/* <div class="container-fluid">
-        <object class="youtube" data="https://www.youtube.com/embed/TTpMqSJ6poc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></object>
-        </div> */
-      }
       <div class="container">
         <Comment id={this.id} uid={this.props.uid}/>
       </div>

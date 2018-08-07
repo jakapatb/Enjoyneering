@@ -1,17 +1,20 @@
 import React,{Component} from 'react';
-import {database} from '../../firebase';
+import {database,storage} from '../../firebase';
 class ConrouselItem extends Component{
   constructor(props){
     super(props);
     this.getMessage = this.getMessage.bind(this);
+    this.getImage = this.getImage.bind(this);
     this.state={
       title:'',
-      content:''
+      content:'',
+      img:''
     }
   }
 
 componentDidMount(){
   this.getMessage(this.props.item);
+  this.getImage(this.props.item);
 }
 
 getMessage(id) {
@@ -24,8 +27,18 @@ getMessage(id) {
   })
 }
 
+getImage(id){
+  var sRef = storage.ref('Post/'+id+'/0');
+  var path = sRef.fullPath;
+  sRef.getDownloadURL().then((url)=>{
+  this.setState({img:url});
+}).catch((error)=>{
+    console.log(error.message);
+  });
+}
+
 checkIndex=()=>{
-  if(this.props.index===0){
+  if(this.props.index==0){
     return 'active';
   }
   else return null;
@@ -34,7 +47,7 @@ checkIndex=()=>{
 
     return(
       <div class={"carousel-item "+this.checkIndex()}>
-        <a href="post"><img src="img/test1.jpg" class=" img-responsive img-fluid" alt="test1"/></a>
+        <a href="post"><img src={this.state.img} class=" img-responsive img-fluid" alt="test1" id="preview"/></a>
         <div class="carousel-caption">
           <h3>{this.state.title}</h3>
           <p>{this.state.content}</p>

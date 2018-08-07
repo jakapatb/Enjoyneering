@@ -44,7 +44,14 @@ class Comment extends Component {
       name:this.props.uid.data.username,
       content:this.state.value,
       date:time.getTime()
-    });}
+    });
+    this.setState({
+      value:''
+    });
+    e.target.comment.value='';
+
+  }
+
      e.preventDefault();
   }
 
@@ -66,7 +73,7 @@ class Comment extends Component {
         {/*Form Comment*/}
           <form onSubmit={this.createComment} id="commentform">
           <h5>Comment:</h5>
-          <textarea class="form-control" rows="3" id="comment" onChange={this.changeComment} form="commentform"></textarea>
+          <textarea class="form-control" rows="3" id="comment" onChange={this.changeComment} name="comment" form="commentform"></textarea>
           <button class="btn btn-primary btn-ml" type="submit" value="Submit">Post Comment</button>
         </form>
 
