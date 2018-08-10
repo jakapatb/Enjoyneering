@@ -15,7 +15,7 @@ class AddContent extends Component{
   render(){
     return(
       <div class="form-group">
-        <label for="cotnent">content-{this.props.count+1}:</label>
+        <label for="cotnent">content-{this.props.count}:</label>
         <textarea class="form-control" rows="5" id="content"
     onChange={this.changeContent} ></textarea>
     <button onClick={this.delContent}>del</button>

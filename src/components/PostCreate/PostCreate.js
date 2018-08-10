@@ -55,11 +55,15 @@ class PostCreate extends Component {
 
   createpost = () => {
     const {postTag, content, title} = this.state
-    if (postTag !== '' && content.data !== '' && title !== '') {
+    if (postTag !== '' && title !== '') {
+      const trimContent = this.state.content.filter((e)=>{
+        console.log(e);
+        return e!==null;
+      });
       const {title, content, postTag} = this.state;
       let firebaseRef = database.ref('Post/');
       let time = new Date();
-      firebaseRef.push({title: title, writer: this.props.uid.data.username, content: content, date: time.getTime(), tag: postTag}).then((snap) => {
+      firebaseRef.push({title: title, writer: this.props.uid.data.username, content: trimContent, date: time.getTime(), tag: postTag}).then((snap) => {
         const key = snap.key;
         this.tempImg.map((item, i) => {
           var storageRef = storage.ref('Post/' + key + '/' + i);
@@ -83,7 +87,7 @@ class PostCreate extends Component {
   }
 
   addImg = () => {
-    this.addData(<AddImg count={this.state.content.length} onchange={this.onChange}/>);
+    this.addData(<AddImg count={this.state.optional.length} onchange={this.onChange}/>);
     let iRef = this.state.content;
     var ob = [
       {
@@ -95,7 +99,7 @@ class PostCreate extends Component {
   }
 
   addContent = () => {
-    this.addData(<AddContent count={this.state.content.length} onchange={this.onChange} delC={this.delContent}/>);
+    this.addData(<AddContent count={this.state.optional.length} onchange={this.onChange} delC={this.delContent}/>);
     let cRef = this.state.content;
     var ob = [
       {
@@ -107,7 +111,7 @@ class PostCreate extends Component {
   }
 
   addTitle = () => {
-    this.addData(<AddTitle count={this.state.content.length} onchange={this.onChange}/>);
+    this.addData(<AddTitle count={this.state.optional.length} onchange={this.onChange}/>);
     let cRef = this.state.content;
     var ob = [
       {
@@ -124,12 +128,15 @@ class PostCreate extends Component {
     this.setState({optional: Ref});
   }
 
+
   delContent=(i)=>{
-    let data=this.state.content;
-    let newdata = data.filter((e)=>{
-      return  e!==data[i]
-    });
-    this.setState({content:newdata})
+    let {content,optional}=this.state;
+    console.log('Remove '+i);
+    content[i]=null
+    optional[i]=null
+    //this.setState({content:newC,optional:newO})
+    console.log(content);
+    console.log(optional);
     this.forceUpdate();
   }
 
@@ -193,7 +200,8 @@ class PostCreate extends Component {
           {
 
             content.map((element, i) => {
-              if (element['type'] === 'subtitle') {
+              if(element===null){return null;}
+              else if (element['type'] === 'subtitle') {
                 return (<h2>{element['data']}</h2>);
               } else if (element['type'] === 'content') {
                 return (<p>{element['data']}</p>);
@@ -209,7 +217,6 @@ class PostCreate extends Component {
                 }
                 return (<img src={preview[i]} class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="preview" id={"preview" + i}/>);
               }
-              return null;
             })
           }
 

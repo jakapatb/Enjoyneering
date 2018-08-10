@@ -10,7 +10,7 @@ class AddTitle extends Component{
   render(){
     return(
       <div class="form-group">
-        <label for="title">title-{this.props.count+1}:</label>
+        <label for="title">title-{this.props.count}:</label>
         <input type="text"  class="form-control" id="title"
     onChange={this.changeTitle} name="title"/>
       </div>
