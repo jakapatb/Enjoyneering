@@ -37,7 +37,6 @@ getMessage(id,state) {
     })
   })
             var sRef = storage.ref('Post/'+this.props.id+'/0');
-            var path = sRef.fullPath;
             sRef.getDownloadURL().then((url)=>{
             this.setState({img:url});
             }).catch(function(error) {

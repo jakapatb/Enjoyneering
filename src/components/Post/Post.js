@@ -4,7 +4,6 @@ import './post.css';
 import RouteWithSubRoutes from '../../RouteWithSubRoutes';
 import {database,storage} from '../../firebase';
 import {Link} from 'react-router-dom';
-import Icon from '@material-ui/core/Icon';
 var moment = require('moment');
 class Post extends Component {
   constructor(props) {
@@ -59,7 +58,7 @@ class Post extends Component {
     var preview=document.getElementById('image'+index);
      var sRef = storage.ref('Post/'+this.id+'/'+data);
   //  var sRef = storage.ref('Picture1500344731568.JPEG');
-    var path = sRef.fullPath;
+
     sRef.getDownloadURL().then(function(url) {
               preview.src = url;
               }).catch(function(error) {
@@ -74,7 +73,7 @@ class Post extends Component {
     return (<div class="container-fluid">
 
         {this.showImage(0,0)}
-      <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="Image preview..." id="image0"/>
+      <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="preview..." id="image0"/>
       <div class="container">
         {/* Topic */}
         <div class="border rounded">
@@ -102,16 +101,18 @@ class Post extends Component {
               } else if (element['type'] === 'content') {
                 return (<p>{element['data']}</p>);
               }
-              else if (element['type'] == 'imgTopic') {
-                if(i==0){
-                  return;
+              else if (element['type'] === 'imgTopic') {
+                if(i===0){
+                  return false;
                 }
                 let temp =element['data']
                 this.showImage(i,temp)
                 return(
-                  <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="Image preview..." id={"image"+(i)}/>
+                  <img src='' class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="preview" id={"image"+(i)}/>
               );
               }
+              else
+              return false;
             })
           }
         </div>

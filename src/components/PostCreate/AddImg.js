@@ -1,11 +1,5 @@
 import React,{Component} from 'react';
-import {storage} from '../../firebase';
-var base64Img = require('base64-img');
-var fs = require('fs');
 class AddImg extends Component{
-  constructor(props){
-    super(props);
-  }
   changeImg=(e)=>{
 
     let name ="imgTopic";
@@ -35,9 +29,6 @@ class AddImg extends Component{
           <input type="file" class="custom-file-input" id={"imgpost"+this.props.count} onChange={this.changeImg}/>
           <label class="custom-file-label" for="custom-file">Image Title</label>
           </div>
-           <img src='' id="preview"/>
-      
-
             </div>
     );
   }

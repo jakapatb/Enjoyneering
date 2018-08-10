@@ -38,7 +38,7 @@ class Comment extends Component {
   createComment=(e)=>{
     const Ref = database.ref('Post/' + this.postId);
     const cRef = Ref.child('comment');
-    let time = new Date;
+    let time = new Date();
     if(this.state.value!==''){
     cRef.push({
       name:this.props.uid.data.username,

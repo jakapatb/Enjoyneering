@@ -48,7 +48,7 @@ authListener(){
 }
   render(){
     var rightStatus;
-  if(this.state.user == 1 ){
+  if(this.state.user === 1 ){
     rightStatus=<ul class="navbar-nav ml-auto">
         <li class="nav-item">
             <Link class="nav-link" data-toggle="modal" data-target="#login" to="#login">Login</Link>

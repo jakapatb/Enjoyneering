@@ -5,7 +5,11 @@ class AddContent extends Component{
   changeContent=(e)=>{
     let name ="content";
     this.props.onchange(e.target.value,name,this.props.count);
-    
+
+  }
+
+  delContent=()=>{
+    this.props.delC(this.props.count);
   }
 
   render(){
@@ -14,6 +18,7 @@ class AddContent extends Component{
         <label for="cotnent">content-{this.props.count+1}:</label>
         <textarea class="form-control" rows="5" id="content"
     onChange={this.changeContent} ></textarea>
+    <button onClick={this.delContent}>del</button>
       </div>
     );
   }

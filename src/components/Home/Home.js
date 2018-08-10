@@ -28,6 +28,7 @@ class Home extends Component {
 
   componentDidMount() {
     this.getPostKey();
+    console.log(getMessage('tag'));
   }
 
 
@@ -45,7 +46,6 @@ class Home extends Component {
             <div class="p-2 bg-warning">
               Latest Post</div>
           </div>
-
           {/* Card frame */}
           <div class="content">
             <br/> {/* Card:Education */}
@@ -54,9 +54,7 @@ class Home extends Component {
                 return (<LittlePost id={item}/>)
               })
             }
-
           </div>
-
           {/* Top topics: */}
           <div class="d-flex flex-row bg-dark">
             <div class="p-2 bg-warning">

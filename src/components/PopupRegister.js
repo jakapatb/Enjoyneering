@@ -22,8 +22,8 @@ class PopupRegister extends Component{
             return;
         }
       firebase.auth().createUserWithEmailAndPassword(email.value,password.value).then(function(user){
-      var user = firebase.auth().currentUser;
-      var uid = user.uid;
+      var User = firebase.auth().currentUser;
+      var uid = User.uid;
       let dbCon =  database.ref('Users/').child(uid);
       dbCon.set({
         email:email.value,

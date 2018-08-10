@@ -17,7 +17,7 @@ const storage =firebase.storage();
 const getMessage=(element)=>{
   const Ref = database.ref().child(element);
   Ref.on('value', snap => {
-  return;
+  return snap.val();
   });
 }
 export {

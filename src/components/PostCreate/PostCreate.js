@@ -4,21 +4,9 @@ import AddImg from './AddImg';
 import './postCreate.css';
 import AddContent from './AddContent';
 import AddTitle from './AddTitle';
-var base64Img = require('base64-img');
-var moment = require('moment');
 class PostCreate extends Component {
   constructor(props) {
     super(props);
-
-    this.onChange = this.onChange.bind(this);
-    this.createpost = this.createpost.bind(this);
-    this.addData = this.addData.bind(this);
-    this.addImg = this.addImg.bind(this);
-    this.addTitle = this.addTitle.bind(this);
-    this.addContent = this.addContent.bind(this);
-    this.titleChange = this.titleChange.bind(this);
-    this.getMessage = this.getMessage.bind(this);
-    this.tagSelector = this.tagSelector.bind(this);
     this.tempImg = [];
     this.state = {
       title: '',
@@ -41,9 +29,9 @@ class PostCreate extends Component {
   }
 
   onChange = (element, name, i) => {
-    if (name == 'imgTopic') {
+    if (name === 'imgTopic') {
       let img = this.tempImg;
-      img[i]=element;
+      img[i] = element;
       element = i;
     }
     let data = this.state.content;
@@ -54,11 +42,11 @@ class PostCreate extends Component {
     });
   }
 
-  titleChange(e) {
+  titleChange=(e)=>{
     this.setState({title: e.target.value})
   }
 
-  getMessage(element) {
+  getMessage=(element)=> {
     const Ref = database.ref().child(element);
     Ref.on('value', snap => {
       this.setState({[element]: snap.val()})
@@ -67,11 +55,11 @@ class PostCreate extends Component {
 
   createpost = () => {
     const {postTag, content, title} = this.state
-    if (postTag != '' && content.data != '' && title != '') {
-      const {title, content, imgTopic, postTag, writer} = this.state;
+    if (postTag !== '' && content.data !== '' && title !== '') {
+      const {title, content, postTag} = this.state;
       let firebaseRef = database.ref('Post/');
-      let time = new Date;
-      var newRef = firebaseRef.push({title: title, writer: this.props.uid.data.username, content: content, date: time.getTime(), tag: postTag}).then((snap) => {
+      let time = new Date();
+      firebaseRef.push({title: title, writer: this.props.uid.data.username, content: content, date: time.getTime(), tag: postTag}).then((snap) => {
         const key = snap.key;
         this.tempImg.map((item, i) => {
           var storageRef = storage.ref('Post/' + key + '/' + i);
@@ -81,14 +69,12 @@ class PostCreate extends Component {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
-            document.getElementById('uploader').value=progress;
+            document.getElementById('uploader').value = progress;
           }, function(error) {
             // Handle unsuccessful uploads
-          }, function() {
-
           });
+          return null;
         });
-
       });
 
     } else {
@@ -97,7 +83,7 @@ class PostCreate extends Component {
   }
 
   addImg = () => {
-    this.addData(<AddImg count={this.state.content.length} onchange={this.onChange} />);
+    this.addData(<AddImg count={this.state.content.length} onchange={this.onChange}/>);
     let iRef = this.state.content;
     var ob = [
       {
@@ -109,7 +95,7 @@ class PostCreate extends Component {
   }
 
   addContent = () => {
-    this.addData(<AddContent count={this.state.content.length} onchange={this.onChange}/>);
+    this.addData(<AddContent count={this.state.content.length} onchange={this.onChange} delC={this.delContent}/>);
     let cRef = this.state.content;
     var ob = [
       {
@@ -138,9 +124,20 @@ class PostCreate extends Component {
     this.setState({optional: Ref});
   }
 
+  delContent=(i)=>{
+    let data=this.state.content;
+    let newdata = data.filter((e)=>{
+      return  e!==data[i]
+    });
+    this.setState({content:newdata})
+    this.forceUpdate();
+  }
+
   componentDidMount() {
     this.getMessage('Tag');
   }
+
+
 
   tagSelector = (e) => {
     const {postTag} = this.state;
@@ -156,8 +153,8 @@ class PostCreate extends Component {
     console.log(this.tempImg);
     console.log(this.state.content);
     var reader = [];
-    var preview=[];
-    const {Tag,uploader,optional,title,content} = this.state;
+    var preview = [];
+    const {Tag, optional, title, content} = this.state;
     return (<div class="container-fluid">
       <div class="row">
         <div class="col col-md-6">
@@ -196,12 +193,12 @@ class PostCreate extends Component {
           {
 
             content.map((element, i) => {
-              if (element['type'] == 'subtitle') {
+              if (element['type'] === 'subtitle') {
                 return (<h2>{element['data']}</h2>);
-              } else if (element['type'] == 'content') {
+              } else if (element['type'] === 'content') {
                 return (<p>{element['data']}</p>);
-              } else if (element['type'] == 'imgTopic') {
-                 preview[i] = document.getElementById("preview" + i);
+              } else if (element['type'] === 'imgTopic') {
+                preview[i] = document.getElementById("preview" + i);
                 let image = this.tempImg[i];
                 reader[i] = new FileReader();
                 reader[i].addEventListener("load", function() {
@@ -210,17 +207,17 @@ class PostCreate extends Component {
                 if (image) {
                   reader[i].readAsDataURL(image);
                 }
-                return (<img src={preview[i]} class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="Image preview..." id={"preview" + i}/>);
+                return (<img src={preview[i]} class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="preview" id={"preview" + i}/>);
               }
-
+              return null;
             })
           }
 
         </div>
       </div>
       <div class="fixed-bottom">
-        <progress  class="" value="0" max="100" id="uploader" >0%</progress>
-        </div>
+        <progress class="" value="0" max="100" id="uploader">0%</progress>
+      </div>
     </div>);
   }
 }

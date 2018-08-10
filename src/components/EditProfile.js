@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-import * as firebase from 'firebase';
 import {database} from '../firebase';
 /*import trim from 'tirm';*/
 class EditProfile extends Component{

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import trim from 'trim';
-import {database, getMessage} from '../../firebase';
+import {database} from '../../firebase';
 import LittlePost from '../LittlePost/LittlePost';
 class Search extends Component {
   constructor(props) {
@@ -45,7 +44,7 @@ class Search extends Component {
   }
 
   onKeyup(e) {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       e.preventDefault();
 
       this.searching();
@@ -84,7 +83,7 @@ class Search extends Component {
 
   render() {
 
-    let {Tag, Post} = this.state;
+    let {Tag} = this.state;
     return (<div class="container">
       <h1>Search Enjoyneering</h1>
       <input type="search" class="form-control" id="search" onChange={this.onChange} onKeyUp={this.onKeyup} value={this.state.search} name="search"/>

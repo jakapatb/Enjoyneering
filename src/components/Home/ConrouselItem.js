@@ -29,7 +29,6 @@ getMessage(id) {
 
 getImage(id){
   var sRef = storage.ref('Post/'+id+'/0');
-  var path = sRef.fullPath;
   sRef.getDownloadURL().then((url)=>{
   this.setState({img:url});
 }).catch((error)=>{
@@ -38,7 +37,7 @@ getImage(id){
 }
 
 checkIndex=()=>{
-  if(this.props.index==0){
+  if(this.props.index===0){
     return 'active';
   }
   else return null;
