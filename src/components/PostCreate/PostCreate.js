@@ -54,13 +54,12 @@ class PostCreate extends Component {
   }
 
   createpost = () => {
-    const {postTag, content, title} = this.state
+    const {postTag, title} = this.state
     if (postTag !== '' && title !== '') {
       const trimContent = this.state.content.filter((e)=>{
         console.log(e);
         return e!==null;
       });
-      const {title, content, postTag} = this.state;
       let firebaseRef = database.ref('Post/');
       let time = new Date();
       firebaseRef.push({title: title, writer: this.props.uid.data.username, content: trimContent, date: time.getTime(), tag: postTag}).then((snap) => {
@@ -87,7 +86,7 @@ class PostCreate extends Component {
   }
 
   addImg = () => {
-    this.addData(<AddImg count={this.state.optional.length} onchange={this.onChange}/>);
+    this.addData(<AddImg count={this.state.optional.length} onchange={this.onChange} delC={this.delContent}/>);
     let iRef = this.state.content;
     var ob = [
       {
@@ -111,7 +110,7 @@ class PostCreate extends Component {
   }
 
   addTitle = () => {
-    this.addData(<AddTitle count={this.state.optional.length} onchange={this.onChange}/>);
+    this.addData(<AddTitle count={this.state.optional.length} onchange={this.onChange} delC={this.delContent}/>);
     let cRef = this.state.content;
     var ob = [
       {
@@ -179,8 +178,8 @@ class PostCreate extends Component {
             <label for="topic">Post Title:</label>
             <input type="text" class="form-control" id="topic" onChange={this.titleChange} name="title"/>
           </div>
-          <AddImg count={0} onchange={this.onChange} upload={this.uploader}/>
-          <AddContent count={1} onchange={this.onChange}/>
+          <AddImg count={0} onchange={this.onChange} upload={this.uploader} important={1}/>
+          <AddContent count={1} onchange={this.onChange} important={1}/>
 
           <div id="btn-add-optional">
             <button onClick={this.addImg} class="btn btn-secondary">Add image</button>
@@ -217,6 +216,7 @@ class PostCreate extends Component {
                 }
                 return (<img src={preview[i]} class="rounded mx-auto d-block img-responsive img-fluid topImg" height="200" alt="preview" id={"preview" + i}/>);
               }
+              else return null;
             })
           }
 
