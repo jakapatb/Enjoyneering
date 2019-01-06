@@ -31,7 +31,8 @@ import work4 from "assets/img/examples/mariya-georgieva.jpg";
 import work5 from "assets/img/examples/clem-onojegaw.jpg";
 
 import profilePageStyle from "assets/jss/material-kit-react/views/profilePage.jsx";
-
+import {connect} from "react-redux";
+import {compose} from "redux"
 class ProfilePage extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
@@ -45,7 +46,7 @@ class ProfilePage extends React.Component {
       <div>
         <Header
           color="transparent"
-          brand="Material Kit React"
+          brand="Enjoyneering"
           rightLinks={<HeaderLinks />}
           fixed
           changeColorOnScroll={{
@@ -62,11 +63,11 @@ class ProfilePage extends React.Component {
                 <GridItem xs={12} sm={12} md={6}>
                   <div className={classes.profile}>
                     <div>
-                      <img src={profile} alt="..." className={imageClasses} />
+                      <img src={this.props.auth.data.photoURL} alt="..." className={imageClasses} />
                     </div>
                     <div className={classes.name}>
-                      <h3 className={classes.title}>Christian Louboutin</h3>
-                      <h6>DESIGNER</h6>
+                      <h3 className={classes.title}>{this.props.auth.data.displayName}</h3>
+                      <h6>{this.props.auth.data.email}</h6>
                       <Button justIcon link className={classes.margin5}>
                         <i className={"fab fa-twitter"} />
                       </Button>
@@ -212,5 +213,12 @@ class ProfilePage extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  auth:state.auth
+})
 
-export default withStyles(profilePageStyle)(ProfilePage);
+const mapDispatchToProps = {
+  
+}
+
+export default compose(withStyles(profilePageStyle), connect(mapStateToProps,mapDispatchToProps))(ProfilePage);

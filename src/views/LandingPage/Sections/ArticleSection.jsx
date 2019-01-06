@@ -13,25 +13,21 @@ import InfoArea from "components/InfoArea/InfoArea.jsx";
 
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
-class ProductSection extends React.Component {
+class ArticleSection extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { content, classes } = this.props;
     return (
       <div className={classes.section}>
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
-            <h2 className={classes.title}>Let's talk product</h2>
-            <h5 className={classes.description}>
-              This is the paragraph where you can write more details about your
-              product. Keep you user engaged by providing meaningful
-              information. Remember that by this time, the user is curious,
-              otherwise he wouldn't scroll to get here. Add a button if you want
-              the user to see more.
-            </h5>
+            <h2 className={classes.title}>
+              {content.title} {content.index}
+            </h2>
+            <h5 className={classes.description}>{content.content}</h5>
           </GridItem>
         </GridContainer>
         <div>
-          <GridContainer>
+          {/*           <GridContainer>
             <GridItem xs={12} sm={12} md={4}>
               <InfoArea
                 title="Free Chat"
@@ -59,11 +55,11 @@ class ProductSection extends React.Component {
                 vertical
               />
             </GridItem>
-          </GridContainer>
+          </GridContainer> */}
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(productStyle)(ProductSection);
+export default withStyles(productStyle)(ArticleSection);

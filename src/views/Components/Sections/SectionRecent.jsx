@@ -46,17 +46,19 @@ class SectionRecent extends React.Component {
           <div className={classes.title}>
             <h2>Recent Posts</h2>
           </div>
-        <GridContainer justify="center">
-          <GridList className={classes.gridList} cols={2.5}>
-            <SectionCard />
-            <SectionCard />
-            <SectionCard />
-            <SectionCard />
-            <SectionCard />
-          </GridList>
-        </GridContainer>
+          <GridContainer justify="center">
+            <GridList className={classes.gridList} cols={2.5}>
+            <SectionCard id={"test1"} />
+            <SectionCard id={"test2"} />
+            <SectionCard id={"test3"}/>
+            <SectionCard id={"test4"}/>
+            <SectionCard id={"test5"}/>
+            </GridList>
+          </GridContainer>
           <Link to="/">
-            <Button type="button" color="primary">View More »</Button>
+            <Button type="button" color="primary">
+              View More »
+            </Button>
           </Link>
         </div>
       </div>;

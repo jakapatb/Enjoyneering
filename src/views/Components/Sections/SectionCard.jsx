@@ -23,13 +23,16 @@ const style = {
 
 class SectionCard extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { classes,id } = this.props;
     return(
-      <Link to="/landing-page">
+      <Link to={{ 
+        pathname: "/landing-page",
+        search:'post='+id,
+        state:{id:id}}}>
         <Card className={classes.card}>
           <img className={classes.imgCardTop} src={thumbnail} alt="Card-img-cap" />
           <CardBody>
-            <h4 className={classes.cardTitle}>Card title</h4>
+            <h4 className={classes.cardTitle}>Card title {id}</h4>
             <p>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             <p><small className={classes.textMuted}>Last updated 3 mins ago</small></p>
           </CardBody>

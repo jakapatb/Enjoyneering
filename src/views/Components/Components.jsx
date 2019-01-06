@@ -44,7 +44,6 @@ class Components extends React.Component {
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
           <SectionCarousel />
-          {this.props.auth.isAuth && <h1>{this.props.auth.data.email}</h1>}
           <SectionRecent />
         </div>
         <Footer />
