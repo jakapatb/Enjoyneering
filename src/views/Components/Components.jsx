@@ -21,6 +21,7 @@ import componentsStyle from "assets/jss/material-kit-react/views/components.jsx"
 class Components extends React.Component {
   render() {
     const { auth, classes, ...rest } = this.props;
+    console.log(this.props.post)
     return <div>
         <Header
           brand="Enjoyneering KMITL"
@@ -51,7 +52,8 @@ class Components extends React.Component {
   }
 }
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  post: state.post
 });
 
 const mapDispatchToProps = {

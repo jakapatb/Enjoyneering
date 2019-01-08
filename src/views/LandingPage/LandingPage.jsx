@@ -21,23 +21,26 @@ import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.js
 
 // Sections for this page
 import ArticleSection from "./Sections/ArticleSection.jsx";
+import YoutubeSection from "./Sections/YoutubeSection.jsx";
+import ImageSection from "./Sections/ImageSection.jsx";
 import TeamSection from "./Sections/TeamSection.jsx";
 import WorkSection from "./Sections/WorkSection.jsx";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchPost } from "actions/index.js";
+import { fetchPost, clearPost } from "actions/index.js";
 import { withRouter } from "react-router";
-import YoutubeSection from "./Sections/YoutubeSection.jsx";
+
 const dashboardRoutes = [];
 
 class LandingPage extends React.Component {
   componentDidMount = () => {
     this.props.fetchPost(this.props.history.location.search);
   };
-
+  componentWillUnmount=()=>{
+    this.props.clearPost();
+  }
   render() {
     const { post, classes, ...rest } = this.props;
-    console.log(post.data);
     return (
       <div>
         <Header
@@ -49,7 +52,14 @@ class LandingPage extends React.Component {
           changeColorOnScroll={{ height: 400, color: "white" }}
           {...rest}
         />
-        <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+        <Parallax
+          filter
+          image={
+            post.hasPost
+              ? post.data.imgUrl
+              : require("assets/img/landing-bg.jpg")
+          }
+        >
           <div className={classes.container}>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
@@ -57,15 +67,19 @@ class LandingPage extends React.Component {
                 <h4>{post.data.subtitle}</h4>
                 {post.hasPost &&
                   post.data.tags.map(tag => <Badge color="info">{tag}</Badge>)}
-                  <br/>
+                <br />
                 {post.hasPost && (
-                  <Button href="/profile-page" color="transparent" className={classes.button}>
+                  <Button
+                    href="/profile-page"
+                    color="transparent"
+                    className={classes.button}
+                  >
                     <Avatar
                       alt="Remy Sharp"
                       src={post.data.owner.photoURL}
                       className={classes.avatar}
                     />
-                    {" "+post.data.owner.displayName}
+                    {" " + post.data.owner.displayName}
                   </Button>
                 )}
               </GridItem>
@@ -85,6 +99,8 @@ class LandingPage extends React.Component {
                       return <ArticleSection content={content} />;
                     case "youtube":
                       return <YoutubeSection content={content} />;
+                    case "image":
+                      return <ImageSection content={content} id={post.data.id} />;
                   }
                 })}
             {/* <TeamSection />
@@ -101,7 +117,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  fetchPost
+  fetchPost, clearPost
 };
 
 export default compose(

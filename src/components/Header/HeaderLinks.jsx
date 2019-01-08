@@ -39,13 +39,27 @@ function HeaderLinks({...props }) {
       </ListItem>
       <ListItem className={classes.listItem}>
       {auth.isAuth ? 
-      <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} dropdownList={[<Button className={classes.dropdownLink} color="transparent" onClick={()=>signOut()}>
-                Sign Out
-              </Button>]} /> : <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} dropdownList={[<Link to="/login-page" className={classes.dropdownLink}>
-                Sign in
-              </Link>, <a href="https://creativetimofficial.github.io/material-kit-react/#/documentation" target="_blank" className={classes.dropdownLink}>
-                Register
-              </a>]} />}
+        <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} 
+          dropdownList={auth.data.status == 'administrator' ?
+            [<Button href="/create-post" className={classes.dropdownLink} color="transparent">
+              Create Post
+          </Button>,
+            <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
+              Sign Out
+          </Button>]
+          : 
+          [<Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
+            Sign Out
+          </Button>]} />
+        :
+        <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} dropdownList={
+          [ <Link to="/login-page" className={classes.dropdownLink}>
+                  Sign in
+            </Link>,
+            <a href="https://creativetimofficial.github.io/material-kit-react/#/documentation" target="_blank" className={classes.dropdownLink}>
+                  Register
+            </a>]} />
+      }
       </ListItem>
       {auth.isAuth && <ListItem className={classes.listItem}>
           <Tooltip id="instagram-tooltip" title="Your Profile" placement={window.innerWidth > 959 ? "top" : "left"} classes={{ tooltip: classes.tooltip }}>

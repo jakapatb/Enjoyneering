@@ -13,6 +13,9 @@ import exampleStyle from "assets/jss/material-kit-react/views/componentsSections
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import { fetchListPost } from 'actions/index.js'
 import SectionCard from "./SectionCard.jsx";
 const style = {
   gridList: {
@@ -39,8 +42,14 @@ const style = {
   cardTitle
 };
 class SectionRecent extends React.Component {
+  componentDidMount(){
+    this.props.fetchListPost();
+  }
   render() {
-    const { classes } = this.props;
+
+    const { list, classes } = this.props;
+    console.log(list.hasList);
+
     return <div className={classes.section}>
         <div className={classes.container}>
           <div className={classes.title}>
@@ -48,11 +57,18 @@ class SectionRecent extends React.Component {
           </div>
           <GridContainer justify="center">
             <GridList className={classes.gridList} cols={2.5}>
-            <SectionCard id={"test1"} />
+            {
+              list.hasList && list.data.map((post)=>
+               { console.log(post)
+                return <SectionCard data={post} />
+               }
+              )
+            }
+{/*             
             <SectionCard id={"test2"} />
             <SectionCard id={"test3"}/>
             <SectionCard id={"test4"}/>
-            <SectionCard id={"test5"}/>
+            <SectionCard id={"test5"}/> */}
             </GridList>
           </GridContainer>
           <Link to="/">
@@ -64,5 +80,12 @@ class SectionRecent extends React.Component {
       </div>;
   }
 }
+const mapStateToProps = (state) => ({
+  list :state.listPost
+})
 
-export default withStyles(style)(SectionRecent);
+const mapDispatchToProps = {
+  fetchListPost
+};
+
+export default compose(withStyles(style),connect(mapStateToProps,mapDispatchToProps))(SectionRecent);
