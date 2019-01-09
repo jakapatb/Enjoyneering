@@ -66,7 +66,8 @@ class LandingPage extends React.Component {
                 <h1 className={classes.title}>{post.data.title}</h1>
                 <h4>{post.data.subtitle}</h4>
                 {post.hasPost &&
-                  post.data.tags.map(tag => <Badge color="info">{tag}</Badge>)}
+                  post.data.tags.map(tag => <Badge color="info">{tag}</Badge>)
+                }
                 <br />
                 {post.hasPost && (
                   <Button
@@ -95,11 +96,11 @@ class LandingPage extends React.Component {
                 })
                 .map(content => {
                   switch (content.type) {
-                    case "article":
+                    case "Article":
                       return <ArticleSection content={content} />;
-                    case "youtube":
+                    case "Youtube":
                       return <YoutubeSection content={content} />;
-                    case "image":
+                    case "Image":
                       return <ImageSection content={content} id={post.data.id} />;
                   }
                 })}

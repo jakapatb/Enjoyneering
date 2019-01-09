@@ -22,7 +22,9 @@ class ImageSection extends React.Component {
         }
     }
     componentDidMount(){
-        getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl)=>this.setState({imgUrl:imgUrl}));
+        const fileName = "pic"+this.props.content.index+'.jpg';
+        console.log(fileName)
+        getImgfromStorage(this.props.id,fileName).then((imgUrl)=>this.setState({imgUrl:imgUrl}));
     }
     render() {
         const {classes } = this.props;

@@ -3,37 +3,73 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import Chat from "@material-ui/icons/Chat";
-import VerifiedUser from "@material-ui/icons/VerifiedUser";
-import Fingerprint from "@material-ui/icons/Fingerprint";
+import CustomInput from "components/CustomInput/CustomInput.jsx";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import InfoArea from "components/InfoArea/InfoArea.jsx";
 import { getImgfromStorage } from "actions/index.js";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
-
-
+import Button from "components/CustomButtons/Button.jsx";
 class ImageSection extends React.Component {
-    constructor(props){
-        super(props);
-        this.state={
-            imgUrl:""
-        }
-    }
-    componentDidMount(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgUrl: "",
+      file: "",
+      ready: false
+    };
+  }
+  /* componentDidMount(){
         getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl)=>this.setState({imgUrl:imgUrl}));
-    }
-    render() {
-        const {classes } = this.props;
-        return <div className={classes.section}>
-            <GridContainer justify="center">
-              <GridItem xs={12} sm={12} md={8}>
-                <img src={this.state.imgUrl} className={classes.image} />
-              </GridItem>
-            </GridContainer>
-          </div>;
-    }
+    } */
+  handleChange = event => {
+    event.preventDefault();
+    const { index , submit} = this.props;
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onloadend = () => {
+      submit({ type: "Image", file: file, imgUrl: reader.result, index: index })
+      this.setState({ file: file, imgUrl: reader.result });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  removeContent = () => {
+    this.props.remove(this.props.index);
+  };
+
+  render() {
+    const { classes } = this.props;
+    const { ready, imgUrl } = this.state;
+    return (
+      <div className={classes.section}>
+        <Button round color="warning" onClick={this.removeContent}>
+          Remove
+        </Button>
+        <GridContainer justify="center">
+          <GridItem xs={12} sm={12} md={8}>
+            <CustomInput
+              labelText="imgUrl"
+              id="imgUrl"
+              inputProps={{
+                type: "file"
+              }}
+              formControlProps={{
+                fullWidth: true,
+                onChange: this.handleChange
+              }}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={12} md={8}>
+            <img src={this.state.imgUrl} className={classes.image} />
+          </GridItem>
+        </GridContainer>
+      </div>
+    );
+  }
 }
 
 export default withStyles(imageStyle)(ImageSection);
