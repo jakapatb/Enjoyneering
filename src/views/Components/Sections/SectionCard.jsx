@@ -48,7 +48,6 @@ class SectionCard extends React.Component {
   }
   render() {
     const { classes,data } = this.props;
-    console.log(this.state.imgUrl)
     return <Link to={{ pathname: "/landing-page", search: "post=" + data.id, state: { id: data.id } }}>
         <Card className={classes.card}>
           <CardHeader className={classes.cardHeader}>

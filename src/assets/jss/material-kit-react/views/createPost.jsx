@@ -56,6 +56,10 @@ const landingPageStyle = {
     textDecoration: "none",
     fontSize: "3.3125rem",
     lineHeight: "1.15em"
+  },
+  tag:{
+    margin:"0px",
+    padding:"0px"
   }
 };
 

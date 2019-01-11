@@ -16,7 +16,8 @@ class YoutubeSection extends React.Component {
     super(props);
     this.state = {
       ready: false,
-      videoId: ""
+      videoId: "",
+      autoplay:0
     };
   }
   _onReady(event) {
@@ -24,11 +25,11 @@ class YoutubeSection extends React.Component {
     event.target.pauseVideo();
   }
   _handleSubmit= event => {
-    const { videoId} = this.state;
     const { index , submit} = this.props;
-    if ((event.key == "Enter")) {
-      if (event.target.value.trim() != "" && event.target.value.trim().match(/[a-z]/i)) {
-        submit({ type: "Youtube", videoId: event.target.value, index: index });
+    const { autoplay} = this.state;
+    if ((event.key === "Enter")) {
+      if (event.target.value.trim() !== "" && event.target.value.trim().match(/[a-z]/i)) {
+        submit({ type: "Youtube", videoId: event.target.value, index: index ,autoplay:autoplay});
         this.setState({ videoId: event.target.value, ready: true });
       }
       else {
@@ -43,7 +44,7 @@ class YoutubeSection extends React.Component {
     this.props.remove(this.props.index);
   }
   render() {
-    const { content, classes } = this.props;
+    const { classes } = this.props;
     const opts = {
       width: "100%",
       playerVars: {

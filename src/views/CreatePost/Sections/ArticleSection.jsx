@@ -3,16 +3,12 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import Chat from "@material-ui/icons/Chat";
-import VerifiedUser from "@material-ui/icons/VerifiedUser";
-import Fingerprint from "@material-ui/icons/Fingerprint";
 import TextField from "@material-ui/core/TextField"
 import Edit from "@material-ui/icons/Edit";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
-import InputBase from "@material-ui/core/InputBase";
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 class ArticleSection extends React.Component {
@@ -32,7 +28,7 @@ class ArticleSection extends React.Component {
   handleSubmit = event => {
     const { title, content } = this.state;
     const {submit , index} = this.props;
-      if ((title.trim() != "" && content.trim() != "")) {
+      if ((title.trim() !== "" && content.trim() !== "")) {
         submit({ type:"Article", title:title , content:content , index:index })
         this.setState({ ready: true });
       } else {
@@ -47,6 +43,7 @@ class ArticleSection extends React.Component {
   handleEdit = event => {
     this.setState({ ready: false });
   };
+  
   render() {
     const { classes } = this.props;
     const { ready, title, content } = this.state;

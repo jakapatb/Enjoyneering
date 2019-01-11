@@ -52,12 +52,17 @@ class CreatePost extends React.Component {
   };
 
   _handleTags = event => {
-    if (event.key=="Enter") {
+    if (event.key === "Enter") {
       var Tags = this.state.tags;
       Tags.push(event.target.value.toUpperCase());
-      this.setState({tags:Tags});
-      event.target.value = '';
+      this.setState({ tags: Tags });
+      event.target.value = "";
     }
+  };
+  _removeTag = index => () => {
+    var Tags = this.state.tags;
+    Tags.splice(index, 1);
+    this.setState({ tags: Tags });
   };
 
   _handleChildSubmit = content => {
@@ -99,7 +104,7 @@ class CreatePost extends React.Component {
 
   render() {
     const { auth, classes, ...rest } = this.props;
-    const { imgUrl,tags } = this.state;
+    const { imgUrl, tags } = this.state;
     return (
       <div>
         <Header
@@ -149,15 +154,23 @@ class CreatePost extends React.Component {
                 </Button>
               </GridItem>
               <GridItem>
-                  {
-                  tags.map(tag => <Badge color="info">{tag}</Badge>)
-                  }
+                {tags.map((tag, index) => (
+                  <Button
+                    simple
+                    className={classes.tag}
+                    onClick={this._removeTag(index)}
+                  >
+                    <Badge color="primary" round>
+                      {" "}
+                      {tag}
+                    </Badge>
+                  </Button>
+                ))}
+                <br />
                 <CustomInput
                   labelText="Text limit 10"
                   id="tags"
-                  formControlProps={{
-                    onKeyPress:this._handleTags
-                  }}
+                  formControlProps={{ onKeyPress: this._handleTags }}
                   inputProps={{ type: "text" }}
                 />
               </GridItem>
@@ -165,9 +178,7 @@ class CreatePost extends React.Component {
                 <CustomInput
                   labelText="imgUrl"
                   id="imgUrl"
-                  formControlProps={{
-                    onChange: this._handleImageTitle
-                  }}
+                  formControlProps={{ onChange: this._handleImageTitle }}
                   inputProps={{ type: "file" }}
                 />
               </GridItem>
@@ -205,6 +216,7 @@ class CreatePost extends React.Component {
                       submit={this._handleChildSubmit}
                     />
                   );
+                default: return null
               }
             })}
 

@@ -13,7 +13,8 @@ const productStyle = {
     textDecoration: "none"
   },
   description: {
-    color: "#999"
+    color: "#999",
+    whiteSpace:"pre-line"
   }
 };
 

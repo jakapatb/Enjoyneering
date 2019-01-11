@@ -17,7 +17,6 @@ import Menu from "@material-ui/icons/Menu";
 import headerStyle from "assets/jss/material-kit-react/components/headerStyle.jsx";
 
 import { checkStateUser } from "actions/index.js";
-import { compose } from "redux";
 import { connect } from "react-redux";
 
 class Header extends React.Component {

@@ -7,8 +7,6 @@ import CustomInput from "components/CustomInput/CustomInput.jsx";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import InfoArea from "components/InfoArea/InfoArea.jsx";
-import { getImgfromStorage } from "actions/index.js";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 class ImageSection extends React.Component {
@@ -17,7 +15,6 @@ class ImageSection extends React.Component {
     this.state = {
       imgUrl: "",
       file: "",
-      ready: false
     };
   }
   /* componentDidMount(){
@@ -43,7 +40,7 @@ class ImageSection extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { ready, imgUrl } = this.state;
+    const { imgUrl } = this.state;
     return (
       <div className={classes.section}>
         <Button round color="warning" onClick={this.removeContent}>
@@ -64,7 +61,7 @@ class ImageSection extends React.Component {
             />
           </GridItem>
           <GridItem xs={12} sm={12} md={8}>
-            <img src={this.state.imgUrl} className={classes.image} />
+            <img src={imgUrl} className={classes.image} alt="preview"/>
           </GridItem>
         </GridContainer>
       </div>

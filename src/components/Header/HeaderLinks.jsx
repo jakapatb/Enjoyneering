@@ -41,12 +41,13 @@ function HeaderLinks({...props }) {
       {auth.isAuth ? 
         <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} 
           dropdownList={auth.data.status == 'administrator' ?
-            [<Button href="/create-post" className={classes.dropdownLink} color="transparent">
+            [<Link className={classes.dropdownLink} color="transparent"  to="/create-post">
               Create Post
-          </Button>,
-            <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
-              Sign Out
-          </Button>]
+          </Link>,
+              <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
+                Sign Out
+          </Button>
+          ]
           : 
           [<Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
             Sign Out
