@@ -64,7 +64,7 @@ class LandingPage extends React.Component {
     this.props.clearPost();
   };
   render() {
-    const { post, classes, ...rest } = this.props;
+    const { auth , post, classes, ...rest } = this.props;
     return <div>
         <Header color="transparent" routes={dashboardRoutes} brand="Enjoyneering" rightLinks={<HeaderLinks />} fixed changeColorOnScroll={{ height: 400, color: "white" }} {...rest} />
         <Parallax filter image={post.hasPost ? post.data.imgUrl : require("assets/img/landing-bg.jpg")}>
@@ -78,7 +78,7 @@ class LandingPage extends React.Component {
                   ))}
                 <br />
                 {post.hasPost && <Button href="/profile-page" color="transparent" className={classes.button}>
-                    <Avatar alt="Remy Sharp" src={post.data.owner.photoURL} className={classes.avatar} />
+                    <Avatar alt="Owner" src={post.data.owner.photoURL} className={classes.avatar} />
                     {" " + post.data.owner.displayName}
                   </Button>}
               </GridItem>
@@ -104,7 +104,7 @@ class LandingPage extends React.Component {
                   }
                 })}
             <GridItem xs={12} sm={12} md={6}>
-              {post.hasPost && <Button color="primary" round onClick={this.handleLove} simple={!this.state.love}>
+            {post.hasPost && <Button color="primary" round onClick={this.handleLove} simple={!this.state.love} disabled={!auth.isAuth}>
                   <Favorite /> {this.state.number} love it! 
                 </Button>}
             </GridItem>

@@ -24,7 +24,7 @@ const style = {
   },
   imgCardTop:{
     objectFit: 'cover',
-    maxWidth:'100%',
+    width: 250,
     maxHeight:'100%'
   },
   cardHeader:{

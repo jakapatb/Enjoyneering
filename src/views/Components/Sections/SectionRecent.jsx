@@ -42,14 +42,13 @@ const style = {
   cardTitle
 };
 class SectionRecent extends React.Component {
+  
   componentDidMount(){
     this.props.fetchListPost();
   }
   render() {
 
     const { list, classes } = this.props;
-    console.log(list.hasList);
-
     return <div className={classes.section}>
         <div className={classes.container}>
           <div className={classes.title}>
@@ -58,17 +57,10 @@ class SectionRecent extends React.Component {
           <GridContainer justify="center">
             <GridList className={classes.gridList} cols={2.5}>
             {
-              list.hasList && list.data.map((post)=>
-               { console.log(post)
-                return <SectionCard data={post} />
-               }
+              list.hasRecent && list.recent.map((post,index)=>
+               <SectionCard data={post} key={index}/>
               )
             }
-{/*             
-            <SectionCard id={"test2"} />
-            <SectionCard id={"test3"}/>
-            <SectionCard id={"test4"}/>
-            <SectionCard id={"test5"}/> */}
             </GridList>
           </GridContainer>
           <Link to="/">

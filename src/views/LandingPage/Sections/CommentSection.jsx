@@ -3,7 +3,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-
+import Avatar from "@material-ui/core/Avatar";
 // core components
 import GridItem from "components/Grid/GridItem.jsx";
 import Card from "components/Card/Card.jsx";
@@ -17,10 +17,13 @@ import { getUserFromUid } from "actions/index.js";
 const style = {
   cardTitle,
   textCenter: {
-    textAlign: "center"
+    textAlign: "justify"
   },
   textMuted: {
     color: "#6c757d"
+  },
+  avatar: {
+    paddingLefe: "5px"
   }
 };
 
@@ -44,19 +47,19 @@ class ArticleSection extends React.Component {
   render() {
     const { content, classes } = this.props;
     const {owner} = this.state;
-    return (
-      <GridItem xs={12} sm={12} md={8}>
+    return <GridItem xs={12} sm={12} md={8}>
         <Card className={classes.textCenter}>
-          <CardHeader color="danger">{owner.displayName}</CardHeader>
+          <CardHeader color="danger">
+              {/* <Avatar alt="Owner" src={owner.photoURL} className={classes.avatar} />  */}{owner.displayName}
+          </CardHeader>
           <CardBody>
-            <p>
-              {content.content}
-            </p>
+            <p>{content.content}</p>
           </CardBody>
-          <CardFooter className={classes.textMuted}>{moment(content.date).fromNow()}</CardFooter>
+          <CardFooter className={classes.textMuted}>
+            {moment(content.date).fromNow()}
+          </CardFooter>
         </Card>
-      </GridItem>
-    );
+      </GridItem>;
   }
 }
 
