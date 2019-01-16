@@ -15,9 +15,9 @@ class ArticleSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: "",
-      content: "",
-      ready: false
+      title: props.content.title,
+      content: props.content.content,
+      ready: props.content.ready
     };
   }
 
@@ -29,7 +29,7 @@ class ArticleSection extends React.Component {
     const { title, content } = this.state;
     const {submit , index} = this.props;
       if ((title.trim() !== "" && content.trim() !== "")) {
-        submit({ type:"Article", title:title , content:content , index:index })
+        submit({ type: "Article", title: title, content: content, index: index})
         this.setState({ ready: true });
       } else {
         console.log("warning");

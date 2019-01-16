@@ -21,7 +21,7 @@ import createPostStyle from "assets/jss/material-kit-react/views/createPost.jsx"
 // Sections for this page
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { sendPost } from "actions/index.js";
+import { sendPost, fetchPost, clearPost } from "actions/index.js";
 import YoutubeSection from "./Sections/YoutubeSection";
 import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
@@ -32,6 +32,7 @@ class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      postId:"none",
       contents: [],
       title: "",
       subtitle: "",
@@ -39,15 +40,45 @@ class CreatePost extends React.Component {
       tags: []
     };
   }
+
+  componentDidMount = () => {
+    const { history, fetchPost} = this.props;
+    if (history.location.search.includes("?edit=")){
+      //หากมีการแก้ไข
+      const postId = history.location.search.split("?edit=")[1];
+      this.setState({postId:postId});
+      fetchPost(postId)
+    } 
+  }
+
+  componentWillUpdate = (nextProps, nextState) => {
+    //นำข้อมูลเก่าแสดง
+    if (!this.props.post.hasPost && nextProps.post.hasPost) {
+      this.setState({
+        contents: Object.values(nextProps.post.data.contents).sort(
+          (a, b) => a.index - b.index
+        ),
+        tags: nextProps.post.data.tags,
+        title: nextProps.post.data.title,
+        subtitle: nextProps.post.data.subtitle,
+        imgUrl: nextProps.post.data.imgUrl
+      });
+    }
+  }
+  componentWillUnmount(){
+    this.props.clearPost();
+  }
+  
+  
+
   _handleList = type => () => {
     var Contents = this.state.contents;
-    Contents.push({ type: type });
+    Contents.push({ type: type ,ready:false});
     this.setState({ contents: Contents });
   };
   _removeContent = index => {
     var Contents = this.state.contents;
     Contents.splice(index, 1);
-    console.log(index, Contents);
     this.setState({ contents: Contents });
   };
 
@@ -72,9 +103,10 @@ class CreatePost extends React.Component {
   };
 
   _handleSubmit = () => {
-    const { title, subtitle, contents, file, imgUrl, tags } = this.state;
+    const { title, subtitle, contents, file, imgUrl, tags, postId } = this.state;
     const { auth, sendPost } = this.props;
     const post = {
+      postId: postId,
       title: title,
       subtitle: subtitle,
       contents: contents,
@@ -103,8 +135,9 @@ class CreatePost extends React.Component {
   };
 
   render() {
-    const { auth, classes, ...rest } = this.props;
-    const { imgUrl, tags } = this.state;
+    const { post ,auth, classes, ...rest } = this.props;
+    const { imgUrl, tags ,title, subtitle} = this.state;
+    console.log(post)
     return (
       <div>
         <Header
@@ -128,7 +161,7 @@ class CreatePost extends React.Component {
                     fullWidth: true,
                     onChange: this._handleChange
                   }}
-                  inputProps={{ classes: { input: classes.resize } }}
+                  inputProps={{ classes: { input: classes.resize } ,value:title}}
                 />
                 <CustomInput
                   className={classes.input}
@@ -138,7 +171,7 @@ class CreatePost extends React.Component {
                     fullWidth: true,
                     onChange: this._handleChange
                   }}
-                  inputProps={{ classes: { input: classes.subtitle } }}
+                  inputProps={{ classes: { input: classes.subtitle },value:subtitle }}
                 />
                 <Button
                   href="/profile-page"
@@ -198,6 +231,7 @@ class CreatePost extends React.Component {
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}
+                      content={content}
                     />
                   );
                 case "Image":
@@ -206,6 +240,8 @@ class CreatePost extends React.Component {
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}
+                      content={content}
+                      id={this.state.postId}
                     />
                   );
                 case "Youtube":
@@ -214,6 +250,7 @@ class CreatePost extends React.Component {
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}
+                      content={content}
                     />
                   );
                 default: return null
@@ -235,11 +272,12 @@ class CreatePost extends React.Component {
   }
 }
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  post : state.post
 });
 
 const mapDispatchToProps = {
-  sendPost
+  sendPost, fetchPost, clearPost
 };
 
 export default compose(

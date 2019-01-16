@@ -8,26 +8,21 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 
-import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
+import articleStyle from "assets/jss/material-kit-react/views/landingPageSections/articleStyle.jsx";
 
 class ArticleSection extends React.Component {
   render() {
     const { content, classes } = this.props;
-    return (
-      <div className={classes.section}>
+    return <div className={classes.section}>
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
-            <h2 className={classes.title}>
-              {content.title}
-            </h2>
+            <h2 className={classes.title}>{content.title}</h2>
             <h4 className={classes.description}>{content.content}</h4>
           </GridItem>
         </GridContainer>
-        <div>
-        </div>
-      </div>
-    );
+        <div />
+      </div>;
   }
 }
 
-export default withStyles(productStyle)(ArticleSection);
+export default withStyles(articleStyle)(ArticleSection);

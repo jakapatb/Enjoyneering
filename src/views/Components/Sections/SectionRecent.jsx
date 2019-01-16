@@ -44,7 +44,8 @@ const style = {
 class SectionRecent extends React.Component {
   
   componentDidMount(){
-    this.props.fetchListPost();
+      const condition = ['date','<=',new Date]  
+    this.props.fetchListPost(condition, 5);
   }
   render() {
 
@@ -73,6 +74,7 @@ class SectionRecent extends React.Component {
   }
 }
 const mapStateToProps = (state) => ({
+  auth : state.auth,
   list :state.listPost
 })
 

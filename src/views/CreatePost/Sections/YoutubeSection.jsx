@@ -15,14 +15,14 @@ class YoutubeSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: false,
-      videoId: "",
-      autoplay:0
+      ready: props.content.ready,
+      videoId: props.content.videoId,
+      autoplay:props.content.autoplay||0
     };
   }
   _onReady(event) {
     // access to player in all event handlers via event.target
-    event.target.pauseVideo();
+    /* event.target.pauseVideo(); */
   }
   _handleSubmit= event => {
     const { index , submit} = this.props;
@@ -45,6 +45,7 @@ class YoutubeSection extends React.Component {
   }
   render() {
     const { classes } = this.props;
+    console.log(this.state.autoplay);
     const opts = {
       width: "100%",
       playerVars: {
@@ -66,6 +67,8 @@ class YoutubeSection extends React.Component {
                 formControlProps={{
                   fullWidth: true,
                   onKeyPress: this._handleSubmit,
+                }}
+                inputProps={{
                   value: this.state.videoId
                 }}
               />

@@ -20,17 +20,21 @@ import Button from "components/CustomButtons/Button.jsx";
 import Avatar from "@material-ui/core/Avatar";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.jsx";
 import imageAvatar from "assets/img/faces/avatar.jpg";
-import {signOut} from "actions/index.js"
+import { signOut, goToSearch} from "actions/index.js"
 
 
 function HeaderLinks({...props }) {
-  const { signOut,auth,classes } = props;
+  const { goToSearch, signOut, auth, classes } = props;
   return <List className={classes.list}>
       <ListItem className={classes.listItem}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
-        <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput }} />
+        <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput }} onKeyPress={(e)=>{
+          if(e.key=="Enter" && e.target.value!=null){
+            goToSearch(e.target.value.trim())
+          }
+        }} />
       </ListItem>
       <ListItem className={classes.listItem}>
         <Link to="/?test" color="transparent" className={classes.navLink}>
@@ -77,7 +81,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  signOut
+  signOut, goToSearch
 }
 
 

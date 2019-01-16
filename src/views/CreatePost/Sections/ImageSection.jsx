@@ -9,17 +9,22 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
+import { getImgfromStorage } from "actions/index.js"
 class ImageSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      imgUrl: "",
+      imgUrl: props.content.imgUrl,
       file: "",
+      ready:props.content.ready
     };
   }
-  /* componentDidMount(){
-        getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl)=>this.setState({imgUrl:imgUrl}));
-    } */
+   componentDidMount(){
+        if(this.state.ready){
+          console.log("work")
+          getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl) => this.setState({ imgUrl: imgUrl,ready:false }));
+        }
+    } 
   handleChange = event => {
     event.preventDefault();
     const { index , submit} = this.props;
@@ -27,7 +32,7 @@ class ImageSection extends React.Component {
     let file = event.target.files[0];
 
     reader.onloadend = () => {
-      submit({ type: "Image", file: file, imgUrl: reader.result, index: index })
+      submit({ type: "Image", file: file, imgUrl: reader.result, index: index})
       this.setState({ file: file, imgUrl: reader.result });
     };
 
@@ -41,6 +46,7 @@ class ImageSection extends React.Component {
   render() {
     const { classes } = this.props;
     const { imgUrl } = this.state;
+    console.log(imgUrl)
     return (
       <div className={classes.section}>
         <Button round color="warning" onClick={this.removeContent}>
@@ -52,7 +58,7 @@ class ImageSection extends React.Component {
               labelText="imgUrl"
               id="imgUrl"
               inputProps={{
-                type: "file"
+                type: "file",
               }}
               formControlProps={{
                 fullWidth: true,
