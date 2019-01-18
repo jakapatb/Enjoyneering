@@ -5,7 +5,6 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
-
 // core components
 import parallaxStyle from "assets/jss/material-kit-react/components/parallaxStyle.jsx";
 
@@ -16,10 +15,17 @@ class Parallax extends React.Component {
     this.state = {
       transform: "translate3d(0," + windowScrollTop + "px,0)"
     };
+    this.ironImageHd = null;
     this.resetTransform = this.resetTransform.bind(this);
   }
   componentDidMount() {
     var windowScrollTop = window.pageYOffset / 3;
+    const hdLoaderImg = new Image();
+    hdLoaderImg.src = this.props.image;
+    hdLoaderImg.onload = () => {
+      this.ironImageHd.setAttribute("style", `background-image: url('${this.props.image}')`);
+      this.ironImageHd.classList.add(this.props.classes.fadeIn);
+    };
     this.setState({
       transform: "translate3d(0," + windowScrollTop + "px,0)"
     });
@@ -44,23 +50,45 @@ class Parallax extends React.Component {
       image,
       small
     } = this.props;
-    const parallaxClasses = classNames({
+    const parallaxOnly = classNames({
       [classes.parallax]: true,
       [classes.filter]: filter,
       [classes.small]: small,
       [className]: className !== undefined
     });
+    const parallaxClasses = classNames({
+      [classes.parallax]: true,
+      [classes.loaded]:true,
+      [classes.filter]: filter,
+      [classes.small]: small,
+      [className]: className !== undefined
+    });
+    const preloadParallaxClasses = ({
+      [classes.parallax]: true,
+      [classes.preload]: true,
+      [classes.filter]: filter,
+      [classes.small]: small,
+      [className]: className !== undefined
+    })
     return (
-      <div
-        className={parallaxClasses}
-        style={{
-          ...style,
-          backgroundImage: "url(" + image + ")",
-          ...this.state
-        }}
-        ref="parallax"
-      >
+      <div className={parallaxOnly}
+      ref="parallax">
+        <div
+          className={parallaxClasses}
+          style={{
+            ...style,
+            backgroundImage: "url(" + image + ")" ,  
+            ...this.state
+          }}
+          ref={imageLoadedElem => this.ironImageHd = imageLoadedElem}
+        >
         {children}
+        </div>
+        <div
+          className={preloadParallaxClasses}
+          style={{ backgroundImage: "linear-gradient(#fff, #fffff3)" }}>
+          <h4>Loading....</h4>
+        </div>
       </div>
     );
   }

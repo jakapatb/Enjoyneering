@@ -19,7 +19,8 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 import Favorite from "@material-ui/icons/Favorite";
 import searchPageStyle from "assets/jss/material-kit-react/views/searchPage.jsx";
-import { InstantSearch, Hits,SearchBox} from "react-instantsearch-dom";
+import { InstantSearch, Hits, connectSearchBox } from "react-instantsearch-dom";
+
 // Sections for this page
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -68,79 +69,67 @@ class SearchPage extends React.Component {
   handleSearch=(event)=>{
     this.setState({ search: event.target.value, searching:true });
   }
-  handleSubmitSearch = event => {
-    if (event.key === "Enter"){
-      if(event.target.value!==""){
-        this.getList(this.state.type, event.target.value)
-        this.setState({ search: event.target.value, searching: false });
-        this.props.history.push('/search/?s=' + event.target.value)
-      }
-      }
-      
-  };
 
   render() {
     const { list, classes, ...rest } = this.props;
     const { search, searching} = this.state;
     return <div>
         <Header color="transparent" routes={dashboardRoutes} brand="Enjoyneering" rightLinks={<HeaderLinks />} fixed changeColorOnScroll={{ height: 400, color: "white" }} {...rest} />
-        <Parallax filter className={classes.parallax} image={require("assets/img/landing-bg.jpg")}>
-          <div className={classes.container}>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
-                 <CustomInput
-                  className={classes.input}
-                  labelText="Search Here"
-                  id="title"
-                  formControlProps={{
-                    fullWidth: true,
-                    onChange: this.handleSearch,
-                    onKeyPress: this.handleSubmitSearch
-                  }}
-                  inputProps={{
-                    classes: { input: classes.resize },
-                    value: search,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon className={classes.searchIcon} />
-                      </InputAdornment>
-                    )
-                  }}
-                />  
-              </GridItem>
-            </GridContainer>
-          </div>
-        </Parallax>
-        <div className={classNames(classes.main, classes.mainRaised)}>
-          <div className={classes.container}>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={8}>
-                <div className={classes.title}>
-                  {!searching ? (
-                    <h3>Result: {search}</h3>
-                  ) : (
-                    <h3>please press Enter</h3>
-                  )}
-                </div>
-              </GridItem>
-              {list.hasRecent && list.recent.map((post, index) => (
-                  <SectionPost data={post} key={index} />
-                ))}
-              {/* <InstantSearch appId="Enjoyneering" apiKey="84cb8efd13a49bcd5f78ffbf5482c6f5" indexName="bestbuy">
-                <header>
-                  <SearchBox translations={{ placeholder: "search" }} />
-                </header>
-                <main>
-                  <Hits hitComponent={Hit} />
-                </main>
-              </InstantSearch> */}
-            </GridContainer>
-          </div>
-        </div>
+        <InstantSearch appId="81E61Q7CM2" apiKey="84cb8efd13a49bcd5f78ffbf5482c6f5" indexName="Enjoyneering">
+          <header>
+            <Parallax filter className={classes.parallax} image={require("assets/img/landing-bg.jpg")}>
+              <div className={classes.container}>
+                <GridContainer>
+                  <ConnectSearchBox search={search} handleSearch={this.handleSearch} />
+                </GridContainer>
+              </div>
+            </Parallax>
+          </header>
+          <main>
+            <div className={classNames(classes.main, classes.mainRaised)}>
+              <div className={classes.container}>
+              <GridContainer justify="center">
+                  <Hits hitComponent={SectionPost} />
+                </GridContainer>
+              </div>
+            </div>
+          </main>
+        </InstantSearch>
         <Footer />
       </div>;
   }
 }
+//TODO Change CSS 
+const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleSearch }) => {
+  refine(search)
+  return (
+    <CustomInput
+      labelText="Search Here"
+      id="title"
+      formControlProps={{
+        fullWidth: true
+      }}
+      inputProps={{
+        type: "search",
+        value: currentRefinement,
+        onChange: event =>{
+          refine(event.currentTarget.value)
+          handleSearch(event)
+        },
+        endAdornment: (
+          <InputAdornment position="end">
+            <SearchIcon />
+          </InputAdornment>
+        )
+      }}
+    />
+  )
+};
+
+const ConnectSearchBox = connectSearchBox(SearchBox);
+
+
+
 const mapStateToProps = state => ({
     list: state.listPost,
 });
@@ -150,12 +139,6 @@ const mapDispatchToProps = {
 
 };
 
-const Hit=({hit})=><div>
-  <div>
-    <img src={hit.image}/>
-    <p>{hit.title}</p>
-  </div>
-</div>
 
 
 export default compose(
