@@ -1,6 +1,6 @@
 import { container, title } from "assets/jss/material-kit-react.jsx";
 
-const searchPageStyle = {
+const searchPageStyle = theme => ({
     parallax:{
         height:"60vh"
     },
@@ -62,7 +62,51 @@ const searchPageStyle = {
   tag: {
     margin: "0px",
     padding: "0px"
-  }
-};
+  },
+  inputRoot: {
+     color: "inherit", 
+    width: "100%"
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: 120,
+      "&:focus": {
+        width: 200
+      }
+    }
+  }, 
+  listItem: {
+    float: "left",
+    color: "inherit",
+    position: "relative",
+    display: "block",
+    width: "auto",
+    margin: "0",
+    padding: "0",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      "&:after": {
+        width: "calc(100% - 30px)",
+        content: '""',
+        display: "block",
+        height: "1px",
+        marginLeft: "15px",
+        backgroundColor: "#e5e5e5"
+      }
+    }
+  },
+  gridList: {
+    justify: "center",
+    flexWrap: "nowrap",
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: "translateZ(0)"
+  },
+});
 
 export default searchPageStyle;

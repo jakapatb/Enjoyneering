@@ -47,13 +47,19 @@ function HeaderLinks({...props }) {
           dropdownList={auth.data.status == 'administrator' ?
             [<Link className={classes.dropdownLink} color="transparent"  to="/create-post">
               Create Post
+          </Link>, 
+          <Link className={classes.dropdownLink} color="transparent" to="/management">
+                Management
           </Link>,
               <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
                 Sign Out
           </Button>
           ]
           : 
-          [<Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
+          [<Link className={classes.dropdownLink} color="transparent" to="/management">
+              Management
+          </Link>,
+          <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
             Sign Out
           </Button>]} />
         :

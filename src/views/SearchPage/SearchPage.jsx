@@ -6,9 +6,12 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
 import Avatar from "@material-ui/core/Avatar";
+import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import GridList from "@material-ui/core/GridList";
 // core components
+import ListItem from "@material-ui/core/ListItem";
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -80,7 +83,7 @@ class SearchPage extends React.Component {
             <Parallax filter className={classes.parallax} image={require("assets/img/landing-bg.jpg")}>
               <div className={classes.container}>
                 <GridContainer>
-                  <ConnectSearchBox search={search} handleSearch={this.handleSearch} />
+                  <ConnectSearchBox search={search} handleSearch={this.handleSearch} classes={classes} />
                 </GridContainer>
               </div>
             </Parallax>
@@ -88,8 +91,10 @@ class SearchPage extends React.Component {
           <main>
             <div className={classNames(classes.main, classes.mainRaised)}>
               <div className={classes.container}>
-              <GridContainer justify="center">
-                  <Hits hitComponent={SectionPost} />
+                <GridContainer justify="center">
+                  <GridList className={classes.gridList} cols={2.5}>
+                    <Hits hitComponent={SectionPost} />
+                  </GridList>
                 </GridContainer>
               </div>
             </div>
@@ -100,10 +105,10 @@ class SearchPage extends React.Component {
   }
 }
 //TODO Change CSS 
-const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleSearch }) => {
+const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleSearch,classes }) => {
   refine(search)
-  return (
-    <CustomInput
+  return <ListItem className={classes.listItem}>
+      {/* <CustomInput
       labelText="Search Here"
       id="title"
       formControlProps={{
@@ -122,8 +127,17 @@ const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleS
           </InputAdornment>
         )
       }}
-    />
-  )
+    /> */}
+      <div className={classes.searchIcon}>
+        <SearchIcon />
+      </div>
+      <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput }} onKeyPress={event => {
+          if (event.key == "Enter" && event.target.value != null) {
+            refine(event.currentTarget.value);
+            handleSearch(event);
+          }
+        }} />
+  </ListItem>;
 };
 
 const ConnectSearchBox = connectSearchBox(SearchBox);

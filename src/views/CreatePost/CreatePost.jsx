@@ -25,7 +25,7 @@ import { sendPost, fetchPost, clearPost } from "actions/index.js";
 import YoutubeSection from "./Sections/YoutubeSection";
 import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
-
+import Image from 'assets/img/bg.jpg'
 const dashboardRoutes = [];
 
 class CreatePost extends React.Component {
@@ -36,7 +36,7 @@ class CreatePost extends React.Component {
       contents: [],
       title: "",
       subtitle: "",
-      imgUrl: "",
+      imgUrl: Image,
       tags: []
     };
   }

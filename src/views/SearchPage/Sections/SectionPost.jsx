@@ -4,69 +4,82 @@ import { Link } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import Card from "components/Card/Card.jsx";
-import GridItem from "components/Grid/GridItem.jsx";
-import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
-import CardMedia from "@material-ui/core/CardMedia";
-import image from "assets/img/bg.jpg";
-import { cardTitle } from "assets/jss/material-kit-react.jsx";
-import { getImgfromStorage } from "actions/index.js";
-import * as moment from "moment";
+import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 
+import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
+import { cardTitle } from "assets/jss/material-kit-react.jsx";
+import thumbnail from "assets/img/thumbnail.jpg";
+import { getImgfromStorage } from "actions/index.js";
+import * as moment from 'moment';
 const style = {
-  cardTitle,
-  imgCard: {
-    objectFit: "cover ",
-    width: "100%",
-    height:300
-    /* maxHeight: "100%", */
-  },
   card: {
-    display: "flex",
+    width: 250,
+    height: 400,
   },
-  details: {
-    display: "flex",
-    flexDirection: "column"
+  ...imagesStyles,
+  cardTitle,
+  textMuted: {
+    color: "#6c757d"
   },
-  content: {
-    flex: '1 0 auto',
+  imgCardTop: {
+    objectFit: 'cover',
+    width: 250,
+    maxHeight: '100%'
   },
+  cardHeader: {
+
+    width: 250,
+    height: 175,
+    padding: 0,
+    margin: 0
+  }
 };
 
 class SectionPost extends React.Component {
-constructor(props){
-  super(props)
-  this.state={
-    imgUrl :image
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgUrl: thumbnail
+    };
   }
-}
   componentDidMount() {
     getImgfromStorage(this.props.hit.objectID, "title.jpg").then(imgUrl =>
       this.setState({ imgUrl: imgUrl })
     );
   }
-
   render() {
-    const { classes,hit } = this.props;
-    return <GridItem xs={8} sm={8} md={12}>
-        <Link to={{ pathname: "/landing-page/", search: "post=" + hit.objectID, state: { id: hit.objectID } }}>
-          <Card className={classes.card}>
-            <div className={classes.details}>
-              <CardBody className={classes.content}>
-                <div className={classes.imgCardOverlay}>
-                  <h3 className={classes.cardTitle}>{hit.title}</h3>
-                  {/*  <h4>{hit.subtitle}</h4> */}
-                  <h4>{moment(hit.date).format("lll")}</h4>
-                </div>
-              </CardBody>
-            <img className={classes.imgCard} src={this.state.imgUrl} alt="post" />
-            </div>
-        
-
-          </Card>
-        </Link>
-      </GridItem>;
+    const { classes, hit } = this.props;
+    return (
+      <Link
+        to={{
+          pathname: "/landing-page/",
+          search: "post=" + hit.id,
+          state: { id: hit.id }
+        }}
+      >
+        <Card className={classes.card}>
+          <CardHeader className={classes.cardHeader}>
+            <img
+              className={classes.imgCardTop}
+              src={this.state.imgUrl}
+              alt="Card-img-cap"
+            />
+          </CardHeader>
+          <CardBody>
+            <h4 className={classes.cardTitle}>{hit.title}</h4>
+            <p>{hit.subtitle}</p>
+            <p>
+              <small className={classes.textMuted}>
+                {moment(hit.date).fromNow()}
+              </small>
+            </p>
+          </CardBody>
+        </Card>
+      </Link>
+    );
   }
 };
+
 
 export default withStyles(style)(SectionPost);

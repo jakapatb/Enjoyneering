@@ -30,13 +30,6 @@ const style = {
       radius: 10
     }
   },
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 140,
-    width: "auto"
-  },
   ...exampleStyle,
   ...imagesStyles,
   cardTitle
