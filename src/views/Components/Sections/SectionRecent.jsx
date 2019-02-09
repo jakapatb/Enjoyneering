@@ -37,7 +37,7 @@ const style = {
 class SectionRecent extends React.Component {
   
   componentDidMount(){
-      const condition = ['date','<=',new Date]  
+    const condition = ['date','<=',new Date()]  
     this.props.fetchListPost(condition, 5);
   }
   render() {

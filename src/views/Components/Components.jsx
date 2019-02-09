@@ -21,7 +21,6 @@ import componentsStyle from "assets/jss/material-kit-react/views/components.jsx"
 class Components extends React.Component {
   render() {
     const { auth, classes, ...rest } = this.props;
-    console.log(this.props.post)
     return <div>
         <Header
           brand="Enjoyneering KMITL"
