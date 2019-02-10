@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 // react component for creating beautiful carousel
 import Carousel from "react-slick";
 // material-ui components

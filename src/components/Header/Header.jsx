@@ -16,7 +16,7 @@ import Menu from "@material-ui/icons/Menu";
 // core components
 import headerStyle from "assets/jss/material-kit-react/components/headerStyle.jsx";
 
-import { checkStateUser  } from "actions/index.js";
+import { checkStateUser } from "actions/index.js";
 import { connect } from "react-redux";
 
 class Header extends React.Component {
@@ -176,7 +176,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  checkStateUser 
+  checkStateUser
 };
 
 export default connect(
