@@ -14,14 +14,13 @@ import GridItem from "components/Grid/GridItem.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 // sections for this page
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
-import SectionRecent from "./Sections/SectionRecent.jsx";
-import SectionCarousel from "./Sections/SectionCarousel.jsx";
+ import SectionRecent from "./Sections/SectionRecent.jsx";
+ import SectionCarousel from "./Sections/SectionCarousel.jsx";  
 import componentsStyle from "assets/jss/material-kit-react/views/components.jsx";
 
 class Components extends React.Component {
   render() {
     const { auth, classes, ...rest } = this.props;
-    console.log(this.props.post)
     return <div>
         <Header
           brand="Enjoyneering KMITL"
@@ -44,8 +43,8 @@ class Components extends React.Component {
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
-          <SectionCarousel />
-          <SectionRecent />
+          <SectionCarousel /> 
+         <SectionRecent /> 
         </div>
         <Footer />
       </div>

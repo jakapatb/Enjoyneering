@@ -3,17 +3,16 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import Avatar from "@material-ui/core/Avatar";
+
 // core components
 import GridItem from "components/Grid/GridItem.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
-import Button from "components/CustomButtons/Button.jsx";
 import * as moment from 'moment';
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
-import { getUserFromUid } from "actions/index.js";
+import { getUserFromUid } from "actions/helpers.js";
 const style = {
   cardTitle,
   textCenter: {

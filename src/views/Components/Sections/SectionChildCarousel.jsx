@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/icons
-import LocationOn from "@material-ui/icons/LocationOn";
+
 // core components
 import image from "assets/img/Carousel.jpg";
-import { getImgfromStorage } from "actions/index.js";
+import { getImgfromStorage } from "actions/helpers.js";
 
 const style = {
   imgCard: {

@@ -23,7 +23,7 @@ class ArticleSection extends React.Component {
   handleSubmit= event => {
     if(event.key === "Enter"){
         this.setState({ content:"Sending..." }) 
-        this.props.sendComment(this.props.id,
+        this.props.sendComment(
           {
             ownerUid: this.props.auth.data.uid,
             content: event.target.value,

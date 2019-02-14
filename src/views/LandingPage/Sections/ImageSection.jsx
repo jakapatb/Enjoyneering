@@ -6,7 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import { getImgfromStorage } from "actions/index.js";
+import { getImgfromStorage } from "actions/helpers.js";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
 
 

@@ -13,13 +13,13 @@ import exampleStyle from "assets/jss/material-kit-react/views/componentsSections
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import { fetchListPost } from 'actions/index.js'
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { fetchListPost } from "actions/index.js";
 import SectionCard from "./SectionCard.jsx";
 const style = {
   gridList: {
-    justify:"center",
+    justify: "center",
     flexWrap: "nowrap",
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: "translateZ(0)"
@@ -35,26 +35,24 @@ const style = {
   cardTitle
 };
 class SectionRecent extends React.Component {
-  
-  componentDidMount(){
-      const condition = ['date','<=',new Date]  
+  componentDidMount() {
+    const condition = ["date", "<=", new Date()];
     this.props.fetchListPost(condition, 5);
   }
   render() {
-
     const { list, classes } = this.props;
-    return <div className={classes.section}>
+    return (
+      <div className={classes.section}>
         <div className={classes.container}>
           <div className={classes.title}>
             <h2>Recent Posts</h2>
           </div>
           <GridContainer justify="center">
             <GridList className={classes.gridList} cols={2.5}>
-            {
-              list.hasRecent && list.recent.map((post,index)=>
-               <SectionCard data={post} key={index}/>
-              )
-            }
+              {list.hasRecent &&
+                list.recent.map((post, index) => (
+                  <SectionCard data={post} key={index} />
+                ))}
             </GridList>
           </GridContainer>
           <Link to="/">
@@ -63,16 +61,23 @@ class SectionRecent extends React.Component {
             </Button>
           </Link>
         </div>
-      </div>;
+      </div>
+    );
   }
 }
-const mapStateToProps = (state) => ({
-  auth : state.auth,
-  list :state.listPost
-})
+const mapStateToProps = state => ({
+  auth: state.auth,
+  list: state.listPost
+});
 
 const mapDispatchToProps = {
   fetchListPost
 };
 
-export default compose(withStyles(style),connect(mapStateToProps,mapDispatchToProps))(SectionRecent);
+export default compose(
+  withStyles(style),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(SectionRecent);

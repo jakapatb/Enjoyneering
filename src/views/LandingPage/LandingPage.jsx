@@ -25,7 +25,7 @@ import ImageSection from "./Sections/ImageSection.jsx";
 import CommentListSection from "./Sections/CommentListSection.jsx";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchPost, clearPost, checkLove } from "actions/index.js";
+import { fetchPost, clearPost, pressLove } from "actions/index.js";
 
 const dashboardRoutes = [];
 
@@ -48,7 +48,6 @@ class LandingPage extends React.Component {
   componentWillUpdate(nextProps){
     const { post, auth } = nextProps;
     if (post.hasPost && !this.props.post.hasPost) {
-      console.log("working")
       if (post.data.love.includes(auth.data.uid)) {
         this.setState({ love: true })
       }
@@ -58,8 +57,8 @@ class LandingPage extends React.Component {
 
   handleLove = async () => {
     const { love, number} = this.state
-    const {checkLove, history, auth} = this.props;
-    await checkLove(history.location.search, auth.data.uid, !love)
+    const {pressLove } = this.props;
+    await pressLove(!love)
     await this.setState({ love: !love, number: !love ? number + 1 : number - 1 })
   }
 
@@ -108,7 +107,7 @@ class LandingPage extends React.Component {
                     case "Youtube":
                       return <YoutubeSection content={content} />;
                     case "Image":
-                      return <ImageSection content={content} id={post.data.id} />;
+                      return <ImageSection content={content} />;
                     default:
                       return null;
                   }
@@ -118,7 +117,7 @@ class LandingPage extends React.Component {
                   <Favorite /> {this.state.number} love it!
                 </Button>}
             </GridItem>
-            {post.hasPost && <CommentListSection comments={post.data.comments} id={postId} />}
+            {post.hasComments && <CommentListSection comments={post.comments} id={postId} />}
           </div>
         </div>
         <Footer />
@@ -133,7 +132,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchPost,
   clearPost,
-  checkLove
+  pressLove
 };
 
 export default compose(
