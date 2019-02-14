@@ -20,7 +20,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 src/components/PopupRegister.js
-*.js
-*.js
 src/components/PopupRegister.js
 src/assets/scss/material-kit-react.css
