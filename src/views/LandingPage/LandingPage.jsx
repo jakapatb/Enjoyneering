@@ -107,7 +107,7 @@ class LandingPage extends React.Component {
                     case "Youtube":
                       return <YoutubeSection content={content} />;
                     case "Image":
-                      return <ImageSection content={content} />;
+                      return <ImageSection content={content} id={postId}/>;
                     default:
                       return null;
                   }

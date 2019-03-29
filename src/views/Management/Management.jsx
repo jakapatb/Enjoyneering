@@ -21,7 +21,6 @@ import SectionStudent from "./Sections/SectionStudent";
 class Management extends React.Component {
     render() {
         const { auth, classes, ...rest } = this.props;
-        console.log(this.props.post)
         return <div>
             <Header brand="Enjoyneering KMITL" rightLinks={<HeaderLinks user={auth} test="123" />} fixed color="transparent" changeColorOnScroll={{ height: 100, color: "white" }} {...rest} />
             <Parallax image={require("assets/img/bg2.jpg")}>

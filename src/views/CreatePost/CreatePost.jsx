@@ -32,12 +32,14 @@ class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      postId:"none",
+      postId:undefined,
       contents: [],
       title: "",
       subtitle: "",
       imgUrl: Image,
-      tags: []
+      tags: [],
+      isChangeTitleImg:false,
+      deletedContents:[]
     };
   }
 
@@ -71,23 +73,34 @@ class CreatePost extends React.Component {
   
   
 
-  _handleList = type => () => {
+  _handleList = type => () => { // Create new Content
     var Contents = this.state.contents;
-    Contents.push({ type: type ,ready:false});
+    Contents.push({ type: type });
     this.setState({ contents: Contents });
   };
   _removeContent = index => {
-    var Contents = this.state.contents;
-    Contents.splice(index, 1);
-    this.setState({ contents: Contents });
+    const { deletedContents, contents} = this.state;
+    var DeletedContents = deletedContents;
+    var Contents = contents;
+    var deletedContent = Contents.splice(index, 1)[0];
+    if(deletedContent.id!==null){ // content ที่เคยอัพลงfirestoreแล้ว
+      DeletedContents.push(deletedContent)
+    }
+    this.setState({ contents: Contents, deeteContents: DeletedContents});
   };
 
   _handleTags = event => {
     if (event.key === "Enter") {
-      var Tags = this.state.tags;
-      Tags.push(event.target.value.toUpperCase());
-      this.setState({ tags: Tags });
-      event.target.value = "";
+      const tag = event.target.value.toUpperCase();
+      var tags = this.state.tags;
+      if (!tags.includes(tag)) { // กันไม่ให้ มีTags ซ้ำ
+        tags.push(tag);
+        this.setState({ tags: tags });
+        event.target.value = "";
+      }
+      else{
+        //TODO แจ้งเตือนว่าTag ซ้ำ
+      }
     }
   };
   _removeTag = index => () => {
@@ -103,17 +116,17 @@ class CreatePost extends React.Component {
   };
 
   _handleSubmit = () => {
-    const { title, subtitle, contents, file, imgUrl, tags, postId } = this.state;
-    const { auth, sendPost } = this.props;
+    const { title, subtitle, contents, file, imgUrl, tags, postId, deletedContents } = this.state;
+    const { sendPost } = this.props;
     const post = {
       postId: postId,
       title: title,
       subtitle: subtitle,
       contents: contents,
-      ownerUid: auth.data.uid,
       file: file,
       imgUrl: imgUrl,
-      tags: tags
+      tags: tags,
+      deletedContents: deletedContents
     };
     sendPost(post);
   };
@@ -128,7 +141,7 @@ class CreatePost extends React.Component {
     let file = event.target.files[0];
 
     reader.onloadend = () => {
-      this.setState({ file: file, imgUrl: reader.result });
+      this.setState({ file: file, imgUrl: reader.result, isChangeTitleImg:true});
     };
 
     reader.readAsDataURL(file);
@@ -137,7 +150,6 @@ class CreatePost extends React.Component {
   render() {
     const { post ,auth, classes, ...rest } = this.props;
     const { imgUrl, tags ,title, subtitle} = this.state;
-    console.log(post)
     return (
       <div>
         <Header
@@ -228,6 +240,7 @@ class CreatePost extends React.Component {
                 case "Article":
                   return (
                     <ArticleSection
+                      key={content.id}
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}
@@ -237,6 +250,7 @@ class CreatePost extends React.Component {
                 case "Image":
                   return (
                     <ImageSection
+                      key={content.id}
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}
@@ -247,6 +261,7 @@ class CreatePost extends React.Component {
                 case "Youtube":
                   return (
                     <YoutubeSection
+                      key={content.id}
                       index={index}
                       remove={this._removeContent}
                       submit={this._handleChildSubmit}

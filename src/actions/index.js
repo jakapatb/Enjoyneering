@@ -24,13 +24,23 @@ export const checkStateUser = () => (dispatch, getState) => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const dataUser = user.providerData[0];
-      const payload = {
+      var payload = {
         displayName: dataUser.displayName,
         uid: user.uid,
-        photoURL: dataUser.photoURL
+        photoURL: dataUser.photoURL,
+        status: "visitor"
       };
       const userRef = db.collection("users").doc(user.uid);
-      userRef.set(payload);
+      db.runTransaction(transaction => {
+        transaction.get(userRef).then(userDoc => {
+          if (userDoc.exists) {
+            //already Member
+            payload.status = userDoc.data().status;
+          }
+          dispatch({ type: FETCH_USER_SUCCESS, payload: payload });
+          transaction.update(userRef, payload);
+        });
+      });
       //notifications
       userRef.collection("notifications").onSnapshot(notiSnap => {
         var notifications = [];
@@ -39,7 +49,6 @@ export const checkStateUser = () => (dispatch, getState) => {
         );
         dispatch({ type: FETCH_NOTI_SUCCESS, payload: notifications });
       });
-      dispatch({ type: FETCH_USER_SUCCESS, payload: payload });
     } else {
       dispatch({ type: FETCH_USER_FAIL });
     }
@@ -173,8 +182,10 @@ export const pressLove = isLove => (dispatch, getState) => {
     return transaction.get(postRef).then(postDoc => {
       var love = postDoc.data().love;
       if (isLove) {
+        //เพิ่มเข้า
         love.push(uid);
       } else {
+        //เอาออก
         love = love.filter(userInLove => {
           return userInLove !== uid;
         });
@@ -186,4 +197,135 @@ export const pressLove = isLove => (dispatch, getState) => {
       });
     });
   });
+};
+
+//Create & Edit Post
+
+export const sendPost = post => (dispatch, getState) => {
+  const { auth } = getState();
+  //add or Update data except contents
+  const postsRef = db.collection("posts");
+  const details = {
+    title: post.title,
+    subtitle: post.subtitle,
+    ownerUid: auth.data.uid,
+    tags: post.tags
+  };
+  if (post.postId === undefined) {
+    //new Post //? should set Love_count?
+    postsRef
+      .add({ ...details, love: [], love_count: 0, date: new Date() })
+      .then(postRef => {
+        updateContents(post.contents, postRef.id, post.deletedContents);
+        firebase
+          .storage()
+          .ref("posts")
+          .child(postRef.id + "/title.jpg")
+          .put(post.file);
+        return hist.push("/landing-page/?post=" + postRef.id);
+      });
+  } else {
+    //Edit Post
+    postsRef
+      .doc(post.postId)
+      .update({ ...details, updated: new Date() })
+      .then(() => {
+        updateContents(post.contents, post.postId, post.deletedContents);
+        if (post.isChangeTitleImg) {
+          firebase
+            .storage()
+            .ref("posts")
+            .child(post.postId + "/title.jpg")
+            .put(post.file);
+        }
+        return hist.push("/landing-page/?post=" + post.postId);
+      })
+      .catch(e => console.log(e));
+  }
+};
+
+const updateContents = (contents, postId, deletedContents) => {
+  //add Image Title to storage
+  const batch = db.batch();
+  const contentsRef = db
+    .collection("posts")
+    .doc(postId)
+    .collection("contents");
+  const postsImgRef = firebase.storage().ref("posts");
+  // Delete useless Content
+  deletedContents.map(content => {
+    batch.delete(contentsRef.doc(content.id));
+    if (content.type === "Image") {
+      //ลบรูป
+      postsImgRef
+        .child(postId + "/" + content.fileName)
+        .delete()
+        .then(() => console.log("SUCCESS"))
+        .catch(e => console.log(e));
+    }
+    return 0;
+  });
+  batch.commit().then(() => {
+    // add & update Contents
+    contents.map((content, index) => {
+      var outPutContent = {
+        index: content.index,
+        type: content.type,
+        ready: true //? For what?
+      };
+      switch (content.type) {
+        case "Article":
+          outPutContent = {
+            ...outPutContent,
+            title: content.title,
+            content: content.content
+          };
+          break;
+        case "Image":
+          outPutContent = {
+            ...outPutContent,
+            fileName: "pic" + index + "." + content.fileType
+          };
+          // Add Image to storage
+          postsImgRef
+            .child(postId + "/pic" + index + "." + content.fileType)
+            .put(content.file);
+          break;
+        case "Youtube":
+          outPutContent = {
+            ...outPutContent,
+            autoplay: 0,
+            videoId: content.videoId
+          };
+          break;
+        default:
+          break;
+      }
+
+      //add info to firestore
+      if (content.id === undefined) {
+        // new Content
+        return contentsRef.add(outPutContent);
+      } else {
+        //edit Content
+        return contentsRef.doc(content.id).set(outPutContent);
+      }
+    });
+  });
+};
+
+export const fetchSections = () => (dispatch, getState) => {
+  const { auth } = getState();
+  db.collection("sections")
+    .where("ownerUid", "==", auth.data.uid)
+    .get()
+    .then(sectionsDocs => {
+
+      var sections = [];
+      sectionsDocs.forEach((section,index) => {
+        sections.push(section.data())
+      });
+      /* dispatch({type:}) */
+
+    });
 };

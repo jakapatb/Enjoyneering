@@ -9,7 +9,7 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import { getImgfromStorage } from "actions/index.js"
+import { getImgfromStorage } from "actions/helpers.js"
 class ImageSection extends React.Component {
   constructor(props) {
     super(props);
@@ -21,22 +21,26 @@ class ImageSection extends React.Component {
   }
    componentDidMount(){
         if(this.state.ready){
-          console.log("work")
           getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl) => this.setState({ imgUrl: imgUrl,ready:false }));
         }
     } 
   handleChange = event => {
     event.preventDefault();
     const { index , submit} = this.props;
+    var fileTypes = ['jpg', 'jpeg', 'png'];
     let reader = new FileReader();
     let file = event.target.files[0];
+    var fileType = file.name.split('.').pop().toLowerCase();
+    if (fileTypes.includes(fileType)){ // input is image file
+      reader.onloadend = () => {
+        submit({ type: "Image", file: file, imgUrl: reader.result, index: index, fileType: fileType })
+        this.setState({ file: file, imgUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }else{ //input wrong
 
-    reader.onloadend = () => {
-      submit({ type: "Image", file: file, imgUrl: reader.result, index: index})
-      this.setState({ file: file, imgUrl: reader.result });
-    };
-
-    reader.readAsDataURL(file);
+    }
+    
   };
 
   removeContent = () => {

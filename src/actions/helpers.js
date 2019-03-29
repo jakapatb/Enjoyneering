@@ -12,7 +12,7 @@ export const getImgfromStorage = (postId, fileName) => {
       .then(url => {
         return resolve(url);
       })
-      .catch(e => console.log(e));
+      .catch(e => console.warn(e));
   });
 };
 

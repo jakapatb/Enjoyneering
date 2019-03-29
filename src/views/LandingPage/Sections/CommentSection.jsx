@@ -8,8 +8,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import GridItem from "components/Grid/GridItem.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
-import CardFooter from "components/Card/CardFooter.jsx";
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Avatar from "@material-ui/core/Avatar";
 import * as moment from 'moment';
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import { getUserFromUid } from "actions/helpers.js";
@@ -31,7 +33,7 @@ class ArticleSection extends React.Component {
     super(props);
     this.state={
       owner:{
-        displayName:"wait"
+        displayName:""
       }
     }
   }
@@ -48,15 +50,21 @@ class ArticleSection extends React.Component {
     const {owner} = this.state;
     return <GridItem xs={12} sm={12} md={8}>
         <Card className={classes.textCenter}>
-          <CardHeader color="danger">
-              {/* <Avatar alt="Owner" src={owner.photoURL} className={classes.avatar} />  */}{owner.displayName}
-          </CardHeader>
+        <CardHeader 
+        avatar={<Avatar alt="Owner" src={owner.photoURL} className={classes.avatar} />}
+          action={
+            <IconButton>
+              <MoreVertIcon />
+            </IconButton>
+          }
+          title={owner.displayName}
+          subheader={moment(content.date).fromNow()}
+        >
+
+        </CardHeader>
           <CardBody>
             <p>{content.content}</p>
           </CardBody>
-          <CardFooter className={classes.textMuted}>
-            {moment(content.date).fromNow()}
-          </CardFooter>
         </Card>
       </GridItem>;
   }

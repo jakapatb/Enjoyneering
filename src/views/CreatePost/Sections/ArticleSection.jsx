@@ -28,10 +28,11 @@ class ArticleSection extends React.Component {
   handleSubmit = event => {
     const { title, content } = this.state;
     const {submit , index} = this.props;
-      if ((title.trim() !== "" && content.trim() !== "")) {
+      if ((title.trim() !== "" && content.trim() !== "")) { // ตอน Submit ข้อมูลทั้ง Title และ Content ห้ามว่าง
         submit({ type: "Article", title: title, content: content, index: index})
         this.setState({ ready: true });
       } else {
+        //TODO แจ้งเตื่อนว่า ยังมีข้อมูลว่าง
         console.log("warning");
       }
   };

@@ -10,7 +10,7 @@ import CardBody from "components/Card/CardBody.jsx";
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import thumbnail from "assets/img/thumbnail.jpg";
-import { getImgfromStorage } from "actions/index.js";
+import { getImgfromStorage } from "actions/helpers.js";
 import * as moment from 'moment';
 const style = {
   card: {

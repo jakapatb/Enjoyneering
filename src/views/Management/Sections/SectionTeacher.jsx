@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import GridItem from "components/Grid/GridItem.jsx";
+import SectionTable from "./SectionTable";
 export class SectionTeacher extends Component {
   render() {
     /**  
@@ -9,6 +10,7 @@ export class SectionTeacher extends Component {
     return (
         <GridItem>
             <h2>Teacher</h2>
+            <SectionTable/>
         </GridItem>
     )
   }

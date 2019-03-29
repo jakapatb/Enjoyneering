@@ -5,22 +5,17 @@ import classNames from "classnames";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import Avatar from "@material-ui/core/Avatar";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import GridList from "@material-ui/core/GridList";
 // core components
 import ListItem from "@material-ui/core/ListItem";
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
-import GridItem from "components/Grid/GridItem.jsx";
-import Button from "components/CustomButtons/Button.jsx";
-import Badge from "components/Badge/Badge.jsx";
+
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
-import Favorite from "@material-ui/icons/Favorite";
 import searchPageStyle from "assets/jss/material-kit-react/views/searchPage.jsx";
 import { InstantSearch, Hits, connectSearchBox } from "react-instantsearch-dom";
 
@@ -29,7 +24,6 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { fetchListPost} from "actions/index.js";
 import SectionPost from "./Sections/SectionPost";
-import CustomInput from "components/CustomInput/CustomInput.jsx";
 const dashboardRoutes = [];
 
 class SearchPage extends React.Component {
@@ -75,7 +69,7 @@ class SearchPage extends React.Component {
 
   render() {
     const { list, classes, ...rest } = this.props;
-    const { search, searching} = this.state;
+    const { search} = this.state;
     return <div>
         <Header color="transparent" routes={dashboardRoutes} brand="Enjoyneering" rightLinks={<HeaderLinks />} fixed changeColorOnScroll={{ height: 400, color: "white" }} {...rest} />
         <InstantSearch appId="81E61Q7CM2" apiKey="84cb8efd13a49bcd5f78ffbf5482c6f5" indexName="Enjoyneering">
@@ -105,34 +99,14 @@ class SearchPage extends React.Component {
   }
 }
 //TODO Change CSS 
-const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleSearch,classes }) => {
+const SearchBox = ({refine, search, handleSearch,classes }) => {
   refine(search)
   return <ListItem className={classes.listItem}>
-      {/* <CustomInput
-      labelText="Search Here"
-      id="title"
-      formControlProps={{
-        fullWidth: true
-      }}
-      inputProps={{
-        type: "search",
-        value: currentRefinement,
-        onChange: event =>{
-          refine(event.currentTarget.value)
-          handleSearch(event)
-        },
-        endAdornment: (
-          <InputAdornment position="end">
-            <SearchIcon />
-          </InputAdornment>
-        )
-      }}
-    /> */}
       <div className={classes.searchIcon}>
         <SearchIcon />
       </div>
       <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput }} onKeyPress={event => {
-          if (event.key == "Enter" && event.target.value != null) {
+          if (event.key === "Enter" && event.target.value !== null) {
             refine(event.currentTarget.value);
             handleSearch(event);
           }
@@ -142,8 +116,6 @@ const SearchBox = ({ currentRefinement, isSearchStalled, refine, search, handleS
 
 const ConnectSearchBox = connectSearchBox(SearchBox);
 
-
-
 const mapStateToProps = state => ({
     list: state.listPost,
 });
@@ -152,8 +124,6 @@ const mapDispatchToProps = {
     fetchListPost,
 
 };
-
-
 
 export default compose(
   withStyles(searchPageStyle),
