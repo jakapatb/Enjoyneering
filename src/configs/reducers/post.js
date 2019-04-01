@@ -18,7 +18,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_POST:
-      return { ...state, isFetching: true, hasPost: false };
+      return { ...state, isFetching: true };
     case FETCH_POST_SUCCESS:
       return {
         ...state,

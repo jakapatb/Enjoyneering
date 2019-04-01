@@ -74,7 +74,7 @@ function HeaderLinks({...props }) {
           left
           caret={false}
           hoverColor="black"
-          dropdownHeader="Dropdown Header"
+          dropdownHeader="Notifications "
           buttonText={
             <div className={classes.rootBadge}>
               <Badge
@@ -103,7 +103,7 @@ function HeaderLinks({...props }) {
               case "comment":
                 return (
                   <a href={"landing-page?post=" + message.postId} onClick={()=>markSeenNoti(message.postId,message.notiId)} className={classes.dropdownLink}>
-                   {message.seen&&"Seen "}Someone Comment in Your "{message.title}" post
+                   {message.seen && "Seen "} Someone Comment in Your "{message.title}" post
                   </a>
                 );
               default:

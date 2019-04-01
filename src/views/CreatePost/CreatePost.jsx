@@ -231,7 +231,10 @@ class CreatePost extends React.Component {
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
-          <div className={classes.container}>
+          { post.isFetching ? 
+          <h2>Fetching....</h2>
+          :
+            <div className={classes.container}>
             <Button onClick={this._handleList("Article")}>Article</Button>
             <Button onClick={this._handleList("Image")}>Image</Button>
             <Button onClick={this._handleList("Youtube")}>Youtube</Button>
@@ -280,6 +283,7 @@ class CreatePost extends React.Component {
               </GridItem>
             </GridContainer>
           </div>
+          }
         </div>
         <Footer />
       </div>

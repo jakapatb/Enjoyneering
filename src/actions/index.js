@@ -42,7 +42,10 @@ export const checkStateUser = () => (dispatch, getState) => {
         });
       });
       //notifications
-      userRef.collection("notifications").onSnapshot(notiSnap => {
+      userRef.collection("notifications")
+      .orderBy("date","desc")
+      .limit(5)
+      .onSnapshot(notiSnap => {
         var notifications = [];
         notiSnap.forEach(noti =>
           notifications.push({ ...noti.data(), notiId: noti.id })
@@ -84,7 +87,7 @@ export const signOut = () => dispatch => {
 export const fetchListPopPost = () => dispatch => {
   var listPopPost = [];
   db.collection("posts")
-    .orderBy("love_count")
+    .orderBy("love_count","desc")
     .limit(5)
     .get()
     .then(snapPosts => {
@@ -103,7 +106,7 @@ export const fetchListPopPost = () => dispatch => {
 export const fetchListPost = () => dispatch => {
   var listRecentPost = [];
   db.collection("posts")
-    .orderBy("date")
+    .orderBy("date","desc")
     .limit(5)
     .get()
     .then(snapPosts => {
@@ -202,6 +205,7 @@ export const pressLove = isLove => (dispatch, getState) => {
 //Create & Edit Post
 
 export const sendPost = post => (dispatch, getState) => {
+  dispatch({type:FETCH_POST});
   const { auth } = getState();
   //add or Update data except contents
   const postsRef = db.collection("posts");
@@ -217,11 +221,13 @@ export const sendPost = post => (dispatch, getState) => {
       .add({ ...details, love: [], love_count: 0, date: new Date() })
       .then(postRef => {
         updateContents(post.contents, postRef.id, post.deletedContents);
-        firebase
+        if(post.file!==undefined){
+          firebase
           .storage()
           .ref("posts")
           .child(postRef.id + "/title.jpg")
           .put(post.file);
+        }
         return hist.push("/landing-page/?post=" + postRef.id);
       });
   } else {
@@ -313,7 +319,7 @@ const updateContents = (contents, postId, deletedContents) => {
     });
   });
 };
-
+//? คือไรวะ
 export const fetchSections = () => (dispatch, getState) => {
   const { auth } = getState();
   db.collection("sections")

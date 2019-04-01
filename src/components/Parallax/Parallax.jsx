@@ -73,6 +73,15 @@ class Parallax extends React.Component {
     return (
       <div className={parallaxOnly}
       ref="parallax">
+              <div
+          className={preloadParallaxClasses}
+          style={{ 
+            ...style,
+            ...this.state,
+            backgroundImage: "linear-gradient(#fff, #fffff3)" }}
+            >
+          {children}
+        </div>
         <div
           className={parallaxClasses}
           style={{
@@ -84,11 +93,7 @@ class Parallax extends React.Component {
         >
         {children}
         </div>
-        <div
-          className={preloadParallaxClasses}
-          style={{ backgroundImage: "linear-gradient(#fff, #fffff3)" }}>
-          <h4>Loading....</h4>
-        </div>
+
       </div>
     );
   }
