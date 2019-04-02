@@ -60,6 +60,12 @@ const landingPageStyle = {
   tag:{
     margin:"0px",
     padding:"0px"
+  },
+  progressSubmit:{
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    width: 'fit-content',
   }
 };
 

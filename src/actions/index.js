@@ -215,20 +215,34 @@ export const sendPost = post => (dispatch, getState) => {
     ownerUid: auth.data.uid,
     tags: post.tags
   };
+
+
   if (post.postId === undefined) {
     //new Post //? should set Love_count?
     postsRef
       .add({ ...details, love: [], love_count: 0, date: new Date() })
       .then(postRef => {
         updateContents(post.contents, postRef.id, post.deletedContents);
-        if(post.file!==undefined){
-          firebase
-          .storage()
-          .ref("posts")
-          .child(postRef.id + "/title.jpg")
-          .put(post.file);
+        if(post.file === undefined){
+          return hist.push("/landing-page/?post=" + postRef.id);
         }
-        return hist.push("/landing-page/?post=" + postRef.id);
+        var uploadTask = firebase
+        .storage()
+        .ref("posts")
+        .child(postRef.id + "/title.jpg")
+        .put(post.file);
+        uploadTask.on('state_changed',snapshot =>{
+          //use for see progress
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },err =>{ 
+          //error 
+          console.log(err)
+        },() =>{
+          //upload title img successful
+          return hist.push("/landing-page/?post=" + postRef.id);
+        })
+
       });
   } else {
     //Edit Post
@@ -237,14 +251,29 @@ export const sendPost = post => (dispatch, getState) => {
       .update({ ...details, updated: new Date() })
       .then(() => {
         updateContents(post.contents, post.postId, post.deletedContents);
-        if (post.isChangeTitleImg) {
-          firebase
+
+        if (!post.isChangeTitleImg) {
+          console.log("pass HERE")
+          //return hist.push("/landing-page/?post=" + post.postId);
+        }
+        console.log("Testing")
+        var uploadTask = firebase
             .storage()
             .ref("posts")
             .child(post.postId + "/title.jpg")
             .put(post.file);
-        }
-        return hist.push("/landing-page/?post=" + post.postId);
+            uploadTask.on('state_changed',snapshot =>{
+              //use for see progress
+              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+            },err =>{ 
+              //error 
+              console.log(err)
+            },() =>{
+              //upload title img successful
+              return hist.push("/landing-page/?post=" + post.postId);
+            })
+
       })
       .catch(e => console.log(e));
   }

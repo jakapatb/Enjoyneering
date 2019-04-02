@@ -18,6 +18,12 @@ import Parallax from "components/Parallax/Parallax.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 import createPostStyle from "assets/jss/material-kit-react/views/createPost.jsx";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from '@material-ui/core/CircularProgress';
 // Sections for this page
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -25,33 +31,34 @@ import { sendPost, fetchPost, clearPost } from "actions/index.js";
 import YoutubeSection from "./Sections/YoutubeSection";
 import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
-import Image from 'assets/img/bg.jpg'
+import Image from "assets/img/bg.jpg";
 const dashboardRoutes = [];
 
 class CreatePost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      postId:undefined,
+      submitDialog:false,
+      postId: undefined,
       contents: [],
       title: "",
       subtitle: "",
       imgUrl: Image,
       tags: [],
-      isChangeTitleImg:false,
-      deletedContents:[]
+      isChangeTitleImg: false,
+      deletedContents: []
     };
   }
 
   componentDidMount = () => {
-    const { history, fetchPost} = this.props;
-    if (history.location.search.includes("?edit=")){
+    const { history, fetchPost } = this.props;
+    if (history.location.search.includes("?edit=")) {
       //หากมีการแก้ไข
       const postId = history.location.search.split("?edit=")[1];
-      this.setState({postId:postId});
-      fetchPost(postId)
-    } 
-  }
+      this.setState({ postId: postId });
+      fetchPost(postId);
+    }
+  };
 
   componentWillUpdate = (nextProps, nextState) => {
     //นำข้อมูลเก่าแสดง
@@ -66,39 +73,39 @@ class CreatePost extends React.Component {
         imgUrl: nextProps.post.data.imgUrl
       });
     }
-  }
-  componentWillUnmount(){
+  };
+  componentWillUnmount() {
     this.props.clearPost();
   }
-  
-  
 
-  _handleList = type => () => { // Create new Content
+  _handleList = type => () => {
+    // Create new Content
     var Contents = this.state.contents;
     Contents.push({ type: type });
     this.setState({ contents: Contents });
   };
   _removeContent = index => {
-    const { deletedContents, contents} = this.state;
+    const { deletedContents, contents } = this.state;
     var DeletedContents = deletedContents;
     var Contents = contents;
     var deletedContent = Contents.splice(index, 1)[0];
-    if(deletedContent.id!==null){ // content ที่เคยอัพลงfirestoreแล้ว
-      DeletedContents.push(deletedContent)
+    if (deletedContent.id !== null) {
+      // content ที่เคยอัพลงfirestoreแล้ว
+      DeletedContents.push(deletedContent);
     }
-    this.setState({ contents: Contents, deeteContents: DeletedContents});
+    this.setState({ contents: Contents, deeteContents: DeletedContents });
   };
 
   _handleTags = event => {
     if (event.key === "Enter") {
       const tag = event.target.value.toUpperCase();
       var tags = this.state.tags;
-      if (!tags.includes(tag)) { // กันไม่ให้ มีTags ซ้ำ
+      if (!tags.includes(tag)) {
+        // กันไม่ให้ มีTags ซ้ำ
         tags.push(tag);
         this.setState({ tags: tags });
         event.target.value = "";
-      }
-      else{
+      } else {
         //TODO แจ้งเตือนว่าTag ซ้ำ
       }
     }
@@ -115,8 +122,25 @@ class CreatePost extends React.Component {
     this.setState({ contents: Contents });
   };
 
+//for handle dialog Submit
+_handleSubmitDialog = () => {
+  if(this.state.submitDialog){
+    this.setState({submitDialog:false})
+  }else {
+    this.setState({submitDialog:true})
+  }
+}
   _handleSubmit = () => {
-    const { title, subtitle, contents, file, imgUrl, tags, postId, deletedContents } = this.state;
+    const {
+      title,
+      subtitle,
+      contents,
+      file,
+      imgUrl,
+      tags,
+      postId,
+      deletedContents
+    } = this.state;
     const { sendPost } = this.props;
     const post = {
       postId: postId,
@@ -128,7 +152,7 @@ class CreatePost extends React.Component {
       tags: tags,
       deletedContents: deletedContents
     };
-    sendPost(post);
+    sendPost(post); 
   };
 
   _handleChange = event => {
@@ -141,15 +165,22 @@ class CreatePost extends React.Component {
     let file = event.target.files[0];
 
     reader.onloadend = () => {
-      this.setState({ file: file, imgUrl: reader.result, isChangeTitleImg:true});
+      this.setState({
+        file: file,
+        imgUrl: reader.result,
+        isChangeTitleImg: true
+      });
     };
 
     reader.readAsDataURL(file);
   };
 
+  
+
   render() {
-    const { post ,auth, classes, ...rest } = this.props;
-    const { imgUrl, tags ,title, subtitle} = this.state;
+    const { post, auth, classes, ...rest } = this.props;
+    const { imgUrl, tags, title, subtitle } = this.state;
+
     return (
       <div>
         <Header
@@ -173,7 +204,10 @@ class CreatePost extends React.Component {
                     fullWidth: true,
                     onChange: this._handleChange
                   }}
-                  inputProps={{ classes: { input: classes.resize } ,value:title}}
+                  inputProps={{
+                    classes: { input: classes.resize },
+                    value: title
+                  }}
                 />
                 <CustomInput
                   className={classes.input}
@@ -183,7 +217,10 @@ class CreatePost extends React.Component {
                     fullWidth: true,
                     onChange: this._handleChange
                   }}
-                  inputProps={{ classes: { input: classes.subtitle },value:subtitle }}
+                  inputProps={{
+                    classes: { input: classes.subtitle },
+                    value: subtitle
+                  }}
                 />
                 <Button
                   href="/profile-page"
@@ -231,59 +268,99 @@ class CreatePost extends React.Component {
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
-          { post.isFetching ? 
-          <h2>Fetching....</h2>
-          :
             <div className={classes.container}>
-            <Button onClick={this._handleList("Article")}>Article</Button>
-            <Button onClick={this._handleList("Image")}>Image</Button>
-            <Button onClick={this._handleList("Youtube")}>Youtube</Button>
-            {this.state.contents.map((content, index) => {
-              switch (content.type) {
-                case "Article":
-                  return (
-                    <ArticleSection
-                      key={content.id}
-                      index={index}
-                      remove={this._removeContent}
-                      submit={this._handleChildSubmit}
-                      content={content}
-                    />
-                  );
-                case "Image":
-                  return (
-                    <ImageSection
-                      key={content.id}
-                      index={index}
-                      remove={this._removeContent}
-                      submit={this._handleChildSubmit}
-                      content={content}
-                      id={this.state.postId}
-                    />
-                  );
-                case "Youtube":
-                  return (
-                    <YoutubeSection
-                      key={content.id}
-                      index={index}
-                      remove={this._removeContent}
-                      submit={this._handleChildSubmit}
-                      content={content}
-                    />
-                  );
-                default: return null
-              }
-            })}
+              <Button onClick={this._handleList("Article")}>Article</Button>
+              <Button onClick={this._handleList("Image")}>Image</Button>
+              <Button onClick={this._handleList("Youtube")}>Youtube</Button>
+              {this.state.contents.map((content, index) => {
+                switch (content.type) {
+                  case "Article":
+                    return (
+                      <ArticleSection
+                        key={content.id}
+                        index={index}
+                        remove={this._removeContent}
+                        submit={this._handleChildSubmit}
+                        content={content}
+                      />
+                    );
+                  case "Image":
+                    return (
+                      <ImageSection
+                        key={content.id}
+                        index={index}
+                        remove={this._removeContent}
+                        submit={this._handleChildSubmit}
+                        content={content}
+                        id={this.state.postId}
+                      />
+                    );
+                  case "Youtube":
+                    return (
+                      <YoutubeSection
+                        key={content.id}
+                        index={index}
+                        remove={this._removeContent}
+                        submit={this._handleChildSubmit}
+                        content={content}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
 
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
-                <Button round color="warning" onClick={this._handleSubmit}>
-                  Submit
-                </Button>
-              </GridItem>
-            </GridContainer>
-          </div>
-          }
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={this._handleSubmitDialog}
+                  >
+                    Submit
+                  </Button>
+                  <Dialog
+                    open={this.state.submitDialog}
+                    onClose={this._handleSubmitDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                  <DialogTitle id="alert-dialog-title">
+                        {"คุณแน่ใจแล้วใช่ไหม"}
+                      </DialogTitle>
+                   {
+                     post.isFetching ? (
+                      <DialogContent className={classes.progressSubmit}>
+                      <CircularProgress className={classes.progress} />
+                    </DialogContent>
+                     ):(
+                      
+                      <div>
+                        <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          กรุณาตรวจสอบโพสของคุณ 
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                      <Button onClick={this._handleSubmitDialog} color="primary">
+                        Close
+                      </Button>
+                      <Button
+                        onClick={this._handleSubmit}
+                        color="primary"
+                        autoFocus
+                      >
+                        Submit
+                      </Button>
+                    </DialogActions>
+                        </div>
+                     )
+                   }
+                   
+                  </Dialog>
+                </GridItem>
+              </GridContainer>
+            </div>
         </div>
         <Footer />
       </div>
@@ -292,11 +369,13 @@ class CreatePost extends React.Component {
 }
 const mapStateToProps = state => ({
   auth: state.auth,
-  post : state.post
+  post: state.post
 });
 
 const mapDispatchToProps = {
-  sendPost, fetchPost, clearPost
+  sendPost,
+  fetchPost,
+  clearPost
 };
 
 export default compose(
