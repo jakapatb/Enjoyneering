@@ -2,6 +2,7 @@ import { FETCH_LIST, FETCH_LIST_FAIL, FETCH_LIST_RECENT, FETCH_LIST_POPULAR} fro
 const initialState = {
     recent:[],
     popular:[],
+    test:[],
     isFetching: false,
     hasRecent: false,
     hasPop:false,
@@ -14,7 +15,9 @@ export default (state = initialState, action) => {
       case FETCH_LIST:
         return { ...state, isFetching: true, hasList: false };
       case FETCH_LIST_RECENT:
-        return { ...state, recent: action.recent, isFetching: false, hasRecent: true };
+        return { ...state,
+          [action.listName]:action.listPost,
+         isFetching: false, hasRecent: true };
       case FETCH_LIST_POPULAR:
         return { ...state, popular: action.popular, isFetching: false, hasPop: true };
       case FETCH_LIST_FAIL:

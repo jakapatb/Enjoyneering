@@ -14,14 +14,15 @@ import GridItem from "components/Grid/GridItem.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 // sections for this page
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
- import SectionRecent from "./Sections/SectionRecent.jsx";
+import SectionList from "./Sections/SectionList.jsx";
  import SectionCarousel from "./Sections/SectionCarousel.jsx";  
 import componentsStyle from "assets/jss/material-kit-react/views/components.jsx";
 
 class Components extends React.Component {
   render() {
     const { auth, classes, ...rest } = this.props;
-    return <div>
+    return (
+      <div>
         <Header
           brand="Enjoyneering KMITL"
           rightLinks={<HeaderLinks user={auth} test="123" />}
@@ -36,18 +37,42 @@ class Components extends React.Component {
               <GridItem>
                 <div className={classes.brand}>
                   <h1 className={classes.title}>Enjoyneering KMITL</h1>
-                  <h3 className={classes.subtitle}>Make KMITL better again.</h3>
+                  <h3 className={classes.subtitle}>
+                    Make KMITL better again.
+                  </h3>
                 </div>
               </GridItem>
             </GridContainer>
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
-          <SectionCarousel /> 
-         <SectionRecent /> 
+          <SectionCarousel />
+          <SectionList
+            listName={"recommend"}
+            title={"Recommend from Teacher"}
+            condition={{
+              type: "where",
+              name: "recommend",
+              operator: "==",
+              value: true
+            }}
+          />
+          <SectionList listName={"recent"} title={"What's New?"} />
+          {/**
+          <SectionList
+            listName={"test"}
+            title={"testTest"}
+            condition={{
+              type: "where",
+              name: "tags",
+              operator: "array-contains",
+              value: "TEST"
+            }}
+          /> */}
         </div>
         <Footer />
       </div>
+    );
   }
 }
 const mapStateToProps = state => ({

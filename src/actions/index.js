@@ -4,6 +4,7 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_LIST_POPULAR,
   FETCH_LIST_RECENT,
+  FETCH_LIST,
   FETCH_POST,
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
@@ -84,9 +85,16 @@ export const signOut = () => dispatch => {
 
 // * list Post
 // Popular List posts
-export const fetchListPopPost = () => dispatch => {
+export const fetchListPopPost = () => (dispatch,getState) => {
+  const {
+    auth
+  } = getState();
   var listPopPost = [];
-  db.collection("posts")
+  var postsRef = db.collection("posts");
+  if (!auth.isAuth) {
+    postsRef = postsRef.where("public", "==", true)
+  }
+  postsRef
     .orderBy("love_count","desc")
     .limit(5)
     .get()
@@ -103,19 +111,35 @@ export const fetchListPopPost = () => dispatch => {
 };
 
 // Recent List posts
-export const fetchListPost = () => dispatch => {
-  var listRecentPost = [];
-  db.collection("posts")
-    .orderBy("date","desc")
+export const fetchListPost = (listName,condition={type:"recent"}) => (dispatch,getState) => {
+  dispatch({
+    type: FETCH_LIST
+  });
+  const {auth} =getState();
+  var postsRef = db.collection("posts")
+  var listPost = [];
+   if (!auth.isAuth) {
+     postsRef = postsRef.where("public", "==", true)
+   }
+
+ // ! ใช้ไม่ได้ งงชิบ
+  if (condition.type=="where") {
+    postsRef = postsRef.where(condition.name, condition.operator, condition.value)
+  }else{
+    postsRef = postsRef.orderBy("date", "desc");
+  }
+
+  postsRef
     .limit(5)
     .get()
     .then(snapPosts => {
       snapPosts.forEach(post => {
-        listRecentPost.push({ ...post.data(), id: post.id });
+        listPost.push({ ...post.data(), id: post.id });
       });
       dispatch({
         type: FETCH_LIST_RECENT,
-        recent: listRecentPost,
+        listName:listName,
+        listPost: listPost,
         hasRecent: true
       });
     });
@@ -213,7 +237,9 @@ export const sendPost = post => (dispatch, getState) => {
     title: post.title,
     subtitle: post.subtitle,
     ownerUid: auth.data.uid,
-    tags: post.tags
+    tags: post.tags,
+    public:false,
+    recommend:false,
   };
 
 

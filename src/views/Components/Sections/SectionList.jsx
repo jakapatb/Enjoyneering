@@ -34,23 +34,23 @@ const style = {
   ...imagesStyles,
   cardTitle
 };
-class SectionRecent extends React.Component {
+class SectionList extends React.Component {
   componentDidMount() {
-    const condition = ["date", "<=", new Date()];
-    this.props.fetchListPost(condition, 5);
+    const { listName, condition} = this.props;
+    this.props.fetchListPost(listName,condition);
   }
   render() {
-    const { list, classes } = this.props;
+    const { list, classes,listName } = this.props;
     return (
       <div className={classes.section}>
         <div className={classes.container}>
           <div className={classes.title}>
-            <h2>Recent Posts</h2>
+            <h2>{this.props.title}</h2>
           </div>
           <GridContainer justify="center">
             <GridList className={classes.gridList} cols={2.5}>
               {list.hasRecent &&
-                list.recent.map((post, index) => (
+                list[listName].map((post, index) => (
                   <SectionCard data={post} key={index} />
                 ))}
             </GridList>
@@ -80,4 +80,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(SectionRecent);
+)(SectionList);

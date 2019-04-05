@@ -32,11 +32,14 @@ class Header extends React.Component {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   }
 
+  componentWillMount(){
+    this.props.checkStateUser();
+  }
   componentDidMount() {
     if (this.props.changeColorOnScroll) {
       window.addEventListener("scroll", this.headerColorChange);
     }
-    this.props.checkStateUser();
+    
   }
   headerColorChange() {
     const { classes, color, changeColorOnScroll } = this.props;
