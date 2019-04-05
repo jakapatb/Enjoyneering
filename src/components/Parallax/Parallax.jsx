@@ -41,62 +41,66 @@ class Parallax extends React.Component {
     });
   }
   render() {
-    const {
-      classes,
-      filter,
-      className,
-      children,
-      style,
-      image,
-      small
-    } = this.props;
-    const parallaxOnly = classNames({
-      [classes.parallax]: true,
-      [classes.filter]: filter,
-      [classes.small]: small,
-      [className]: className !== undefined
-    });
-    const parallaxClasses = classNames({
-      [classes.parallax]: true,
-      [classes.loaded]:true,
-      [classes.filter]: filter,
-      [classes.small]: small,
-      [className]: className !== undefined
-    });
-    const preloadParallaxClasses = ({
+             const {
+               classes,
+               filter,
+               className,
+               children,
+               style,
+               image,
+               small
+             } = this.props;
+             const parallaxOnly = classNames({
+               [classes.parallax]: true,
+               [classes.filter]: filter,
+               [classes.small]: small,
+               [className]: className !== undefined
+             });
+             const parallaxClasses = classNames({
+               [classes.parallax]: true,
+               [classes.loaded]: true,
+               [classes.filter]: filter,
+               [classes.small]: small,
+               [className]: className !== undefined
+             });
+             /**
+ *     const preloadParallaxClasses = ({
       [classes.parallax]: true,
       [classes.preload]: true,
       [classes.filter]: filter,
       [classes.small]: small,
       [className]: className !== undefined
     })
-    return (
-      <div className={parallaxOnly}
-      ref="parallax">
-              <div
+ */
+             return (
+               <div className={parallaxOnly} ref="parallax">
+                 {/*
+             <div
           className={preloadParallaxClasses}
-          style={{ 
-            ...style,
-            ...this.state,
-            backgroundImage: "linear-gradient(#fff, #fffff3)" }}
-            >
-          {children}
-        </div>
-        <div
-          className={parallaxClasses}
           style={{
             ...style,
-            backgroundImage: "url(" + image + ")" ,  
-            ...this.state
-          }}
-          ref={imageLoadedElem => this.ironImageHd = imageLoadedElem}
-        >
-        {children}
+            ...this.state,
+             }}
+            >
+            {children}
         </div>
-
-      </div>
-    );
-  }
+*/}
+                 <div
+                   className={parallaxClasses}
+                   style={{
+                     ...style,
+                     backgroundImage: "url(" + image + ")",
+                     ...this.state
+                   }}
+                   ref={imageLoadedElem =>
+                     (this.ironImageHd = imageLoadedElem)
+                   }
+                 >
+                   {children}
+                 </div>
+               </div>
+             );
+           }
 }
 
 Parallax.propTypes = {

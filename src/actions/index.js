@@ -12,7 +12,7 @@ import {
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
-import { getImgfromStorage, getUserFromUid } from "./helpers";
+import { getUserFromUid } from "./helpers";
 const db = firebase.firestore();
 
 /**
@@ -143,19 +143,19 @@ export const fetchPost = postId => dispatch => {
         contentsRef.forEach(content =>
           contents.push({ ...content.data(), id: content.id })
         );
-        getImgfromStorage(postId, "title.jpg").then(imgUrl =>
+      //  getImgfromStorage(postId, "title.jpg").then(imgUrl =>
           getUserFromUid(post.data().ownerUid).then(owner =>
             dispatch({
               type: FETCH_POST_SUCCESS,
               payload: {
                 ...post.data(),
                 id: post.id,
-                imgUrl: imgUrl,
+                //imgUrl: imgUrl,
                 owner: owner,
                 contents: contents
               }
             })
-          )
+      //    )
         );
       });
   });

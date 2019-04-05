@@ -39,7 +39,14 @@ const landingPageStyle = {
   button: {
     padding: "12px 0px",
     fontSize: "1.313rem",
-    textTransform:"none"
+    textTransform: "none"
+  },
+  progress: {
+    padding: "20px 0px 20px 0px",
+    display: "flex",
+    flexDirection: "column",
+    margin: "auto",
+    width: "fit-content"
   }
 };
 

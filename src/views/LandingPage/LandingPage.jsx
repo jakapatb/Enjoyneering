@@ -17,16 +17,19 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 import Favorite from "@material-ui/icons/Favorite";
 import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 // Sections for this page
 import ArticleSection from "./Sections/ArticleSection.jsx";
 import YoutubeSection from "./Sections/YoutubeSection.jsx";
 import ImageSection from "./Sections/ImageSection.jsx";
 import FooterPostSection from "./Sections/FooterPostSection.jsx";
 import CommentListSection from "./Sections/CommentListSection.jsx";
+
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { fetchPost, clearPost, pressLove } from "actions/index.js";
+import { getImgfromStorage } from "actions/helpers.js";
+
 
 const dashboardRoutes = [];
 
@@ -39,11 +42,18 @@ class LandingPage extends React.Component {
       postId: ""
     };
   }
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const { fetchPost } = this.props;
     const params = new URLSearchParams(this.props.history.location.search);
     this.setState({ postId: params.get("post") });
     fetchPost(params.get("post"));
+    await getImgfromStorage(params.get("post"),"title.jpg").then((imgUrl)=>{
+      console.log(imgUrl);
+      
+      this.setState({
+        imgUrl:imgUrl
+      })
+    })
   };
 
   componentWillUpdate(nextProps) {
@@ -71,7 +81,7 @@ class LandingPage extends React.Component {
   };
   render() {
     const { auth, post, classes, ...rest } = this.props;
-    const { postId } = this.state;
+    const { postId,imgUrl } = this.state;
     return (
       <div>
         <Header
@@ -85,11 +95,7 @@ class LandingPage extends React.Component {
         />
         <Parallax
           filter
-          image={
-            post.hasPost
-              ? post.data.imgUrl
-              : require("assets/img/landing-bg.jpg")
-          }
+          image={post.hasPost&&imgUrl}
         >
           <div className={classes.container}>
             <GridContainer>
@@ -120,7 +126,8 @@ class LandingPage extends React.Component {
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
           <div className={classes.container}>
-            {post.hasPost &&
+          {/* Content */}
+            {post.hasPost ?
               Object.values(post.data.contents)
                 .sort((a, b) => {
                   return a.index - b.index;
@@ -136,7 +143,12 @@ class LandingPage extends React.Component {
                     default:
                       return null;
                   }
-                })}
+                }) :
+              (
+                <CircularProgress className={classes.progress} size={150}/>
+              )
+              }
+                {/* Footer */}
             {post.hasPost && (
               <GridItem xs={12} sm={12} md={6}>
                 <Button

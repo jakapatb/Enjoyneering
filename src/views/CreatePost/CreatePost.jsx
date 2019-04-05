@@ -5,7 +5,7 @@ import classNames from "classnames";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import Avatar from "@material-ui/core/Avatar";
+//import Avatar from "@material-ui/core/Avatar";
 // core components
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -163,16 +163,21 @@ _handleSubmitDialog = () => {
     event.preventDefault();
     let reader = new FileReader();
     let file = event.target.files[0];
-
-    reader.onloadend = () => {
+    if(typeof file == "object"){
+      reader.onloadend = () => {
+        this.setState({
+          file: file,
+          imgUrl: reader.result,
+          isChangeTitleImg: true
+        });
+      };
+  
+      reader.readAsDataURL(file);
+    }else if(typeof this.state.file !== "object"){
       this.setState({
-        file: file,
-        imgUrl: reader.result,
-        isChangeTitleImg: true
+        isChangeTitleImg: false
       });
-    };
-
-    reader.readAsDataURL(file);
+    }
   };
 
   
@@ -222,6 +227,7 @@ _handleSubmitDialog = () => {
                     value: subtitle
                   }}
                 />
+                {/*
                 <Button
                   href="/profile-page"
                   color="transparent"
@@ -234,6 +240,7 @@ _handleSubmitDialog = () => {
                   />
                   {" " + auth.data.displayName}
                 </Button>
+                */}
               </GridItem>
               <GridItem>
                 {tags.map((tag, index) => (

@@ -15,42 +15,78 @@ class YoutubeSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ready: props.content.ready,
-      videoId: props.content.videoId,
-      autoplay:props.content.autoplay||0
+      ready: false,
+      videoId: "",
+      autoplay:0
     };
   }
+  componentDidMount = () => {
+    this.setState({
+      ready: this.props.content.ready,
+      videoId: this.props.content.videoId,
+      autoplay: this.props.content.autoplay
+    })
+  }
+  
   _onReady(event) {
     // access to player in all event handlers via event.target
     /* event.target.pauseVideo(); */
   }
+
+  youtubeIdFinder = (url) => {
+    var id
+    if (url.includes("youtu.be")) {
+      id = url.split("youtu.be/").find((arr) => {
+        return !arr.includes("http")
+      })
+    }else if(url.includes("v=")){
+      id = url.split("v=")[1];
+    }
+    else{
+      return url;
+    }
+    return id.match(".{11}")[0]
+    
+  }
+
   _handleSubmit= event => {
     const { index , submit} = this.props;
     const { autoplay} = this.state;
     if ((event.key === "Enter")) {
-      if (event.target.value.trim() !== "" && event.target.value.trim().match(/[a-z]/i)) {
-        submit({ type: "Youtube", videoId: event.target.value, index: index ,autoplay:autoplay});
-        this.setState({ videoId: event.target.value, ready: true });
-      }
-      else {
-        console.log("warning")
+      if (
+        event.target.value.trim() !== "" &&
+        event.target.value.trim().match(/.{11}/i)
+      ) {
+        var vId = this.youtubeIdFinder(event.target.value);
+        submit({
+          type: "Youtube",
+          videoId: vId,
+          index: index,
+          autoplay: autoplay
+        });
+        this.setState({ videoId: vId, ready: true });
+      } else {
+        console.log("warning");
       }
     }
   };
+  _handleChange=(event) => {
+    this.setState({ videoId: event.target.value });
+  }
   _handleEdit = event => {
-    this.setState({ ready: false });
+    this.setState({ ready: false ,videoId:""});
   };
   removeContent = () => {
     this.props.remove(this.props.index);
   }
+
   render() {
     const { classes } = this.props;
-    console.log(this.state.autoplay);
     const opts = {
       width: "100%",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 1
+        autoplay: 0
       }
     };
     if (!this.state.ready) {
@@ -66,6 +102,7 @@ class YoutubeSection extends React.Component {
                 id="float"
                 formControlProps={{
                   fullWidth: true,
+                  onChange: this._handleChange,
                   onKeyPress: this._handleSubmit,
                 }}
                 inputProps={{
