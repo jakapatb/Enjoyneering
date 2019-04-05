@@ -50,10 +50,7 @@ function HeaderLinks({...props }) {
           </Link>, 
           <Link className={classes.dropdownLink} color="transparent" to="/management">
                 Management
-          </Link>,
-              <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
-                Sign Out
-          </Button>
+          </Link>
           ]
           : 
           [<Link className={classes.dropdownLink} color="transparent" to="/management">
@@ -119,7 +116,7 @@ function HeaderLinks({...props }) {
           left
           caret={false}
           hoverColor="black"
-          dropdownHeader="Dropdown Header"
+       //   dropdownHeader="Dropdown Header"
           buttonText={
             <img
               src={auth.isAuth ? auth.data.photoURL : profileImage}
@@ -131,7 +128,9 @@ function HeaderLinks({...props }) {
             className: classes.navLink + " " + classes.imageDropdownButton,
             color: "transparent"
           }}
-          dropdownList={["Me", "Settings and other stuff", "Sign out"]}
+        dropdownList={["Me", "Settings and other stuff", <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
+          Sign out
+          </Button>]}
         />
       </ListItem>
       {/* {auth.isAuth && <ListItem className={classes.listItem}>

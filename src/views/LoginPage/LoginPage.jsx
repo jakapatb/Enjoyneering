@@ -34,7 +34,10 @@ class LoginPage extends React.Component {
       firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
     callbacks: {
-      signInSuccess: () => false
+      signInSuccess: () => {
+        // ? ควรเด้งกลับไปหน้าที่มาก่อนหน้า
+        this.props.history.push("/")
+      }
     }
   }
 

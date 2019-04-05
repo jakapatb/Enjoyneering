@@ -16,7 +16,7 @@ import Menu from "@material-ui/icons/Menu";
 // core components
 import headerStyle from "assets/jss/material-kit-react/components/headerStyle.jsx";
 
-import { checkStateUser } from "actions/index.js";
+
 import { connect } from "react-redux";
 
 class Header extends React.Component {
@@ -27,14 +27,12 @@ class Header extends React.Component {
     };
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.headerColorChange = this.headerColorChange.bind(this);
+    
   }
-  handleDrawerToggle() {
-    this.setState({ mobileOpen: !this.state.mobileOpen });
+  handleDrawerToggle () {
+  this.setState({ mobileOpen: !this.state.mobileOpen });
   }
 
-  componentWillMount(){
-    this.props.checkStateUser();
-  }
   componentDidMount() {
     if (this.props.changeColorOnScroll) {
       window.addEventListener("scroll", this.headerColorChange);
@@ -179,7 +177,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  checkStateUser
 };
 
 export default connect(
