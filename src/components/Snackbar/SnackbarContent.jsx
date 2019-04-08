@@ -6,6 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Snack from "@material-ui/core/SnackbarContent";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
+import Button from "@material-ui/core/Button";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 
@@ -15,10 +16,22 @@ class SnackbarContent extends React.Component {
   constructor(props) {
     super(props);
     this.closeAlert = this.closeAlert.bind(this);
-    const { classes, message, color, close, icon } = props;
+    const { classes, message, color, close, icon, button } = props;
     var action = [];
     if (close !== undefined) {
-      action = [
+      if (button !== undefined) {
+        action.push(
+          <Button
+            key="undo"
+            color="secondary"
+            size="small"
+            onClick={button.onClick}
+          >
+            {button.name}
+          </Button>
+        );
+      }
+      action.push(
         <IconButton
           className={classes.iconButton}
           key="close"
@@ -28,7 +41,7 @@ class SnackbarContent extends React.Component {
         >
           <Close className={classes.close} />
         </IconButton>
-      ];
+      );
     }
 
     let snackIcon = null;
@@ -73,6 +86,7 @@ class SnackbarContent extends React.Component {
 SnackbarContent.propTypes = {
   classes: PropTypes.object.isRequired,
   message: PropTypes.node.isRequired,
+  button: PropTypes.node,
   color: PropTypes.oneOf(["info", "success", "warning", "danger", "primary"]),
   close: PropTypes.bool,
   icon: PropTypes.oneOfType([PropTypes.func, PropTypes.string])

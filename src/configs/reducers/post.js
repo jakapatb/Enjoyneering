@@ -10,6 +10,7 @@ const initialState = {
   data: {},
   comments: {},
   isFetching: false,
+  public:true,
   hasPost: false,
   hasComments:false,
   isError: false
@@ -23,6 +24,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         data: action.payload,
+        public: action.public,
         isFetching: false,
         hasPost: true
       };

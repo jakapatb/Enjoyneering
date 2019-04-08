@@ -16,6 +16,9 @@ import Badge from "components/Badge/Badge.jsx";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 import Favorite from "@material-ui/icons/Favorite";
+import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
+import Clearfix from "components/Clearfix/Clearfix.jsx";
+
 import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx";
 import CircularProgress from "@material-ui/core/CircularProgress";
 // Sections for this page
@@ -27,8 +30,9 @@ import CommentListSection from "./Sections/CommentListSection.jsx";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchPost, clearPost, pressLove } from "actions/index.js";
+import { fetchPost, clearPost, pressLove, allowPublic} from "actions/index.js";
 import { getImgfromStorage } from "actions/helpers.js";
+import ModalSection from "./Sections/ModalSection.jsx";
 
 
 const dashboardRoutes = [];
@@ -37,6 +41,7 @@ class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      modal: false,
       love: false,
       number: 0,
       postId: ""
@@ -46,7 +51,7 @@ class LandingPage extends React.Component {
     const { fetchPost } = this.props;
     const params = new URLSearchParams(this.props.history.location.search);
     this.setState({ postId: params.get("post") });
-    fetchPost(params.get("post"));
+    await fetchPost(params.get("post"));
     await getImgfromStorage(params.get("post"),"title.jpg").then((imgUrl)=>{
       console.log(imgUrl);
       
@@ -59,6 +64,9 @@ class LandingPage extends React.Component {
   componentWillUpdate(nextProps) {
     const { post, auth } = nextProps;
     if (post.hasPost && !this.props.post.hasPost) {
+      this.setState({
+        modal: auth.data.status === "administrator" && !post.public
+      })
       if (post.data.love.includes(auth.data.uid)) {
         this.setState({ love: true });
       }
@@ -75,13 +83,23 @@ class LandingPage extends React.Component {
       number: !love ? number + 1 : number - 1
     });
   };
+  handleModal= () => {
+    this.setState({
+      modal:!this.state.modal
+    })
+  }
+  handleAllow =() => {
+    console.log("Allow");
+    
+    this.props.allowPublic(this.state.postId,true)
+  }
 
   componentWillUnmount = () => {
     this.props.clearPost();
   };
   render() {
     const { auth, post, classes, ...rest } = this.props;
-    const { postId,imgUrl } = this.state;
+    const { postId,imgUrl ,modal} = this.state;
     return (
       <div>
         <Header
@@ -93,21 +111,20 @@ class LandingPage extends React.Component {
           changeColorOnScroll={{ height: 400, color: "white" }}
           {...rest}
         />
-        <Parallax
-          filter
-          image={post.hasPost&&imgUrl}
-        >
+        <Parallax filter image={post.hasPost && imgUrl}>
           <div className={classes.container}>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <h1 className={classes.title}>{post.data.title}</h1>
                 <h4>{post.data.subtitle}</h4>
                 {post.hasPost &&
-                  post.data.tags.map(tag => <Badge color="info">{tag}</Badge>)}
+                  post.data.tags.map(tag => (
+                    <Badge color="info">{tag}</Badge>
+                  ))}
                 <br />
                 {post.hasPost && (
                   <div>
-
+                    <ModalSection isOpen={modal} handleModal={this.handleModal} allow={this.handleAllow}/>
                     <br />
                     {post.data.ownerUid === auth.data.uid && auth.isAuth && (
                       <Button
@@ -125,9 +142,27 @@ class LandingPage extends React.Component {
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
+          { 
+            !post.public && <SnackbarContent
+              message={
+                <span>
+                  <b>INFO ALERT:</b> บทความนี้ยังไม่เปิด Public
+              </span>
+              }
+              close
+              button={auth.data.status ? {
+                name: "Public Permission",
+                onClick: this.handleModal
+              } : undefined}
+              color="warning"
+              icon="info_outline"
+            />
+            
+          }
+          <Clearfix />
           <div className={classes.container}>
-          {/* Content */}
-            {post.hasPost ?
+            {/* Content */}
+            {post.hasPost ? (
               Object.values(post.data.contents)
                 .sort((a, b) => {
                   return a.index - b.index;
@@ -143,12 +178,11 @@ class LandingPage extends React.Component {
                     default:
                       return null;
                   }
-                }) :
-              (
-                <CircularProgress className={classes.progress} size={150}/>
-              )
-              }
-                {/* Footer */}
+                })
+            ) : (
+              <CircularProgress className={classes.progress} size={150} />
+            )}
+            {/* Footer */}
             {post.hasPost && (
               <GridItem xs={12} sm={12} md={6}>
                 <Button
@@ -160,7 +194,7 @@ class LandingPage extends React.Component {
                 >
                   <Favorite /> {this.state.number} love it!
                 </Button>
-                <FooterPostSection owner={post.data.owner}/>
+                <FooterPostSection owner={post.data.owner} />
               </GridItem>
             )}
             {post.hasComments && (
@@ -181,7 +215,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchPost,
   clearPost,
-  pressLove
+  pressLove,
+  allowPublic
 };
 
 export default compose(

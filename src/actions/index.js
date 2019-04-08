@@ -1,7 +1,5 @@
 import {
   FETCH_USER,
-  FETCH_USER_FAIL,
-  FETCH_USER_SUCCESS,
   FETCH_LIST_POPULAR,
   FETCH_LIST_RECENT,
   FETCH_LIST,
@@ -9,7 +7,6 @@ import {
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
   FETCH_POST_ADD_COMMENT,
-  FETCH_NOTI_SUCCESS
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
@@ -86,7 +83,7 @@ export const fetchListPost = (listName,condition={type:"recent"}) => (dispatch,g
    }
 
  // ! ใช้ไม่ได้ งงชิบ
-  if (condition.type=="where") {
+  if (condition.type === "where") {
     postsRef = postsRef.where(condition.name, condition.operator, condition.value)
   }else{
     postsRef = postsRef.orderBy("date", "desc");
@@ -134,6 +131,7 @@ export const fetchPost = postId => dispatch => {
           getUserFromUid(post.data().ownerUid).then(owner =>
             dispatch({
               type: FETCH_POST_SUCCESS,
+              public:post.data().public,
               payload: {
                 ...post.data(),
                 id: post.id,
@@ -353,3 +351,11 @@ export const fetchSections = () => (dispatch, getState) => {
 
     });
 };
+
+export const allowPublic =(postId,isPublic)=>(dispatch,getState)=>{
+  db.collection("posts").doc(postId).update({
+    public:isPublic
+  }).then(()=>{
+    hist.go(0);
+  })
+}
