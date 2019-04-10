@@ -11,7 +11,8 @@ import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import thumbnail from "assets/img/thumbnail.jpg";
 import { getImgfromStorage } from "actions/helpers.js";
-import * as moment from 'moment';
+var moment = require("moment");
+//import * as moment from 'moment';
 const style = {
   card:{
     width:250,
@@ -58,7 +59,7 @@ class SectionCard extends React.Component {
             <p>{data.subtitle}</p>
             <p>
               <small className={classes.textMuted}>
-                {moment(data.date).fromNow()}
+              {moment(data.date.toDate()).fromNow()}
               </small>
             </p>
           </CardBody>

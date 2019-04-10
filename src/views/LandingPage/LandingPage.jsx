@@ -150,7 +150,7 @@ class LandingPage extends React.Component {
               </span>
               }
               close
-              button={auth.data.status ? {
+              button={auth.status==="administrator" ? {
                 name: "Public Permission",
                 onClick: this.handleModal
               } : undefined}

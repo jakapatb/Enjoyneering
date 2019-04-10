@@ -7,6 +7,7 @@ import {
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
   FETCH_POST_ADD_COMMENT,
+  FETCH_CONTENT,FETCH_CONTENT_CLEAR,FETCH_CONTENT_SUCCESS
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
@@ -78,15 +79,16 @@ export const fetchListPost = (listName,condition={type:"recent"}) => (dispatch,g
   const {auth} =getState();
   var postsRef = db.collection("posts")
   var listPost = [];
-   if (!auth.isAuth) {
-     postsRef = postsRef.where("public", "==", true)
-   }
+  if (!auth.isAuth || auth.status === "visitor") {
+    //  visitor & notAuth only see public post
+    postsRef = postsRef.where("public", "==", true)
+  }
 
  // ! ใช้ไม่ได้ งงชิบ
   if (condition.type === "where") {
     postsRef = postsRef.where(condition.name, condition.operator, condition.value)
   }else{
-    postsRef = postsRef.orderBy("date", "desc");
+    postsRef = postsRef.orderBy('date', 'desc')
   }
 
   postsRef
@@ -199,7 +201,7 @@ export const sendPost = post => (dispatch, getState) => {
     subtitle: post.subtitle,
     ownerUid: auth.data.uid,
     tags: post.tags,
-    public:false,
+    public: auth.status === "student" ? false : true ,
     recommend:false,
   };
 
@@ -358,4 +360,24 @@ export const allowPublic =(postId,isPublic)=>(dispatch,getState)=>{
   }).then(()=>{
     hist.go(0);
   })
+}
+
+// ############################## Classrooms #######################################
+
+export const fetchClassrooms = () => (dispatch,getState) => {
+  dispatch({type:FETCH_CONTENT})
+  const {auth} = getState();
+  db.collection("classrooms").where("ownerUid","==",auth.data.uid).onSnapshot((snap)=>{
+  var classrooms =[]
+   snap.forEach((classroom) => {
+      classrooms.push({
+        name: classroom.data().name,
+        membersUid: classroom.data().membersUid
+      })
+   });
+   dispatch({type:FETCH_CONTENT_SUCCESS,payload:classrooms})
+  })
+}
+export const clearClassrooms = () => (dispatch) => {
+  dispatch({type:FETCH_CONTENT_CLEAR})
 }

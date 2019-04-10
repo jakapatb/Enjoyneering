@@ -14,13 +14,19 @@ import GridItem from "components/Grid/GridItem.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 // sections for this page
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
-import componentsStyle from "assets/jss/material-kit-react/views/components.jsx";
+import managementStyle from "assets/jss/material-kit-react/views/management.jsx";
 import SectionTeacher from "./Sections/SectionTeacher";
 import SectionStudent from "./Sections/SectionStudent";
+import { fetchClassrooms } from "actions/index.js"
 
 class Management extends React.Component {
+
+  componentDidMount(){
+    this.props.fetchClassrooms()
+  }
+
     render() {
-        const { auth, classes, ...rest } = this.props;
+        const { auth,content, classes, ...rest } = this.props;
         return <div>
             <Header brand="Enjoyneering KMITL" rightLinks={<HeaderLinks user={auth} test="123" />} fixed color="transparent" changeColorOnScroll={{ height: 100, color: "white" }} {...rest} />
             <Parallax image={require("assets/img/bg2.jpg")}>
@@ -40,34 +46,35 @@ class Management extends React.Component {
             <div
               className={classNames(classes.main, classes.mainRaised)}
             >
+            <div className={classes.container}>
+
                 <GridContainer>
-              {auth.isAuth ? (
-                auth.data.status === "administrator" ? (
-                  <SectionTeacher />
+              {auth.status === "administrator" ? (
+                  <SectionTeacher content={content}/>
                 ) : (
                   <SectionStudent />
                 )
-              ) : (
-                    <GridItem>
-                    <p>Please Login</p>
-                    </GridItem>
-              )}
+              }
               </GridContainer>
+
             </div>
+          </div>
             <Footer />
           </div>;
     }
 }
 const mapStateToProps = state => ({
     auth: state.auth,
-    post: state.post
+    post: state.post,
+  content: state.content
 });
 
 const mapDispatchToProps = {
-}
+  fetchClassrooms
+};
 
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(componentsStyle)(Management));
+)(withStyles(managementStyle)(Management));

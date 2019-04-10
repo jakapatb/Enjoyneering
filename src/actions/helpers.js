@@ -52,16 +52,15 @@ export const checkAuth = (dispatch) => new Promise((resolve, reject) => {
         displayName: dataUser.displayName,
         uid: user.uid,
         photoURL: dataUser.photoURL,
-        status: "visitor"
       };
       const userRef = db.collection("users").doc(user.uid);
       db.runTransaction(transaction => {
         transaction.get(userRef).then(userDoc => {
-          if (userDoc.exists) {
-            //already Member
-            payload.status = userDoc.data().status;
-          }
-          dispatch({ type: FETCH_USER_SUCCESS, payload: payload });
+          dispatch({
+            type: FETCH_USER_SUCCESS,
+            payload: payload,
+            status: userDoc.data().status
+          });
           transaction.update(userRef, payload);
         });
       });

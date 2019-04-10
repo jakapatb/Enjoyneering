@@ -58,7 +58,7 @@ class ArticleSection extends React.Component {
             </IconButton>
           }
           title={owner.displayName}
-          subheader={moment(content.date).fromNow()}
+          subheader={moment(content.date.toDate()).fromNow()}
         >
 
         </CardHeader>

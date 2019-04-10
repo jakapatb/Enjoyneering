@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
-import { Router, Route, Switch  } from "react-router-dom";
+import { Router, Route, Switch ,Redirect } from "react-router-dom";
 import thunk from "redux-thunk"; 
 import { Provider } from "react-redux";
 import indexRoutes from "routes/index.jsx";
@@ -19,9 +19,8 @@ checkAuth(store.dispatch).then(()=>{
         <Switch>
           { 
             indexRoutes.map((prop, key) => {
-              return (
-                <Route path={prop.path} key={key} component={prop.component} />
-              );
+              return !prop.private?(<Route path={prop.path} key={key} component={prop.component} />)
+                : ( <PrivateRoute path={prop.path} key={key} component={prop.component}/>);
             })}
         </Switch>
       </Router>
@@ -30,3 +29,16 @@ checkAuth(store.dispatch).then(()=>{
   );
 })
 
+const PrivateRoute = ({component:Component , ...rest}) => (
+  <Route {...rest}
+  render = {props => store.getState().auth.isAuth&&store.getState().auth.status!=="visitor" ? (<Component {...props}/>) 
+  : (<Redirect to={
+    {
+      pathname: "/",
+      state: {
+        from: props.location
+      }
+    }
+  }/>)}
+  />
+)
