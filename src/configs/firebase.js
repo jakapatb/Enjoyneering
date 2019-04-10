@@ -1,7 +1,10 @@
 // Initialize Firebase
-import * as firebase from "firebase";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/storage';
 // Required for side-effects
-require("firebase/firestore");
+//require("firebase/firestore");
 export const config = {
     apiKey: "AIzaSyCaqCsynNjtmhytqPfVdrM1BI9UpefvBwA",
     authDomain: "enjoyneering-1531218835783.firebaseapp.com",

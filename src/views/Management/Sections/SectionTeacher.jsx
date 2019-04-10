@@ -1,17 +1,69 @@
 import React, { Component } from 'react'
+import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import SectionTable from "./SectionTable";
+import NavPills from "components/NavPills/NavPills.jsx";
+import Dashboard from "@material-ui/icons/Dashboard";
+import Schedule from "@material-ui/icons/Schedule";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import SectionClass from "./SectionClass";
 export class SectionTeacher extends Component {
   render() {
     /**  
     *TODO สร้างเซคของนักเรียน
     *TODO ตอบรับคำร้องจากนักเรียน
     **/
+   const {content} = this.props
     return (
-        <GridItem>
-            <h2>Teacher</h2>
-            <SectionTable/>
+      <GridContainer justify="center">
+        
+      <GridItem s={12} sm={12} md={12}>
+          {content.hasContent ? (<NavPills
+            color="rose"
+            horizontal={{
+              tabsGrid: { s: 12, sm: 2, md: 2 },
+              contentGrid: { s: 12, sm: 10, md: 10 }
+            }}
+            tabs={[
+              {
+                tabButton: "Dashboard",
+                tabIcon: Dashboard,
+                tabContent: (
+                  <span>
+                    <SectionClass classrooms={content} />
+                  </span>
+                )
+              },
+              {
+                tabButton: "Schedule",
+                tabIcon: Schedule,
+                tabContent: (
+                  <span>
+                    <p>
+                      Efficiently unleash cross-media information without
+                      cross-media value. Quickly maximize timely
+                      deliverables for real-time schemas.
+                          </p>
+                    <br />
+                    <p>
+                      Dramatically maintain clicks-and-mortar solutions
+                      without functional solutions. Dramatically visualize
+                      customer directed convergence without revolutionary
+                      ROI. Collaboratively administrate empowered markets
+                      via plug-and-play networks. Dynamically
+                      procrastinate B2C users after installed base
+                      benefits.
+                          </p>
+                  </span>
+                )
+              }
+            ]}
+          />):(
+              <CircularProgress size={150} />
+          )
+
+         }
         </GridItem>
+      </GridContainer>
     )
   }
 }

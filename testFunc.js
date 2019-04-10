@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 const youtubeIdFinder = (url) => {
     console.log(url);
     var id
@@ -14,13 +16,10 @@ const youtubeIdFinder = (url) => {
 }
 
 const main = () => {
-    testYoutubeIdFinder("https://www.youtube.com/watch?v=f4Y4naOadlE", "f4Y4naOadlE");
-    testYoutubeIdFinder("https://youtu.be/-GkYmMEshVc?t=10", "-GkYmMEshVc")
+   console.log(moment().format())
 }
 
-const testYoutubeIdFinder = (input, output) => {
-    console.log(youtubeIdFinder(input));
-}
+
 
 
 

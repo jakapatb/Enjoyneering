@@ -64,7 +64,7 @@ class Parallax extends React.Component {
                [className]: className !== undefined
              });
              /**
- *     const preloadParallaxClasses = ({
+ *                  const preloadParallaxClasses = ({
       [classes.parallax]: true,
       [classes.preload]: true,
       [classes.filter]: filter,

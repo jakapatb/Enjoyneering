@@ -25,114 +25,170 @@ import { goToSearch } from "actions/helpers.js";
 
 function HeaderLinks({...props }) {
   const { markSeenNoti,signOut, auth,noti, classes } = props;
-  return <List className={classes.list}>
+  var Menus = [];
+  if (auth.status !== "visitor"){
+    Menus = [ <Link
+                      className={classes.dropdownLink}
+                      color="transparent"
+                      to="/management"
+                    >
+                      Management
+                    </Link>,
+              <Link
+                      className={classes.dropdownLink}
+                      color="transparent"
+                      to="/create-post"
+                    >
+                      Create Post
+                    </Link>
+                  ]
+  }
+  return (
+    <List className={classes.list}>
       <ListItem className={classes.listItem}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
-        <InputBase placeholder="Search…" classes={{ root: classes.inputRoot, input: classes.inputInput }} onKeyPress={(e)=>{
-          if(e.key==="Enter" && e.target.value!=null){
-            goToSearch(e.target.value.trim())
-          }
-        }} />
+        <InputBase
+          placeholder="Search…"
+          classes={{ root: classes.inputRoot, input: classes.inputInput }}
+          onKeyPress={e => {
+            if (e.key === "Enter" && e.target.value != null) {
+              goToSearch(e.target.value.trim());
+            }
+          }}
+        />
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Link to="/?test" color="transparent" className={classes.navLink}>
+        <Link to="/" color="transparent" className={classes.navLink}>
           Home
         </Link>
       </ListItem>
-      <ListItem className={classes.listItem}>
-      {auth.isAuth ? 
-        <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} 
-          dropdownList={auth.data.status === 'administrator' ?
-            [<Link className={classes.dropdownLink} color="transparent"  to="/create-post">
-              Create Post
-          </Link>, 
-          <Link className={classes.dropdownLink} color="transparent" to="/management">
-                Management
+      {auth.isAuth ? ( //true
+        <ListItem className={classes.listItem}>
+          <CustomDropdown
+            noLiPadding
+            buttonText="Menus"
+            buttonProps={{ className: classes.navLink, color: "transparent" }}
+            buttonIcon={Apps}
+            dropdownList={Menus}
+          />
+        </ListItem>
+      ) : (
+        //false
+        <ListItem className={classes.listItem}>
+          <Link
+            to="/login-page"
+            color="transparent"
+            className={classes.navLink}
+          >
+            Sign in
           </Link>
-          ]
-          : 
-          [<Link className={classes.dropdownLink} color="transparent" to="/management">
-              Management
-          </Link>,
-          <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
-            Sign Out
-          </Button>]} />
-        :
-        <CustomDropdown noLiPadding buttonText="Menus" buttonProps={{ className: classes.navLink, color: "transparent" }} buttonIcon={Apps} dropdownList={
-          [ <Link to="/login-page" className={classes.dropdownLink}>
-                  Sign in
-            </Link>]} />
-      }
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        <CustomDropdown
-          left
-          caret={false}
-          hoverColor="black"
-          dropdownHeader="Notifications "
-          buttonText={
-            <div className={classes.rootBadge}>
-              <Badge
-                badgeContent={noti.length > 0 && noti.length}
-                invisible={noti.length > 0}
-                color={noti.length > 0 ? "secondary" :"default"}
-                className={classes.margin}
-              >
-                <NotiIcon className={classes.icons} />
-              </Badge>
-            </div>
-          }
-          buttonProps={{
-            className: classes.navLink + " " + classes.imageDropdownButton,
-            color: "transparent"
-          }}
-          //? เปลี่ยนสีหลังจาก อ่านแล้ว
-          dropdownList={noti.data.map((message, index) => {
-            switch (message.type) {
-              case "love":
-                return (
-                  <a href={"landing-page?post=" + message.postId} onClick={()=>markSeenNoti(message.postId,message.notiId)}className={classes.dropdownLink}>
-                    {message.seen && "Seen "}{message.love} Love Your "{message.title}" post
-                  </a>
-                );
-              case "comment":
-                return (
-                  <a href={"landing-page?post=" + message.postId} onClick={()=>markSeenNoti(message.postId,message.notiId)} className={classes.dropdownLink}>
-                   {message.seen && "Seen "} Someone Comment in Your "{message.title}" post
-                  </a>
-                );
-              default:
-                return (<Link to="/" className={classes.dropdownLink}>
-                  SomeThing Wrong!
-                  </Link>);
+        </ListItem>
+      )}
+      {auth.isAuth && (
+        <ListItem className={classes.listItem}>
+          <CustomDropdown
+            left
+            caret={false}
+            hoverColor="black"
+            dropdownHeader="Notifications "
+            buttonText={
+              <div className={classes.rootBadge}>
+                <Badge
+                  badgeContent={noti.length > 0 && noti.length}
+                  invisible={noti.length > 0}
+                  color={noti.length > 0 ? "secondary" : "default"}
+                  className={classes.margin}
+                >
+                  <NotiIcon className={classes.icons} />
+                </Badge>
+              </div>
             }
-          })}
-        />
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        <CustomDropdown
-          left
-          caret={false}
-          hoverColor="black"
-       //   dropdownHeader="Dropdown Header"
-          buttonText={
-            <img
-              src={auth.isAuth ? auth.data.photoURL : profileImage}
-              className={classes.img}
-              alt="profile"
-            />
-          }
-          buttonProps={{
-            className: classes.navLink + " " + classes.imageDropdownButton,
-            color: "transparent"
-          }}
-        dropdownList={["Me", "Settings and other stuff", <Button className={classes.dropdownLink} color="transparent" onClick={() => signOut()}>
-          Sign out
-          </Button>]}
-        />
-      </ListItem>
+            buttonProps={{
+              className: classes.navLink + " " + classes.imageDropdownButton,
+              color: "transparent"
+            }}
+            //? เปลี่ยนสีหลังจาก อ่านแล้ว
+            dropdownList={noti.data.map((message, index) => {
+              switch (message.type) {
+                case "love":
+                  return (
+                    <a
+                      href={"landing-page?post=" + message.postId}
+                      onClick={() =>
+                        markSeenNoti(message.postId, message.notiId)
+                      }
+                      className={classes.dropdownLink}
+                    >
+                      {message.seen && "Seen "}
+                      {message.love} Love Your "{message.title}" post
+                    </a>
+                  );
+                case "comment":
+                  return (
+                    <a
+                      href={"landing-page?post=" + message.postId}
+                      onClick={() =>
+                        markSeenNoti(message.postId, message.notiId)
+                      }
+                      className={classes.dropdownLink}
+                    >
+                      {message.seen && "Seen "} Someone Comment in Your "
+                      {message.title}" post
+                    </a>
+                  );
+                default:
+                  return (
+                    <Link to="/" className={classes.dropdownLink}>
+                      SomeThing Wrong!
+                    </Link>
+                  );
+              }
+            })}
+          />
+        </ListItem>
+      )}
+      {auth.isAuth && (
+        <ListItem className={classes.listItem}>
+          <CustomDropdown
+            left
+            noLiPadding
+            caret={false}
+            hoverColor="black"
+            //   dropdownHeader="Dropdown Header"
+            buttonText={
+              <img
+                src={auth.isAuth ? auth.data.photoURL : profileImage}
+                className={classes.img}
+                alt="profile"
+              />
+            }
+            buttonProps={{
+              className: classes.navLink + " " + classes.imageDropdownButton,
+              color: "transparent"
+            }}
+            dropdownList={[
+              <Link
+                className={classes.dropdownLink}
+                color="transparent"
+                to="/profile-page"
+              >
+                {auth.data.displayName}
+                    </Link>
+              ,
+              <Button
+                className={classes.dropdownLink}
+                color="transparent"
+                onClick={() => signOut()}
+              >
+                Sign out
+              </Button>
+            ]}
+          />
+        </ListItem>
+      )}
+
       {/* {auth.isAuth && <ListItem className={classes.listItem}>
           <Tooltip id="instagram-tooltip" title="Your Profile" placement={window.innerWidth > 959 ? "top" : "left"} classes={{ tooltip: classes.tooltip }}>
             <Button href="/profile-page" color="transparent" className={classes.navLink}>
@@ -140,7 +196,8 @@ function HeaderLinks({...props }) {
             </Button>
           </Tooltip>
         </ListItem>} */}
-    </List>;
+    </List>
+  );
 }
 
 const mapStateToProps = (state) => ({
