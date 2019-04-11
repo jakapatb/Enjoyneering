@@ -178,10 +178,7 @@ export class SectionClass extends Component {
                                className={classes.nested}
                              >
                                <ListItemIcon>
-                                 <Avatar
-                                   alt="member"
-                                   src={member.photoURL}
-                                 />
+                                 <Avatar alt="member" src={member.photoURL}/>
                                </ListItemIcon>
                                <ListItemText
                                  inset
