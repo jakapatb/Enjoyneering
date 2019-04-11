@@ -16,9 +16,8 @@ const youtubeIdFinder = (url) => {
 }
 
 const main = () => {
-   console.log(moment().format())
+   console.log(generatePassword())
 }
-
 
 
 

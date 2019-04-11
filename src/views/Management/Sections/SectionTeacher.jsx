@@ -4,7 +4,7 @@ import GridItem from "components/Grid/GridItem.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Schedule from "@material-ui/icons/Schedule";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Loader from "components/Loader/Loader.jsx";
 import SectionClass from "./SectionClass";
 export class SectionTeacher extends Component {
   render() {
@@ -16,8 +16,9 @@ export class SectionTeacher extends Component {
     return (
       <GridContainer justify="center">
         
-      <GridItem s={12} sm={12} md={12}>
-          {content.hasContent ? (<NavPills
+      
+        {content.hasContent ? (<GridItem s={12} sm={12} md={12}>
+          <NavPills
             color="rose"
             horizontal={{
               tabsGrid: { s: 12, sm: 2, md: 2 },
@@ -57,12 +58,13 @@ export class SectionTeacher extends Component {
                 )
               }
             ]}
-          />):(
-              <CircularProgress size={150} />
+          />
+        </GridItem>):(
+              <Loader/>
           )
 
          }
-        </GridItem>
+        
       </GridContainer>
     )
   }

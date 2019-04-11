@@ -17,13 +17,17 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import managementStyle from "assets/jss/material-kit-react/views/management.jsx";
 import SectionTeacher from "./Sections/SectionTeacher";
 import SectionStudent from "./Sections/SectionStudent";
-import { fetchClassrooms } from "actions/index.js"
+import { fetchClassrooms, clearClassrooms } from "actions/index.js"
 
 class Management extends React.Component {
 
   componentDidMount(){
     this.props.fetchClassrooms()
   }
+  componentWillUnmount() {
+    this.props.clearClassrooms();
+  }
+  
 
     render() {
         const { auth,content, classes, ...rest } = this.props;
@@ -48,14 +52,12 @@ class Management extends React.Component {
             >
             <div className={classes.container}>
 
-                <GridContainer>
               {auth.status === "administrator" ? (
                   <SectionTeacher content={content}/>
                 ) : (
                   <SectionStudent />
                 )
               }
-              </GridContainer>
 
             </div>
           </div>
@@ -65,12 +67,11 @@ class Management extends React.Component {
 }
 const mapStateToProps = state => ({
     auth: state.auth,
-    post: state.post,
   content: state.content
 });
 
 const mapDispatchToProps = {
-  fetchClassrooms
+  fetchClassrooms, clearClassrooms
 };
 
 

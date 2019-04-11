@@ -18,9 +18,9 @@ import Parallax from "components/Parallax/Parallax.jsx";
 import Favorite from "@material-ui/icons/Favorite";
 import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
 import Clearfix from "components/Clearfix/Clearfix.jsx";
-
+import Loader from "components/Loader/Loader.jsx";
 import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx";
-import CircularProgress from "@material-ui/core/CircularProgress";
+
 // Sections for this page
 import ArticleSection from "./Sections/ArticleSection.jsx";
 import YoutubeSection from "./Sections/YoutubeSection.jsx";
@@ -32,8 +32,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { fetchPost, clearPost, pressLove, allowPublic} from "actions/index.js";
 import { getImgfromStorage } from "actions/helpers.js";
-import ModalSection from "./Sections/ModalSection.jsx";
-
+import Modal from "components/Modal/Modal.jsx";
 
 const dashboardRoutes = [];
 
@@ -124,7 +123,13 @@ class LandingPage extends React.Component {
                 <br />
                 {post.hasPost && (
                   <div>
-                    <ModalSection isOpen={modal} handleModal={this.handleModal} allow={this.handleAllow}/>
+                    <Modal
+                      isOpen={modal}
+                      handleModal={this.handleModal}
+                      submit={this.handleAllow}
+                      title={"Public Permission"}
+                      content={"คุณต้องการเปิด Public บทความนี้หรือไม่"}
+                    />
                     <br />
                     {post.data.ownerUid === auth.data.uid && auth.isAuth && (
                       <Button
@@ -142,23 +147,26 @@ class LandingPage extends React.Component {
           </div>
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
-          { 
-            !post.public && <SnackbarContent
+          {!post.public && (
+            <SnackbarContent
               message={
                 <span>
                   <b>INFO ALERT:</b> บทความนี้ยังไม่เปิด Public
-              </span>
+                </span>
               }
               close
-              button={auth.status==="administrator" ? {
-                name: "Public Permission",
-                onClick: this.handleModal
-              } : undefined}
+              button={
+                auth.status === "administrator"
+                  ? {
+                      name: "Public Permission",
+                      onClick: this.handleModal
+                    }
+                  : undefined
+              }
               color="warning"
               icon="info_outline"
             />
-            
-          }
+          )}
           <Clearfix />
           <div className={classes.container}>
             {/* Content */}
@@ -180,7 +188,7 @@ class LandingPage extends React.Component {
                   }
                 })
             ) : (
-              <CircularProgress className={classes.progress} size={150} />
+              <Loader />
             )}
             {/* Footer */}
             {post.hasPost && (

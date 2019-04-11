@@ -381,3 +381,12 @@ export const fetchClassrooms = () => (dispatch,getState) => {
 export const clearClassrooms = () => (dispatch) => {
   dispatch({type:FETCH_CONTENT_CLEAR})
 }
+
+export const createClassroom = (name,password) => (dispatch,getState) => {
+  const {auth} = getState();
+  db.collection('classrooms').add({
+    ownerUid:auth.data.uid,
+    name:name,
+    password:password
+  })
+}
