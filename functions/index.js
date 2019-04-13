@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const algoliasearch = require("algoliasearch");
-
 const ALGOLIA_APP_ID = "81E61Q7CM2";
 const ALGOLIA_ADMIN_KEY = "177377b3c5d49be631d61ef277408553";
 const ALGOLIA_INDEX_NAME = "Enjoyneering";
@@ -124,3 +123,17 @@ exports.updateCommentNotification = functions.firestore
       });
     });
   });
+
+  //Generate Password for Promote Status
+exports.generatePassword=functions.https.onRequest((req,res)=>{
+var length = 8,
+  charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  retVal = "";
+for (var i = 0, n = charset.length; i < length; ++i) {
+  retVal += charset.charAt(Math.floor(Math.random() * n));
+}
+res.send(retVal);
+
+})
+
+

@@ -17,12 +17,17 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import managementStyle from "assets/jss/material-kit-react/views/management.jsx";
 import SectionTeacher from "./Sections/SectionTeacher";
 import SectionStudent from "./Sections/SectionStudent";
-import { fetchClassrooms, clearClassrooms } from "actions/index.js"
+import {
+  fetchClassrooms,
+  clearClassrooms,
+  fetchPromotePass
+} from "actions/index.js";
 
 class Management extends React.Component {
 
   componentDidMount(){
-    this.props.fetchClassrooms()
+    
+    this.props.fetchClassrooms();
   }
   componentWillUnmount() {
     this.props.clearClassrooms();
@@ -71,7 +76,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  fetchClassrooms, clearClassrooms
+  fetchClassrooms,
+  clearClassrooms,
+  fetchPromotePass
 };
 
 

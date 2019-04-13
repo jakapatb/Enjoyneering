@@ -7,7 +7,7 @@ import {
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
   FETCH_POST_ADD_COMMENT,
-  FETCH_CONTENT,FETCH_CONTENT_CLEAR,FETCH_CONTENT_SUCCESS
+  FETCH_CONTENT, FETCH_CONTENT_CLEAR, FETCH_CONTENT_SUCCESS, FETCH_CONTENT_ADD_MODAL
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
@@ -366,18 +366,18 @@ export const allowPublic =(postId,isPublic)=>(dispatch,getState)=>{
 
 export const fetchClassrooms = () => (dispatch,getState) => {
   dispatch({type:FETCH_CONTENT})
-  const {auth} = getState();
-  db.collection("classrooms").where("ownerUid","==",auth.data.uid).onSnapshot((snap)=>{
-  var classrooms =[]
-   snap.forEach((classroom) => {
-      classrooms.push({
-        name: classroom.data().name,
-        membersUid: classroom.data().membersUid
-      })
-   });
-   dispatch({type:FETCH_CONTENT_SUCCESS,payload:classrooms})
+db.collection("users").onSnapshot((snap) => {
+  var members = []
+  snap.forEach((member) => {
+    members.push(member.data())
+  });
+  dispatch({
+    type: FETCH_CONTENT_SUCCESS,
+    payload: members
   })
+})
 }
+
 export const clearClassrooms = () => (dispatch) => {
   dispatch({type:FETCH_CONTENT_CLEAR})
 }
@@ -388,5 +388,19 @@ export const createClassroom = (name,password) => (dispatch,getState) => {
     ownerUid:auth.data.uid,
     name:name,
     password:password
+  })
+}
+
+export const fetchPromotePass = () => (dispatch) => {
+  const sysRef = db.collection("systems").doc('classroom');
+  sysRef.onSnapshot((snap) => {
+    var promote = {
+      available: snap.data().available
+    }
+    if (promote.available === true) promote = {
+      ...promote,
+      promoteStatus: snap.data().promoteStatus
+    }
+    return dispatch({type:FETCH_CONTENT_ADD_MODAL,modal:promote})
   })
 }

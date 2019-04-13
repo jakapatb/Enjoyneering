@@ -8,15 +8,9 @@ import Loader from "components/Loader/Loader.jsx";
 import SectionClass from "./SectionClass";
 export class SectionTeacher extends Component {
   render() {
-    /**  
-    *TODO สร้างเซคของนักเรียน
-    *TODO ตอบรับคำร้องจากนักเรียน
-    **/
    const {content} = this.props
     return (
       <GridContainer justify="center">
-        
-      
         {content.hasContent ? (<GridItem s={12} sm={12} md={12}>
           <NavPills
             color="rose"
@@ -30,7 +24,7 @@ export class SectionTeacher extends Component {
                 tabIcon: Dashboard,
                 tabContent: (
                   <span>
-                    <SectionClass classrooms={content} />
+                    <SectionClass/>
                   </span>
                 )
               },
@@ -49,10 +43,7 @@ export class SectionTeacher extends Component {
                       Dramatically maintain clicks-and-mortar solutions
                       without functional solutions. Dramatically visualize
                       customer directed convergence without revolutionary
-                      ROI. Collaboratively administrate empowered markets
-                      via plug-and-play networks. Dynamically
-                      procrastinate B2C users after installed base
-                      benefits.
+                      ROI.
                           </p>
                   </span>
                 )
@@ -69,5 +60,4 @@ export class SectionTeacher extends Component {
     )
   }
 }
-
 export default SectionTeacher
