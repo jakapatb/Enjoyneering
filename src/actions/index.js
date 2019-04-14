@@ -373,7 +373,8 @@ db.collection("users").onSnapshot((snap) => {
   });
   dispatch({
     type: FETCH_CONTENT_SUCCESS,
-    payload: members
+    payload: members,
+    contentType:"classroom"
   })
 })
 }
@@ -391,16 +392,41 @@ export const createClassroom = (name,password) => (dispatch,getState) => {
   })
 }
 
-export const fetchPromotePass = () => (dispatch) => {
+export const fetchPromotePass = () => (dispatch , getState) => {
+  const { auth } = getState() 
   const sysRef = db.collection("systems").doc('classroom');
   sysRef.onSnapshot((snap) => {
     var promote = {
       available: snap.data().available
     }
-    if (promote.available === true) promote = {
+    if (promote.available === true && auth.status==="administrator") promote = {
       ...promote,
       promoteStatus: snap.data().promoteStatus
     }
     return dispatch({type:FETCH_CONTENT_ADD_MODAL,modal:promote})
   })
+}
+
+export const promoteStatus = (yourCode) => (dispatch,getState) =>{
+ return new Promise((resolve, reject) => {
+    const {
+      auth
+    } = getState()
+    db.collection('systems').doc('classroom').get().then((docRef) => {
+      if (docRef.data().available) {
+        if (yourCode === docRef.data().promoteStatus.password) {
+          const toStatus = docRef.data().promoteStatus.toStatus
+          db.collection('users').doc(auth.data.uid).update({
+            status: toStatus
+          })
+          resolve()
+          setTimeout(() => {
+            hist.go(0)
+          }, 5000)
+        } else {
+          return reject('failed')
+        }
+      }
+    })
+ });
 }

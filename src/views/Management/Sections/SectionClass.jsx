@@ -11,17 +11,25 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import Face from "@material-ui/icons/Face";
+import Chat from "@material-ui/icons/Chat";
 import GridItem from "components/Grid/GridItem.jsx";
 import Avatar from "@material-ui/core/Avatar";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.jsx";
 import Modal from "components/Modal/Modal";
-import { createClassroom ,fetchPromotePass} from "actions/index.js";
-import {availablePromote } from "actions/helpers.js";
+import {
+  createClassroom,
+  fetchPromotePass,
+  promoteStatus
+} from "actions/index.js";
+import { availablePromote } from "actions/helpers.js";
 import { Button } from "@material-ui/core";
+import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
+import CustomInput from "components/CustomInput/CustomInput.jsx";
 
 const styles = theme => ({
-  root: {
+  root: { 
     width: "100%",
     backgroundColor: theme.palette.background.paper
   },
@@ -56,7 +64,8 @@ export class SectionClass extends Component {
            types: ["administrator", "student", "visitor"],
            open: [true],
            modal: false,
-           promote: { available :false}
+           promote: { available: false },
+           location: {}
          };
 
          handleClick = key => () => {
@@ -73,33 +82,47 @@ export class SectionClass extends Component {
            this.setState({ modal: !this.state.modal });
          };
 
+         handleUseCode = event => {
+           if (event.key === "Enter") {
+             if (
+               event.target.value.trim() !== "" &&
+               event.target.value.trim().match(/.{8}/i)
+             ) {
+               console.log(event.target.value.trim());
+                this.props.promoteStatus(event.target.value.trim()).then(()=>{
+                  //TODO show Success Promote
+                  //TODO show reload in 5 second
+                }
+                ).catch(err=>{
+                               //TODO show failed Promote
+                               console.log(err);
+                             })
+              } else {
+                       //TODO code not complete
+                       console.log("warning");
+                     }
+           }
+         };
+
          componentDidMount() {
            const { content } = this.props;
            this.props.fetchPromotePass();
-           this.getLocation();
            if (content.hasContent) {
              this.setState({ members: content.data });
            }
          }
 
-         getLocation() {
-           if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(this.showPosition);
-           } else {
-             console.log("fail");
-           }
-         }
-
-         showPosition(position) {
-           console.log(
-             "Latitude " + position.coords.latitude,
-             "Longitude: " + position.coords.longitude
-           );
-         }
-
          render() {
-           const { classes ,content } = this.props;
+           const {
+             classes,
+             content,
+             hasContent,
+             classroom,
+             auth
+           } = this.props;
            const { open, types, modal } = this.state;
+           console.log(this.props);
+           
            return (
              <div>
                <Modal
@@ -108,19 +131,78 @@ export class SectionClass extends Component {
                  content={
                    <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
-                       {  content.hasModal?(content.modal.available? (
-                         <h3>{content.modal.promoteStatus.password}</h3>
-                       ):(<Button onClick={this.handleGenPass}>
-                         generate Password
-                       </Button>)):(<h2>Loading...</h2>)
-                       }
+                       {content.hasModal ? (
+                         auth.status === "administrator" ? (
+                           content.modal.available ? (
+                             <CustomTabs
+                               headerColor="primary"
+                               tabs={[
+                                 {
+                                   tabName: "Password",
+                                   tabIcon: Face,
+                                   tabContent: (
+                                     <div>
+                                       <h2
+                                         className={
+                                           classes.textCenter
+                                         }
+                                       >
+                                         toStatus:{" "}
+                                         {
+                                           content.modal
+                                             .promoteStatus.toStatus
+                                         }
+                                       </h2>
+                                       <h2>
+                                         password :{" "}
+                                         {
+                                           content.modal
+                                             .promoteStatus.password
+                                         }
+                                       </h2>
+                                     </div>
+                                   )
+                                 },
+                                 {
+                                   tabName: "Location",
+                                   tabIcon: Chat,
+                                   tabContent: (
+                                     <div>
+                                       <p>Comming soon</p>
+                                       {/**<p>Latitude : {content.modal.promoteStatus.loaction}</p>
+                            <p>Longitude : {content.modal.promoteStatus.loaction}</p>  */}
+                                     </div>
+                                   )
+                                 }
+                               ]}
+                             />
+                           ) : (
+                             <Button onClick={this.handleGenPass}>
+                               generate Password
+                             </Button>
+                           )
+                         ) : (
+                           <div>
+                             <CustomInput
+                               labelText="input Your Code"
+                               inputProps={{
+                                 placeholder: "Your Code"
+                               }}
+                               formControlProps={{
+                                 fullWidth: true,
+                                 onKeyPress: this.handleUseCode
+                               }}
+                             />
+                           </div>
+                         )
+                       ) : (
+                         <h2>Loading...</h2>
+                       )}
                      </GridItem>
                    </GridContainer>
                  }
                  handleModal={this.handleModal}
-                 submit={() => this.handleGenPass()}
                />
-
                <List
                  component="nav"
                  subheader={
@@ -142,8 +224,10 @@ export class SectionClass extends Component {
                            }}
                            buttonIcon={MoreVertIcon}
                            dropdownList={[
-                             <Button onClick={this.handleCreateClassrom}>
-                               Create Classroom
+                             <Button
+                               onClick={this.handleCreateClassrom}
+                             >
+                               Promote Member
                              </Button>
                            ]}
                          />
@@ -155,7 +239,10 @@ export class SectionClass extends Component {
                >
                  {types.map((type, key) => (
                    <div key={key}>
-                     <ListItem button onClick={this.handleClick(key)}>
+                     <ListItem
+                       button
+                       onClick={this.handleClick(key)}
+                     >
                        <ListItemIcon>
                          <InboxIcon />
                        </ListItemIcon>
@@ -169,27 +256,30 @@ export class SectionClass extends Component {
                        unmountOnExit
                      >
                        <List component="div" disablePadding>
-                         {content.hasContent&&content.data
-                           .filter(member => member.status === type)
-                           .map(member => {
-                             return (
-                               <ListItem
-                                 button
-                                 className={classes.nested}
-                               >
-                                 <ListItemIcon>
-                                   <Avatar
-                                     alt="member"
-                                     src={member.photoURL}
+                         {hasContent &&
+                           classroom
+                             .filter(
+                               member => member.status === type
+                             )
+                             .map(member => {
+                               return (
+                                 <ListItem
+                                   button
+                                   className={classes.nested}
+                                 >
+                                   <ListItemIcon>
+                                     <Avatar
+                                       alt="member"
+                                       src={member.photoURL}
+                                     />
+                                   </ListItemIcon>
+                                   <ListItemText
+                                     inset
+                                     primary={member.displayName}
                                    />
-                                 </ListItemIcon>
-                                 <ListItemText
-                                   inset
-                                   primary={member.displayName}
-                                 />
-                               </ListItem>
-                             );
-                           })}
+                                 </ListItem>
+                               );
+                             })}
                        </List>
                      </Collapse>
                    </div>
@@ -200,11 +290,14 @@ export class SectionClass extends Component {
          }
        }
 const mapStateToProps = state => ({
+  auth:state.auth,
   content: state.content
 });
 
 const mapDispatchToProps = {
-  createClassroom ,fetchPromotePass
+  createClassroom,
+  fetchPromotePass,
+  promoteStatus
 };
 
 export default connect(

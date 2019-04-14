@@ -30,53 +30,59 @@ class Modal extends React.Component {
         const { classes, isOpen, submit, title, content } = this.props;
 
         return (
-            <Dialog
-                classes={{
-                    root: classes.center,
-                    paper: classes.modal
-                }}
-                open={isOpen}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={() => this.handleClose()}
-                aria-labelledby="modal-slide-title"
-                aria-describedby="modal-slide-description">
-                <DialogTitle
-                    id="classic-modal-slide-title"
-                    disableTypography
-                    className={classes.modalHeader}>
-                    <IconButton
-                        className={classes.modalCloseButton}
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        onClick={() => this.handleClose()}>
-                        <Close className={classes.modalClose} />
-                    </IconButton>
-                    <h4 className={classes.modalTitle}>{title}</h4>
-                </DialogTitle>
-                <DialogContent
-                    id="modal-slide-description"
-                    className={classes.modalBody}>
-                    {content}
-                </DialogContent>
-                <DialogActions
-                    className={classes.modalFooter + " " + classes.modalFooterCenter}>
-                    <Button
-                        onClick={() => this.handleClose()}
-                    >
-                        No
-            </Button>
-                    <Button
-                        onClick={() => {
-                            submit();
-                            this.handleClose()
-                        }}
-                        color="successNoBackground">
-                        Yes
-            </Button>
-                </DialogActions>
-            </Dialog>
+          <Dialog
+            classes={{
+              root: classes.center,
+              paper: classes.modal
+            }}
+            open={isOpen}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => this.handleClose()}
+            aria-labelledby="modal-slide-title"
+            aria-describedby="modal-slide-description"
+          >
+            <DialogTitle
+              id="classic-modal-slide-title"
+              disableTypography
+              className={classes.modalHeader}
+            >
+              <IconButton
+                className={classes.modalCloseButton}
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => this.handleClose()}
+              >
+                <Close className={classes.modalClose} />
+              </IconButton>
+              <h4 className={classes.modalTitle}>{title}</h4>
+            </DialogTitle>
+            <DialogContent
+              id="modal-slide-description"
+              className={classes.modalBody}
+            >
+              {content}
+            </DialogContent>
+            { this.props.submit!==undefined &&
+              <DialogActions
+                className={
+                  classes.modalFooter + " " + classes.modalFooterCenter
+                }
+              >
+                <Button onClick={() => this.handleClose()}>No</Button>
+                <Button
+                  onClick={() => {
+                    submit();
+                    this.handleClose();
+                  }}
+                  color="successNoBackground"
+                >
+                  Yes
+                </Button>
+              </DialogActions>
+            }
+          </Dialog>
         );
     }
 }

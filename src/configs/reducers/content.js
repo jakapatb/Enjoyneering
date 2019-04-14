@@ -7,6 +7,7 @@ import {
 } from "../constants";
 
 const initialState = {
+    data:{},
     modal:{},
     hasModal:false,
     isFetching: false,
@@ -25,7 +26,9 @@ export default (state = initialState, action) => {
         case FETCH_CONTENT_SUCCESS:
             return {
                 ...state,
-                data: action.payload,
+                data: {...state.data,
+                    [action.contentType]:action.payload
+                },
                 public: action.public,
                 isFetching: false,
                 hasContent: true,

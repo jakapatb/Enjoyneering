@@ -4,6 +4,10 @@ const algoliasearch = require("algoliasearch");
 const ALGOLIA_APP_ID = "81E61Q7CM2";
 const ALGOLIA_ADMIN_KEY = "177377b3c5d49be631d61ef277408553";
 const ALGOLIA_INDEX_NAME = "Enjoyneering";
+/**const express = require('express');
+const cors = require('cors');
+
+const app = express(); */
 
 admin.initializeApp(functions.config().firebase);
 
@@ -30,7 +34,7 @@ exports.addFirestoreDataToAlgolia = functions.https.onRequest((req, res) => {
       var client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
       var index = client.initIndex(ALGOLIA_INDEX_NAME);
       // eslint-disable-next-line handle-callback-err
-      index.saveObjects(arr, function(err, content) {
+      index.saveObjects(arr, (err, content) => {
         res.status(200).send(content);
       });
       return 0;
@@ -132,8 +136,11 @@ var length = 8,
 for (var i = 0, n = charset.length; i < length; ++i) {
   retVal += charset.charAt(Math.floor(Math.random() * n));
 }
-res.send(retVal);
-
+var infoUpdate={}
+infoUpdate['promoteStatus.password'] = retVal
+admin.firestore().collection("systems").doc("classroom").update(infoUpdate)
 })
 
-
+exports.getPassword = functions.https.onRequest((req,res)=>{
+res.send(req.params.id)
+})

@@ -1,4 +1,7 @@
-import { FETCH_USER, FETCH_USER_SUCCESS } from "../constants"
+import {
+    FETCH_USER,
+    FETCH_USER_SUCCESS
+} from "../constants"
 
 const initialState = {
     data: {},
