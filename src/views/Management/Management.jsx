@@ -19,6 +19,7 @@ import NavPills from "components/NavPills/NavPills.jsx";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Schedule from "@material-ui/icons/Schedule";
 import Loader from "components/Loader/Loader.jsx";
+
 import SectionClass from "./Sections/SectionClass";
 import {
   fetchClassrooms,
@@ -69,55 +70,56 @@ class Management extends React.Component {
             >
               <div className={classes.container}>
                 <GridContainer justify="center">
-                  {content.hasContent ? (
-                    <GridItem s={12} sm={12} md={12}>
-                      <NavPills
-                        color="rose"
-                        horizontal={{
-                          tabsGrid: { s: 12, sm: 2, md: 2 },
-                          contentGrid: { s: 12, sm: 10, md: 10 }
-                        }}
-                        tabs={[
-                          {
-                            tabButton: "Classroom",
-                            tabIcon: Dashboard,
-                            tabContent: (
-                              <span>
+                  {content.hasContent ? (<GridItem s={12} sm={12} md={12}>
+                    <NavPills
+                      color="rose"
+                      horizontal={{
+                        tabsGrid: { s: 12, sm: 2, md: 2 },
+                        contentGrid: { s: 12, sm: 10, md: 10 }
+                      }}
+                      tabs={[
+                        {
+                          tabButton: "Classroom",
+                          tabIcon: Dashboard,
+                          tabContent: (
+                            <span>
                                 <SectionClass
                                   classroom={content.data.classroom}
                                   hasContent={content.hasContent}
                                 />
-                              </span>
-                            )
-                          },
-                          {
-                            tabButton: "Schedule",
-                            tabIcon: Schedule,
-                            tabContent: (
-                              <span>
-                                <p>
-                                  Efficiently unleash cross-media
-                                  information without cross-media value.
-                                  Quickly maximize timely deliverables
-                                  for real-time schemas.
-                                </p>
-                                <br />
-                                <p>
-                                  Dramatically maintain
-                                  clicks-and-mortar solutions without
-                                  functional solutions. Dramatically
-                                  visualize customer directed
-                                  convergence without revolutionary ROI.
-                                </p>
-                              </span>
-                            )
-                          }
-                        ]}
-                      />
-                    </GridItem>
-                  ) : (
-                    <Loader />
-                  )}
+                                Element type is invalid: expected a
+                                string (for built-in components) or a
+                                class/function (for composite
+                                components) but got: symbol.
+                            </span>
+                          )
+                        },
+                        {
+                          tabButton: "Schedule",
+                          tabIcon: Schedule,
+                          tabContent: (
+                            <span>
+                              <p>
+                                Efficiently unleash cross-media
+                                information without cross-media value.
+                                Quickly maximize timely deliverables for
+                                real-time schemas.
+                              </p>
+                              <br />
+                              <p>
+                                Dramatically maintain clicks-and-mortar
+                                solutions without functional solutions.
+                                Dramatically visualize customer directed
+                                convergence without revolutionary ROI.
+                              </p>
+                            </span>
+                          )
+                        }
+                      ]}
+                    />
+                  </GridItem>):(<Loader/>)
+
+                  }
                 </GridContainer>
               </div>
             </div>

@@ -83,12 +83,25 @@ export const checkAuth = (dispatch) => new Promise((resolve, reject) => {
   });
 });
 
-export  const availablePromote = () => {
+export  const changeAvailablePromote = (available) => {
+  if(available){
+    generatePassword()
+  }
   const sysRef = db.collection("systems").doc('classroom');
   sysRef.update({
-    available: true
+    available: available
   })
 }
 
-
+export const generatePassword = () => {
+  var length = 8,
+    charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    retVal = "";
+  for (var i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  var infoUpdate = {}
+  infoUpdate['password'] = retVal
+  db.collection("systems").doc("classroom").update(infoUpdate)
+}
 

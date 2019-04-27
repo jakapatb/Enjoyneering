@@ -8,8 +8,9 @@ import {
 
 const initialState = {
   data: {},
-  comments: {},
+  comments: [],
   isFetching: false,
+  id:"",
   public:true,
   hasPost: false,
   hasComments:false,
@@ -25,6 +26,7 @@ export default (state = initialState, action) => {
         ...state,
         data: action.payload,
         public: action.public,
+        id:action.id,
         isFetching: false,
         hasPost: true
       };

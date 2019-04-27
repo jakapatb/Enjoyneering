@@ -49,22 +49,33 @@ class SectionCard extends React.Component {
   }
   render() {
     const { classes,data } = this.props;
-    return <Link to={{ pathname: "/landing-page/", search: "post=" + data.id, state: { id: data.id } }}>
+    return (
+      <Link
+        to={{
+          pathname: "/landing-page/"+data.id,
+          state: { id: data.id }
+        }}
+      >
         <Card className={classes.card}>
           <CardHeader className={classes.cardHeader}>
-            <img className={classes.imgCardTop} src={this.state.imgUrl} alt="Card-img-cap" />
+                <img
+                  className={classes.imgCardTop}
+                  src={this.state.imgUrl}
+                  alt="Card-img-cap"
+                /> 
           </CardHeader>
           <CardBody>
             <h4 className={classes.cardTitle}>{data.title}</h4>
             <p>{data.subtitle}</p>
             <p>
               <small className={classes.textMuted}>
-              {moment(data.date.toDate()).fromNow()}
+                {moment(data.date.toDate()).fromNow()}
               </small>
             </p>
           </CardBody>
         </Card>
-      </Link>;
+      </Link>
+    );
   }
 };
 

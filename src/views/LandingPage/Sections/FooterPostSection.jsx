@@ -11,9 +11,8 @@ class FooterPostSection extends Component {
       
     return (
       <div>
-         <Button
+        <Button
           href="/profile-page/"
-          color="transparent"
           className={classes.button}
         >
           <Avatar

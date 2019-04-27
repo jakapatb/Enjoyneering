@@ -23,7 +23,7 @@ import {
   fetchPromotePass,
   promoteStatus
 } from "actions/index.js";
-import { availablePromote } from "actions/helpers.js";
+import { changeAvailablePromote, generatePassword } from "actions/helpers.js";
 import { Button } from "@material-ui/core";
 import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
@@ -76,11 +76,14 @@ export class SectionClass extends Component {
            this.setState({ modal: true });
          };
          handleGenPass = () => {
-           availablePromote();
+           changeAvailablePromote(!this.props.content.modal.available);
          };
          handleModal = () => {
            this.setState({ modal: !this.state.modal });
          };
+         handleRegentPass = () => {
+           generatePassword()
+         }
 
          handleUseCode = event => {
            if (event.key === "Enter") {
@@ -88,7 +91,6 @@ export class SectionClass extends Component {
                event.target.value.trim() !== "" &&
                event.target.value.trim().match(/.{8}/i)
              ) {
-               console.log(event.target.value.trim());
                 this.props.promoteStatus(event.target.value.trim()).then(()=>{
                   //TODO show Success Promote
                   //TODO show reload in 5 second
@@ -121,8 +123,6 @@ export class SectionClass extends Component {
              auth
            } = this.props;
            const { open, types, modal } = this.state;
-           console.log(this.props);
-           
            return (
              <div>
                <Modal
@@ -150,16 +150,28 @@ export class SectionClass extends Component {
                                          toStatus:{" "}
                                          {
                                            content.modal
-                                             .promoteStatus.toStatus
+                                             .toStatus
                                          }
                                        </h2>
                                        <h2>
                                          password :{" "}
                                          {
-                                           content.modal
-                                             .promoteStatus.password
+                                           content.modal.password
                                          }
                                        </h2>
+                                       <Button
+                                         onClick={
+                                           this.handleRegentPass
+                                         }
+                                       >
+                                         {" "}
+                                         regenerate Password
+                                       </Button>
+                                       <Button
+                                         onClick={this.handleGenPass}
+                                       >
+                                         Cancel
+                                       </Button>
                                      </div>
                                    )
                                  },
@@ -169,8 +181,8 @@ export class SectionClass extends Component {
                                    tabContent: (
                                      <div>
                                        <p>Comming soon</p>
-                                       {/**<p>Latitude : {content.modal.promoteStatus.loaction}</p>
-                            <p>Longitude : {content.modal.promoteStatus.loaction}</p>  */}
+                                       {/**<p>Latitude : {content.modal.loaction}</p>
+                            <p>Longitude : {content.modal.loaction}</p>  */}
                                      </div>
                                    )
                                  }
@@ -256,7 +268,7 @@ export class SectionClass extends Component {
                        unmountOnExit
                      >
                        <List component="div" disablePadding>
-                         {hasContent &&
+                         {hasContent &&classroom!==undefined&&
                            classroom
                              .filter(
                                member => member.status === type

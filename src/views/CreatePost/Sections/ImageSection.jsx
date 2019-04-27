@@ -20,9 +20,7 @@ class ImageSection extends React.Component {
     };
   }
    componentDidMount(){
-        if(this.state.ready){
-          getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl) => this.setState({ imgUrl: imgUrl,ready:false }));
-        }
+          getImgfromStorage(this.props.id, this.props.content.fileName).then((imgUrl) => this.setState({ imgUrl: imgUrl,ready:false })).catch((e)=>console.log(e));
     } 
   handleChange = event => {
     event.preventDefault();
@@ -34,7 +32,7 @@ class ImageSection extends React.Component {
     if (fileTypes.includes(fileType)){ // input is image file
       reader.onloadend = () => {
         submit({ type: "Image", file: file, imgUrl: reader.result, index: index, fileType: fileType })
-        this.setState({ file: file, imgUrl: reader.result });
+        this.setState({ file: file, imgUrl: reader.result ,ready:true});
       };
       reader.readAsDataURL(file);
     }else{ //input wrong
@@ -49,8 +47,7 @@ class ImageSection extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { imgUrl } = this.state;
-    console.log(imgUrl)
+    const { imgUrl,ready } = this.state;
     return (
       <div className={classes.section}>
         <Button round color="warning" onClick={this.removeContent}>
@@ -58,20 +55,18 @@ class ImageSection extends React.Component {
         </Button>
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
-            <CustomInput
-              labelText="imgUrl"
-              id="imgUrl"
-              inputProps={{
-                type: "file",
-              }}
-              formControlProps={{
-                fullWidth: true,
-                onChange: this.handleChange
-              }}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={8}>
-            <img src={imgUrl} className={classes.image} alt="preview"/>
+              <img src={imgUrl} className={classes.image} alt="preview" />
+              <CustomInput
+                labelText="imgUrl"
+                id="imgUrl"
+                inputProps={{
+                  type: "file"
+                }}
+                formControlProps={{
+                  fullWidth: true,
+                  onChange: this.handleChange
+                }}
+              />
           </GridItem>
         </GridContainer>
       </div>

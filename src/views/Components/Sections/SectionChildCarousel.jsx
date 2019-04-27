@@ -49,8 +49,7 @@ class SectionChildCarousel extends React.Component {
     return (
       <Link
         to={{
-          pathname: "/landing-page",
-          search: "post=" + post.id,
+          pathname: "/landing-page/"+post.id,
           state: { id: post.id }
         }}
       >

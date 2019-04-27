@@ -7,7 +7,10 @@ import {
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
   FETCH_POST_ADD_COMMENT,
-  FETCH_CONTENT, FETCH_CONTENT_CLEAR, FETCH_CONTENT_SUCCESS, FETCH_CONTENT_ADD_MODAL
+  FETCH_CONTENT,
+  FETCH_CONTENT_CLEAR,
+  FETCH_CONTENT_SUCCESS,
+  FETCH_CONTENT_ADD_MODAL
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
@@ -30,7 +33,7 @@ export const markSeenNoti = (postId, notiId) => (dispatch, getState) => {
     .collection("notifications")
     .doc(notiId);
   batch.update(notiRef, { seen: true });
-  batch.commit().then(() => hist.push("/landing-page?post=" + postId));
+  batch.commit().then(() => hist.push("/landing-page/" + postId));
 };
 
 //SignOut and delete from store
@@ -41,25 +44,22 @@ export const signOut = () => dispatch => {
     .then(() => {
       dispatch({ type: FETCH_USER });
     });
-    hist.push("/login-page")
+  hist.push("/login-page");
 };
 
 // * list Post
 // Popular List posts
-export const fetchListPopPost = () => (dispatch,getState) => {
-  const {
-    auth
-  } = getState();
+export const fetchListPopPost = () => (dispatch, getState) => {
+  const { auth } = getState();
   var listPopPost = [];
   var postsRef = db.collection("posts");
   if (!auth.isAuth) {
-    postsRef = postsRef.where("public", "==", true)
+    postsRef = postsRef.where("public", "==", true);
   }
   postsRef
-    .orderBy("love_count","desc")
+    .orderBy("love_count", "desc")
     .limit(5)
-    .get()
-    .then(snapPosts => {
+    .onSnapshot(snapPosts => {
       snapPosts.forEach(post => {
         listPopPost.push({ ...post.data(), id: post.id });
       });
@@ -72,23 +72,30 @@ export const fetchListPopPost = () => (dispatch,getState) => {
 };
 
 // Recent List posts
-export const fetchListPost = (listName,condition={type:"recent"}) => (dispatch,getState) => {
+export const fetchListPost = (listName, condition = { type: "recent" }) => (
+  dispatch,
+  getState
+) => {
   dispatch({
     type: FETCH_LIST
   });
-  const {auth} =getState();
-  var postsRef = db.collection("posts")
+  const { auth } = getState();
+  var postsRef = db.collection("posts");
   var listPost = [];
   if (!auth.isAuth || auth.status === "visitor") {
     //  visitor & notAuth only see public post
-    postsRef = postsRef.where("public", "==", true)
+    postsRef = postsRef.where("public", "==", true);
   }
 
- // ! ใช้ไม่ได้ งงชิบ
+  // ! ใช้ไม่ได้ งงชิบ
   if (condition.type === "where") {
-    postsRef = postsRef.where(condition.name, condition.operator, condition.value)
-  }else{
-    postsRef = postsRef.orderBy('date', 'desc')
+    postsRef = postsRef.where(
+      condition.name,
+      condition.operator,
+      condition.value
+    );
+  } else {
+    postsRef = postsRef.orderBy("date", "desc");
   }
 
   postsRef
@@ -100,7 +107,7 @@ export const fetchListPost = (listName,condition={type:"recent"}) => (dispatch,g
       });
       dispatch({
         type: FETCH_LIST_RECENT,
-        listName:listName,
+        listName: listName,
         listPost: listPost,
         hasRecent: true
       });
@@ -117,23 +124,29 @@ export const sendComment = comment => (dispatch, getState) => {
 };
 
 // fetch Post when coming to Post.
-export const fetchPost = postId => dispatch => {
-  dispatch({ type: FETCH_POST });
-  const postRef = db.collection("posts").doc(postId);
-  postRef.get().then(post => {
-    postRef
-      .collection("contents")
-      .get()
-      .then(contentsRef => {
-        var contents = [];
-        contentsRef.forEach(content =>
-          contents.push({ ...content.data(), id: content.id })
-        );
-      //  getImgfromStorage(postId, "title.jpg").then(imgUrl =>
-          getUserFromUid(post.data().ownerUid).then(owner =>
+export const fetchPost = postId => dispatch =>
+  new Promise((resolve, reject) => {
+    dispatch({
+      type: FETCH_POST
+    });
+    const postRef = db.collection("posts").doc(postId);
+    postRef.get().then(post => {
+      postRef
+        .collection("contents")
+        .get()
+        .then(contentsRef => {
+          var contents = [];
+          contentsRef.forEach(content =>
+            contents.push({
+              ...content.data(),
+              id: content.id
+            })
+          );
+          getUserFromUid(post.data().ownerUid).then(owner => {
             dispatch({
               type: FETCH_POST_SUCCESS,
-              public:post.data().public,
+              public: post.data().public,
+              id: post.id,
               payload: {
                 ...post.data(),
                 id: post.id,
@@ -141,21 +154,63 @@ export const fetchPost = postId => dispatch => {
                 owner: owner,
                 contents: contents
               }
-            })
-      //    )
-        );
+            });
+            return resolve();
+          });
+        });
+    });
+  });
+//fetch Comments
+export const fetchComments = (postId) => dispatch =>
+  new Promise((resolve, reject) => {
+    const commentsRef = db.collection("posts").doc(postId).collection("comments")
+    commentsRef.onSnapshot(snap => {
+      var comments = [];
+      console.log(snap.size);
+      
+      snap.forEach(comment => {
+        comments.push({
+          id: comment.id,
+          content: comment.data()
+        });
       });
+      comments = comments.sort((a, b) => {
+        return a.date - b.date;
+      });
+      dispatch({
+        type: FETCH_POST_ADD_COMMENT,
+        payload: comments
+      });
+      return resolve();
+    });
   });
 
-  //fetch Comments
-  postRef.collection("comments").onSnapshot(snap => {
-    var comments = {};
-    snap.forEach(comment => {
-      comments = { ...comments, [comment.id]: comment.data() };
-    });
-    dispatch({ type: FETCH_POST_ADD_COMMENT, payload: comments });
+
+export const fetchSubComments = id => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    const { post } = getState();
+    if (post.hasPost) {
+      db.collection("posts")
+        .doc(post.id)
+        .collection("comments")
+        .doc(id)
+        .collection("subComments")
+        .onSnapshot(subColl => {
+          var subComments = [];
+          if (subColl.size !== 0) {
+            console.log("found");
+            subColl.forEach(subComment => {
+              subComments.push({
+                ...subComment.data(),
+                id: subComment.id
+              });
+            });
+          }
+          return resolve(subComments);
+        });
+    }
+    return reject("error");
   });
-};
 
 //Clear data when exit this Post.
 export const clearPost = () => dispatch => {
@@ -192,7 +247,7 @@ export const pressLove = isLove => (dispatch, getState) => {
 //Create & Edit Post
 
 export const sendPost = post => (dispatch, getState) => {
-  dispatch({type:FETCH_POST});
+  dispatch({ type: FETCH_POST });
   const { auth } = getState();
   //add or Update data except contents
   const postsRef = db.collection("posts");
@@ -201,10 +256,9 @@ export const sendPost = post => (dispatch, getState) => {
     subtitle: post.subtitle,
     ownerUid: auth.data.uid,
     tags: post.tags,
-    public: auth.status === "student" ? false : true ,
-    recommend:false,
+    public: auth.status === "student" ? false : true,
+    recommend: false
   };
-
 
   if (post.postId === undefined) {
     //new Post //? should set Love_count?
@@ -212,26 +266,31 @@ export const sendPost = post => (dispatch, getState) => {
       .add({ ...details, love: [], love_count: 0, date: new Date() })
       .then(postRef => {
         updateContents(post.contents, postRef.id, post.deletedContents);
-        if(post.file === undefined){
+        if (post.file === undefined) {
           return hist.push("/landing-page/?post=" + postRef.id);
         }
         var uploadTask = firebase
-        .storage()
-        .ref("posts")
-        .child(postRef.id + "/title.jpg")
-        .put(post.file);
-        uploadTask.on('state_changed',snapshot =>{
-          //use for see progress
-          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-        },err =>{ 
-          //error 
-          console.log(err)
-        },() =>{
-          //upload title img successful
-          return hist.push("/landing-page/?post=" + postRef.id);
-        })
-
+          .storage()
+          .ref("posts")
+          .child(postRef.id + "/title.jpg")
+          .put(post.file);
+        uploadTask.on(
+          "state_changed",
+          snapshot => {
+            //use for see progress
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+          },
+          err => {
+            //error
+            console.log(err);
+          },
+          () => {
+            //upload title img successful
+            return hist.push("/landing-page/" + postRef.id);
+          }
+        );
       });
   } else {
     //Edit Post
@@ -242,27 +301,32 @@ export const sendPost = post => (dispatch, getState) => {
         updateContents(post.contents, post.postId, post.deletedContents);
 
         if (!post.isChangeTitleImg) {
-          console.log("pass HERE")
+          console.log("pass HERE");
           //return hist.push("/landing-page/?post=" + post.postId);
         }
-        console.log("Testing")
+        console.log("Testing");
         var uploadTask = firebase
-            .storage()
-            .ref("posts")
-            .child(post.postId + "/title.jpg")
-            .put(post.file);
-            uploadTask.on('state_changed',snapshot =>{
-              //use for see progress
-              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload is ' + progress + '% done');
-            },err =>{ 
-              //error 
-              console.log(err)
-            },() =>{
-              //upload title img successful
-              return hist.push("/landing-page/?post=" + post.postId);
-            })
-
+          .storage()
+          .ref("posts")
+          .child(post.postId + "/title.jpg")
+          .put(post.file);
+        uploadTask.on(
+          "state_changed",
+          snapshot => {
+            //use for see progress
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+          },
+          err => {
+            //error
+            console.log(err);
+          },
+          () => {
+            //upload title img successful
+            return hist.push("/landing-page/" + post.postId);
+          }
+        );
       })
       .catch(e => console.log(e));
   }
@@ -277,18 +341,20 @@ const updateContents = (contents, postId, deletedContents) => {
     .collection("contents");
   const postsImgRef = firebase.storage().ref("posts");
   // Delete useless Content
-  deletedContents.map(content => {
-    batch.delete(contentsRef.doc(content.id));
-    if (content.type === "Image") {
-      //ลบรูป
-      postsImgRef
-        .child(postId + "/" + content.fileName)
-        .delete()
-        .then(() => console.log("SUCCESS"))
-        .catch(e => console.log(e));
-    }
-    return 0;
-  });
+  if(deletedContents!==undefined){
+    deletedContents.map(content => {
+      batch.delete(contentsRef.doc(content.id));
+      if (content.type === "Image") {
+        //ลบรูป
+        postsImgRef
+          .child(postId + "/" + content.fileName)
+          .delete()
+          .then(() => console.log("SUCCESS"))
+          .catch(e => console.log(e));
+      }
+      return 0;
+    });
+  }
   batch.commit().then(() => {
     // add & update Contents
     contents.map((content, index) => {
@@ -344,89 +410,93 @@ export const fetchSections = () => (dispatch, getState) => {
     .where("ownerUid", "==", auth.data.uid)
     .get()
     .then(sectionsDocs => {
-
       var sections = [];
-      sectionsDocs.forEach((section,index) => {
-        sections.push(section.data())
+      sectionsDocs.forEach((section, index) => {
+        sections.push(section.data());
       });
       /* dispatch({type:}) */
-
     });
 };
 
-export const allowPublic =(postId,isPublic)=>(dispatch,getState)=>{
-  db.collection("posts").doc(postId).update({
-    public:isPublic
-  }).then(()=>{
-    hist.go(0);
-  })
-}
+export const allowPublic = (postId, isPublic) => (dispatch, getState) => {
+  db.collection("posts")
+    .doc(postId)
+    .update({
+      public: isPublic
+    })
+    .then(() => {
+      hist.go(0);
+    });
+};
 
 // ############################## Classrooms #######################################
 
-export const fetchClassrooms = () => (dispatch,getState) => {
-  dispatch({type:FETCH_CONTENT})
-db.collection("users").onSnapshot((snap) => {
-  var members = []
-  snap.forEach((member) => {
-    members.push(member.data())
+export const fetchClassrooms = () => (dispatch, getState) => {
+  dispatch({ type: FETCH_CONTENT });
+  db.collection("users").onSnapshot(snap => {
+    var members = [];
+    snap.forEach(member => {
+      members.push(member.data());
+    });
+    dispatch({
+      type: FETCH_CONTENT_SUCCESS,
+      payload: members,
+      contentType: "classroom"
+    });
   });
-  dispatch({
-    type: FETCH_CONTENT_SUCCESS,
-    payload: members,
-    contentType:"classroom"
-  })
-})
-}
+};
 
-export const clearClassrooms = () => (dispatch) => {
-  dispatch({type:FETCH_CONTENT_CLEAR})
-}
+export const clearClassrooms = () => dispatch => {
+  dispatch({ type: FETCH_CONTENT_CLEAR });
+};
 
-export const createClassroom = (name,password) => (dispatch,getState) => {
-  const {auth} = getState();
-  db.collection('classrooms').add({
-    ownerUid:auth.data.uid,
-    name:name,
-    password:password
-  })
-}
+export const createClassroom = (name, password) => (dispatch, getState) => {
+  const { auth } = getState();
+  db.collection("classrooms").add({
+    ownerUid: auth.data.uid,
+    name: name,
+    password: password
+  });
+};
 
-export const fetchPromotePass = () => (dispatch , getState) => {
-  const { auth } = getState() 
-  const sysRef = db.collection("systems").doc('classroom');
-  sysRef.onSnapshot((snap) => {
+export const fetchPromotePass = () => (dispatch, getState) => {
+  const { auth } = getState();
+  const sysRef = db.collection("systems").doc("classroom");
+  sysRef.onSnapshot(snap => {
     var promote = {
       available: snap.data().available
-    }
-    if (promote.available === true && auth.status==="administrator") promote = {
-      ...promote,
-      promoteStatus: snap.data().promoteStatus
-    }
-    return dispatch({type:FETCH_CONTENT_ADD_MODAL,modal:promote})
-  })
-}
+    };
+    if (promote.available === true && auth.status === "administrator")
+      promote = {
+        ...snap.data()
+      };
+    return dispatch({ type: FETCH_CONTENT_ADD_MODAL, modal: promote });
+  });
+};
 
-export const promoteStatus = (yourCode) => (dispatch,getState) =>{
- return new Promise((resolve, reject) => {
-    const {
-      auth
-    } = getState()
-    db.collection('systems').doc('classroom').get().then((docRef) => {
-      if (docRef.data().available) {
-        if (yourCode === docRef.data().promoteStatus.password) {
-          const toStatus = docRef.data().promoteStatus.toStatus
-          db.collection('users').doc(auth.data.uid).update({
-            status: toStatus
-          })
-          resolve()
-          setTimeout(() => {
-            hist.go(0)
-          }, 5000)
-        } else {
-          return reject('failed')
+export const promoteStatus = yourCode => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    const { auth } = getState();
+    db.collection("systems")
+      .doc("classroom")
+      .get()
+      .then(docRef => {
+        if (docRef.data().available) {
+          if (yourCode === docRef.data().password) {
+            const toStatus = docRef.data().toStatus;
+            db.collection("users")
+              .doc(auth.data.uid)
+              .update({
+                status: toStatus
+              });
+            resolve();
+            setTimeout(() => {
+              hist.go(0);
+            }, 5000);
+          } else {
+            return reject("failed");
+          }
         }
-      }
-    })
- });
-}
+      });
+  });
+};

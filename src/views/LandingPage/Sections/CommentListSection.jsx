@@ -42,12 +42,8 @@ class ArticleSection extends React.Component {
     return (
       <div className={classes.section}>
         <GridContainer justify="center">
-          {Object.values(comments)
-            .sort((a, b) => {
-              return a.date - b.date;
-            })
-            .map((comment, index) => (
-              <CommentSection key={index} content={comment} />
+          {comments.map((comment, index) => (
+              <CommentSection key={index} content={comment.content} id={comment.id} />
             ))}
           <GridItem xs={12} sm={12} md={8}>
             <TextField

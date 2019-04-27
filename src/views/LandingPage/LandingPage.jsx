@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom"
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -30,10 +31,9 @@ import CommentListSection from "./Sections/CommentListSection.jsx";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchPost, clearPost, pressLove, allowPublic} from "actions/index.js";
+import { fetchPost,fetchComments, clearPost, pressLove, allowPublic} from "actions/index.js";
 import { getImgfromStorage } from "actions/helpers.js";
 import Modal from "components/Modal/Modal.jsx";
-
 const dashboardRoutes = [];
 
 class LandingPage extends React.Component {
@@ -47,17 +47,19 @@ class LandingPage extends React.Component {
     };
   }
   componentDidMount = async () => {
-    const { fetchPost } = this.props;
-    const params = new URLSearchParams(this.props.history.location.search);
-    this.setState({ postId: params.get("post") });
-    await fetchPost(params.get("post"));
-    await getImgfromStorage(params.get("post"),"title.jpg").then((imgUrl)=>{
+    const { fetchPost, fetchComments ,match: { params }} = this.props;
+    window.scrollTo(0, 0);
+    this.setState({ postId: params.post });
+    await fetchPost(params.post);
+    await fetchComments(params.post);
+    await getImgfromStorage(params.post,"title.jpg").then((imgUrl)=>{
       console.log(imgUrl);
       
       this.setState({
         imgUrl:imgUrl
       })
     })
+    
   };
 
   componentWillUpdate(nextProps) {
@@ -116,10 +118,18 @@ class LandingPage extends React.Component {
               <GridItem xs={12} sm={12} md={6}>
                 <h1 className={classes.title}>{post.data.title}</h1>
                 <h4>{post.data.subtitle}</h4>
-                {post.hasPost &&
-                  post.data.tags.map(tag => (
-                    <Badge color="info">{tag}</Badge>
-                  ))}
+                <ul>
+                  {post.hasPost &&
+                    post.data.tags.map((tag, i) => (
+                    <Link to={"/search/?s="+tag} style={{ color: "#FFF" }}>
+                      <li key={tag + i} className={classes.tag}>
+                        
+                          {tag}
+                        
+                      </li>
+                      </Link>
+                    ))}
+                </ul>
                 <br />
                 {post.hasPost && (
                   <div>
@@ -132,13 +142,14 @@ class LandingPage extends React.Component {
                     />
                     <br />
                     {post.data.ownerUid === auth.data.uid && auth.isAuth && (
-                      <Button
+                      <Link
                         color="warning"
                         round
-                        href={"/create-post/?edit=" + postId}
+                        to={"/create-post/?edit=" + postId}
+                        style={{ color: "#FFF" }}
                       >
                         Edit
-                      </Button>
+                      </Link>
                     )}
                   </div>
                 )}
@@ -222,6 +233,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchPost,
+  fetchComments,
   clearPost,
   pressLove,
   allowPublic

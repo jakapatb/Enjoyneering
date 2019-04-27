@@ -7,7 +7,9 @@ const footerPostStyle = {
   button: {
     padding: "12px 0px",
     fontSize: "1.313rem",
-    textTransform:"none"
+    textTransform: "none",
+    color: "black",
+    backgroundColor: "transparent"
   }
 };
 

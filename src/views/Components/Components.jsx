@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -19,6 +20,7 @@ import SectionList from "./Sections/SectionList.jsx";
 import componentsStyle from "assets/jss/material-kit-react/views/components.jsx";
 
 class Components extends React.Component {
+  
   render() {
     const { auth, classes, ...rest } = this.props;
     return (
@@ -37,9 +39,7 @@ class Components extends React.Component {
               <GridItem>
                 <div className={classes.brand}>
                   <h1 className={classes.title}>Enjoyneering KMITL</h1>
-                  <h3 className={classes.subtitle}>
-                    Make KMITL better again.
-                  </h3>
+                  <h3 className={classes.subtitle}>Make KMITL better again.</h3>
                 </div>
               </GridItem>
             </GridContainer>
@@ -84,7 +84,9 @@ const mapDispatchToProps = {
 }
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(componentsStyle)(Components));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(componentsStyle)(Components))
+);
