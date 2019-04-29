@@ -3,8 +3,11 @@ import {
   FETCH_POST_FAIL,
   FETCH_POST_SUCCESS,
   FETCH_POST_CLEAR,
-  FETCH_POST_ADD_COMMENT
+  FETCH_POST_ADD_COMMENT,
+  FETCH_POST_PREUPLOAD,
+  FETCH_POST_UPLOADED
 } from "../constants";
+import { hist } from "../..";
 
 const initialState = {
   data: {},
@@ -14,7 +17,8 @@ const initialState = {
   public:true,
   hasPost: false,
   hasComments:false,
-  isError: false
+  isError: false,
+  isUpload:[]
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +39,17 @@ export default (state = initialState, action) => {
         ...state,
         comments: action.payload, hasComments: true,
       };
+    case FETCH_POST_PREUPLOAD:  
+    return {...state,
+      isFetching:true,
+      isUpload:Array.from(Array(action.length+1)).map((_, i) => false)
+    };
+    case FETCH_POST_UPLOADED : 
+    let isUpload = state.isUpload
+    isUpload[action.index] = true
+    return {...state,
+    isUpload:isUpload ,id:action.postId
+  }
     case FETCH_POST_CLEAR:
       return initialState;
     case FETCH_POST_FAIL:

@@ -5,11 +5,15 @@ const footerPostStyle = {
     marginRight: "5px"
   },
   button: {
-    padding: "12px 0px",
+    padding: "12px 10px 12px 10px",
     fontSize: "1.313rem",
     textTransform: "none",
+    borderRadius: "0.5rem",
     color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    '&:hover':{
+      backgroundColor: "crimson"
+    }
   }
 };
 

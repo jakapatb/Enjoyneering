@@ -123,51 +123,16 @@ export const sendComment = comment => (dispatch, getState) => {
   commentsRef.collection("comments").add(comment);
 };
 
-// fetch Post when coming to Post.
-export const fetchPost = postId => dispatch =>
-  new Promise((resolve, reject) => {
-    dispatch({
-      type: FETCH_POST
-    });
-    const postRef = db.collection("posts").doc(postId);
-    postRef.get().then(post => {
-      postRef
-        .collection("contents")
-        .get()
-        .then(contentsRef => {
-          var contents = [];
-          contentsRef.forEach(content =>
-            contents.push({
-              ...content.data(),
-              id: content.id
-            })
-          );
-          getUserFromUid(post.data().ownerUid).then(owner => {
-            dispatch({
-              type: FETCH_POST_SUCCESS,
-              public: post.data().public,
-              id: post.id,
-              payload: {
-                ...post.data(),
-                id: post.id,
-                //imgUrl: imgUrl,
-                owner: owner,
-                contents: contents
-              }
-            });
-            return resolve();
-          });
-        });
-    });
-  });
+
 //fetch Comments
-export const fetchComments = (postId) => dispatch =>
+export const fetchComments = postId => dispatch =>
   new Promise((resolve, reject) => {
-    const commentsRef = db.collection("posts").doc(postId).collection("comments")
+    const commentsRef = db
+      .collection("posts")
+      .doc(postId)
+      .collection("comments");
     commentsRef.onSnapshot(snap => {
       var comments = [];
-      console.log(snap.size);
-      
       snap.forEach(comment => {
         comments.push({
           id: comment.id,
@@ -184,7 +149,6 @@ export const fetchComments = (postId) => dispatch =>
       return resolve();
     });
   });
-
 
 export const fetchSubComments = id => (dispatch, getState) =>
   new Promise((resolve, reject) => {
@@ -212,10 +176,7 @@ export const fetchSubComments = id => (dispatch, getState) =>
     return reject("error");
   });
 
-//Clear data when exit this Post.
-export const clearPost = () => dispatch => {
-  dispatch({ type: FETCH_POST_CLEAR });
-};
+
 
 //กดLove / อันLove
 export const pressLove = isLove => (dispatch, getState) => {
@@ -244,165 +205,7 @@ export const pressLove = isLove => (dispatch, getState) => {
   });
 };
 
-//Create & Edit Post
 
-export const sendPost = post => (dispatch, getState) => {
-  dispatch({ type: FETCH_POST });
-  const { auth } = getState();
-  //add or Update data except contents
-  const postsRef = db.collection("posts");
-  const details = {
-    title: post.title,
-    subtitle: post.subtitle,
-    ownerUid: auth.data.uid,
-    tags: post.tags,
-    public: auth.status === "student" ? false : true,
-    recommend: false
-  };
-
-  if (post.postId === undefined) {
-    //new Post //? should set Love_count?
-    postsRef
-      .add({ ...details, love: [], love_count: 0, date: new Date() })
-      .then(postRef => {
-        updateContents(post.contents, postRef.id, post.deletedContents);
-        if (post.file === undefined) {
-          return hist.push("/landing-page/?post=" + postRef.id);
-        }
-        var uploadTask = firebase
-          .storage()
-          .ref("posts")
-          .child(postRef.id + "/title.jpg")
-          .put(post.file);
-        uploadTask.on(
-          "state_changed",
-          snapshot => {
-            //use for see progress
-            var progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-          },
-          err => {
-            //error
-            console.log(err);
-          },
-          () => {
-            //upload title img successful
-            return hist.push("/landing-page/" + postRef.id);
-          }
-        );
-      });
-  } else {
-    //Edit Post
-    postsRef
-      .doc(post.postId)
-      .update({ ...details, updated: new Date() })
-      .then(() => {
-        updateContents(post.contents, post.postId, post.deletedContents);
-
-        if (!post.isChangeTitleImg) {
-          console.log("pass HERE");
-          //return hist.push("/landing-page/?post=" + post.postId);
-        }
-        console.log("Testing");
-        var uploadTask = firebase
-          .storage()
-          .ref("posts")
-          .child(post.postId + "/title.jpg")
-          .put(post.file);
-        uploadTask.on(
-          "state_changed",
-          snapshot => {
-            //use for see progress
-            var progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-          },
-          err => {
-            //error
-            console.log(err);
-          },
-          () => {
-            //upload title img successful
-            return hist.push("/landing-page/" + post.postId);
-          }
-        );
-      })
-      .catch(e => console.log(e));
-  }
-};
-
-const updateContents = (contents, postId, deletedContents) => {
-  //add Image Title to storage
-  const batch = db.batch();
-  const contentsRef = db
-    .collection("posts")
-    .doc(postId)
-    .collection("contents");
-  const postsImgRef = firebase.storage().ref("posts");
-  // Delete useless Content
-  if(deletedContents!==undefined){
-    deletedContents.map(content => {
-      batch.delete(contentsRef.doc(content.id));
-      if (content.type === "Image") {
-        //ลบรูป
-        postsImgRef
-          .child(postId + "/" + content.fileName)
-          .delete()
-          .then(() => console.log("SUCCESS"))
-          .catch(e => console.log(e));
-      }
-      return 0;
-    });
-  }
-  batch.commit().then(() => {
-    // add & update Contents
-    contents.map((content, index) => {
-      var outPutContent = {
-        index: content.index,
-        type: content.type,
-        ready: true //? For what?
-      };
-      switch (content.type) {
-        case "Article":
-          outPutContent = {
-            ...outPutContent,
-            title: content.title,
-            content: content.content
-          };
-          break;
-        case "Image":
-          outPutContent = {
-            ...outPutContent,
-            fileName: "pic" + index + "." + content.fileType
-          };
-          // Add Image to storage
-          postsImgRef
-            .child(postId + "/pic" + index + "." + content.fileType)
-            .put(content.file);
-          break;
-        case "Youtube":
-          outPutContent = {
-            ...outPutContent,
-            autoplay: 0,
-            videoId: content.videoId
-          };
-          break;
-        default:
-          break;
-      }
-
-      //add info to firestore
-      if (content.id === undefined) {
-        // new Content
-        return contentsRef.add(outPutContent);
-      } else {
-        //edit Content
-        return contentsRef.doc(content.id).set(outPutContent);
-      }
-    });
-  });
-};
 //? คือไรวะ
 export const fetchSections = () => (dispatch, getState) => {
   const { auth } = getState();

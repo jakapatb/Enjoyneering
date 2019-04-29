@@ -1,4 +1,5 @@
 import React from "react";
+import {Redirect} from "react-router-dom"
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -26,7 +27,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // Sections for this page
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { sendPost, fetchPost, clearPost } from "actions/index.js";
+import { sendPost, fetchPost, clearPost } from "actions/post.js";
 import YoutubeSection from "./Sections/YoutubeSection";
 import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
@@ -87,6 +88,7 @@ class CreatePost extends React.Component {
       });
     }
   };
+  
   componentWillUnmount() {
     this.props.clearPost();
   }
@@ -141,7 +143,9 @@ class CreatePost extends React.Component {
   //for handle dialog Submit
   _handleSubmitDialog = () => {
     if (this.state.submitDialog) {
-      this.setState({ submitDialog: false });
+      if(!this.props.post.isFetching){
+        this.setState({ submitDialog: false });
+      }
     } else {
       this.setState({ submitDialog: true });
     }
@@ -242,7 +246,18 @@ class CreatePost extends React.Component {
   render() {
     const { post, auth, classes, ...rest } = this.props;
     const { imgUrl, tags, title, subtitle,value } = this.state;
-
+               if (
+                 this.props.post.isUpload.length > 0 &&
+                 this.props.post.isUpload.every(
+                   upload => upload === true
+                 )
+               ) return(
+                   <Redirect
+                     to={{
+                       pathname: "/landing-page/"+post.id,
+                     }}
+                   />
+                 );
     return (
       <div>
         <Header
@@ -428,7 +443,8 @@ class CreatePost extends React.Component {
                   </DialogTitle>
                   {post.isFetching ? (
                     <DialogContent className={classes.progressSubmit}>
-                      <CircularProgress className={classes.progress} />
+                      <CircularProgress className={classes.progress} value={post.isUpload.filter((up)=>up===true).length/post.isUpload.length}/>
+                      <h3>{post.isUpload.filter((up)=>up===true).length+" / "+post.isUpload.length}</h3>
                     </DialogContent>
                   ) : (
                     <div>

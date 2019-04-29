@@ -31,7 +31,8 @@ import CommentListSection from "./Sections/CommentListSection.jsx";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchPost,fetchComments, clearPost, pressLove, allowPublic} from "actions/index.js";
+import { fetchPost ,clearPost} from "actions/post.js";
+import { fetchComments, pressLove, allowPublic} from "actions/index.js";
 import { getImgfromStorage } from "actions/helpers.js";
 import Modal from "components/Modal/Modal.jsx";
 const dashboardRoutes = [];
@@ -121,12 +122,13 @@ class LandingPage extends React.Component {
                 <ul>
                   {post.hasPost &&
                     post.data.tags.map((tag, i) => (
-                    <Link to={"/search/?s="+tag} style={{ color: "#FFF" }}>
-                      <li key={tag + i} className={classes.tag}>
-                        
+                      <Link
+                        to={"/search/?s=" + tag}
+                        style={{ color: "#FFF" }}
+                      >
+                        <li key={tag + i} className={classes.tag}>
                           {tag}
-                        
-                      </li>
+                        </li>
                       </Link>
                     ))}
                 </ul>
@@ -141,16 +143,17 @@ class LandingPage extends React.Component {
                       content={"คุณต้องการเปิด Public บทความนี้หรือไม่"}
                     />
                     <br />
-                    {post.data.ownerUid === auth.data.uid && auth.isAuth && (
-                      <Link
-                        color="warning"
-                        round
-                        to={"/create-post/?edit=" + postId}
-                        style={{ color: "#FFF" }}
-                      >
-                        Edit
-                      </Link>
-                    )}
+                    {post.data.ownerUid.includes(auth.data.uid) &&
+                      auth.isAuth && (
+                        <Link
+                          color="warning"
+                          round
+                          to={"/create-post/?edit=" + postId}
+                          style={{ color: "#FFF" }}
+                        >
+                          Edit
+                        </Link>
+                      )}
                   </div>
                 )}
               </GridItem>
@@ -213,7 +216,7 @@ class LandingPage extends React.Component {
                 >
                   <Favorite /> {this.state.number} love it!
                 </Button>
-                <FooterPostSection owner={post.data.owner} />
+                <FooterPostSection ownerUid={post.data.ownerUid} />
               </GridItem>
             )}
             {post.hasComments && (

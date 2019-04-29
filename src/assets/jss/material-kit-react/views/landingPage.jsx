@@ -55,7 +55,7 @@ const landingPageStyle = {
     display: "inline-block",
     position: "relative",
     padding: "5px 10px",
-    borderRadius: "10em",
+    borderRadius: "2em",
     margin: 5,
     fontWeight: "bold",
     //background: '#3498db',
@@ -116,7 +116,7 @@ const landingPageStyle = {
     marginTop: "10px",
     display: "block",
     lineHeight: "16px"
-  }
+  },
 };
 
 export default landingPageStyle;

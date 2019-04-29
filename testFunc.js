@@ -1,10 +1,9 @@
-var moment = require('moment');
-
-
 
 
 const main = () => {
-  getLocation()
+  const test = Array.from(Array(10)).map((_, i) => false);
+  console.log(test[10]);
+
 }
 
 

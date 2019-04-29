@@ -3,7 +3,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import TextField from "@material-ui/core/TextField"
+import TextField from "@material-ui/core/TextField";
 import Edit from "@material-ui/icons/Edit";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -16,7 +16,7 @@ class ArticleSection extends React.Component {
     super(props);
     this.state = {
       title: props.content.title,
-      content: props.content.content,
+      content: props.content.content||"",
       ready: props.content.ready
     };
   }
@@ -27,14 +27,15 @@ class ArticleSection extends React.Component {
 
   handleSubmit = event => {
     const { title, content } = this.state;
-    const {submit , index} = this.props;
-      if ((title.trim() !== "" && content.trim() !== "")) { // ตอน Submit ข้อมูลทั้ง Title และ Content ห้ามว่าง
-        submit({ type: "Article", title: title, content: content, index: index})
-        this.setState({ ready: true });
-      } else {
-        //TODO แจ้งเตื่อนว่า ยังมีข้อมูลว่าง
-        console.log("warning");
-      }
+    const { submit, index } = this.props;
+    if (title.trim() !== "" && content.trim() !== "") {
+      // ตอน Submit ข้อมูลทั้ง Title และ Content ห้ามว่าง
+      submit({ type: "Article", title: title, content: content, index: index });
+      this.setState({ ready: true });
+    } else {
+      //TODO แจ้งเตื่อนว่า ยังมีข้อมูลว่าง
+      console.log("warning");
+    }
   };
 
   removeContent = () => {
@@ -44,34 +45,59 @@ class ArticleSection extends React.Component {
   handleEdit = event => {
     this.setState({ ready: false });
   };
-  
+
   render() {
     const { classes } = this.props;
     const { ready, title, content } = this.state;
     if (!ready) {
-      return <div className={classes.section}>
-          <Button round color="warning" onClick={this.removeContent}>
-            Remove
-          </Button>
-          <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={8}>
-              <CustomInput labelText="Title" id="title" inputProps={{ ref: input => {
+      return (
+        <div className={classes.section}>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <CustomInput
+                labelText="Title"
+                id="title"
+                inputProps={{
+                  ref: input => {
                     this.titleInput = input;
-                  }, value: title }} formControlProps={{ fullWidth: true, onChange: this.handleChange }} />
+                  },
+                  classes: classes.title,
+                  value: title
+                }}
+                formControlProps={{
+                  fullWidth: true,
+                  onChange: this.handleChange
+                }}
+              />
               <br />
-              <TextField ref={input => {
+              <TextField
+                ref={input => {
                   this.contentInput = input;
-                }} placeholder="MultiLine with rows: 2 and rowsMax: 4" id="content" multiline={true} fullWidth={true} onChange={this.handleChange} rows={5} rowsMax={20} value={content} />
+                }}
+                placeholder="MultiLine with rows: 2 and rowsMax: 4"
+                id="content"
+                multiline={true}
+                fullWidth={true}
+                onChange={this.handleChange}
+                rows={5}
+                rowsMax={20}
+                value={content}
+              />
             </GridItem>
-            <GridItem>
+          </GridContainer>
+          <GridContainer className={classes.buttonList} justify="flex-end">
               <Button round color="warning" onClick={this.handleSubmit}>
                 Submit
               </Button>
-            </GridItem>
+              <Button round color="warning" onClick={this.removeContent}>
+                Remove
+              </Button>
           </GridContainer>
-        </div>;
+        </div>
+      );
     } else {
-      return <div className={classes.section}>
+      return (
+        <div className={classes.section}>
           <Button justIcon round color="warning" onClick={this.handleEdit}>
             <Edit style={{ color: "#FFFFFF" }} />
           </Button>
@@ -84,7 +110,8 @@ class ArticleSection extends React.Component {
               <h5 className={classes.description}>{content}</h5>
             </GridItem>
           </GridContainer>
-        </div>;
+        </div>
+      );
     }
   }
 }
