@@ -17,9 +17,14 @@ const landingPageStyle = {
   },
   subtitle: {
     fontSize: "1.313rem",
-    maxWidth: "500px",
-    margin: "0px auto 0",
-    color: "#FFFFFF"
+    ...title,
+    display: "inline-block",
+    position: "relative",
+    marginTop: "30px",
+    minHeight: "32px",
+    color: "#FFFFFF",
+    textDecoration: "none",
+    lineHeight: "1.15em"
   },
   main: {
     background: "#FFFFFF",
@@ -128,8 +133,8 @@ const landingPageStyle = {
       borderLeftColor: "#fff"
     }
   },
-  button: { background: "transparent", border: "0", cursor: "pointer" },
   tag_input: {
+    width:"100%",
     padding: "5px 10px",
     boxSizing: "border-box",
     color: "#7f8c8d",

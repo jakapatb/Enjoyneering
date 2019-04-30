@@ -1,6 +1,6 @@
 import { container, title } from "assets/jss/material-kit-react.jsx";
 
-const landingPageStyle = {
+const landingPageStyle =(theme)=> ({
   container: {
     zIndex: "12",
     color: "#FFFFFF",
@@ -91,7 +91,6 @@ const landingPageStyle = {
       borderLeftColor: "#fff"
     }
   },
-  button: { background: "transparent", border: "0", cursor: "pointer" },
   tag_input: {
     padding: "5px 10px",
     boxSizing: "border-box",
@@ -117,6 +116,34 @@ const landingPageStyle = {
     display: "block",
     lineHeight: "16px"
   },
-};
+  navLink: {
+    color: "inherit",
+    position: "relative",
+    padding: "0.9375rem",
+    fontWeight: "400",
+    fontSize: "12px",
+    width:"100%",
+    textTransform: "uppercase",
+    borderRadius: "3px",
+    lineHeight: "20px",
+    textDecoration: "none",
+    margin: "0px",
+    display: "block",
+    background: "rgba(200, 200, 200, 0.2)",
+    "&:hover,&:focus": {
+      color: "black",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "calc(100% - 30px)",
+      marginLeft: "15px",
+      marginBottom: "8px",
+      marginTop: "8px",
+      textAlign: "left",
+      "& > span:first-child": {
+        justifyContent: "flex-start"
+      }
+    }
+  }
+})
 
 export default landingPageStyle;

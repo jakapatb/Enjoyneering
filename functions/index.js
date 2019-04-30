@@ -27,6 +27,8 @@ exports.addFirestoreDataToAlgolia = functions.https.onRequest((req, res) => {
           tags: data.tags,
           objectID: doc.id,
           date: data.date,
+          recommend: data.recommend,
+          public: data.public
         };
         arr.push(post);
       });
@@ -45,7 +47,7 @@ exports.addFirestoreDataToAlgolia = functions.https.onRequest((req, res) => {
 // Update the search index every time a blog post is written.
 exports.onNoteCreated = functions.firestore
   .document("posts/{postId}")
-  .onCreate((snap, context) => {
+  .onCreate((doc, context) => {
     // Get the note document
     let data = doc.data();
     let post = {
@@ -53,16 +55,51 @@ exports.onNoteCreated = functions.firestore
       subtitle: data.subtitle,
       tags: data.tags,
       objectID: doc.id,
-      date: data.date
+      date: data.date,
+      recommend:data.recommend,
+      public:data.public,
     };
 
     // Write to the algolia index
     const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
     const index = client.initIndex(ALGOLIA_INDEX_NAME);
-    return index.addObject(post);
+    return index.addObject(post, (err, content) => {
+      if (err) throw err;
+      console.log(content);
+    });
   });
 
-exports.onNoteCreated = functions.firestore
+
+exports.onNoteUpdated = functions.firestore
+  .document("posts/{postId}")
+  .onUpdate((doc, context) => {
+    // Get the note document
+    let data = doc.data();
+    let post = [
+      {
+        title: data.title,
+        subtitle: data.subtitle,
+        tags: data.tags,
+        objectID: doc.id,
+        date: data.date,
+        recommend: data.recommend,
+        public: data.public
+      }
+    ];
+
+    // Write to the algolia index
+    const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
+    const index = client.initIndex(ALGOLIA_INDEX_NAME);
+    index.partialUpdateObjects(post, (err, content) => {
+      if (err) throw err;
+      console.log(content);
+    });
+  });
+
+
+
+
+exports.onNoteDelete = functions.firestore
   .document("posts/{postId}")
   .onDelete((snap, context) => {
     // Get the note document
@@ -71,7 +108,10 @@ exports.onNoteCreated = functions.firestore
     // Write to the algolia index
     const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
     const index = client.initIndex(ALGOLIA_INDEX_NAME);
-    return index.deleteObject(objectID);
+    return index.deleteObject(objectID, (err, content) => {
+      if (err) throw err;
+      console.log(content);
+    });
   });
 
 // Notification when someone love your post
@@ -145,7 +185,7 @@ exports.getPassword = functions.https.onRequest((req,res)=>{
 res.send(req.params.id)
 })
 
-exports.generateThumbnail = functions.storage.object('uploads/{imageId}').onChange(event => {
+/**exports.generateThumbnail = functions.storage.object('post/{postId}/{imageId}').onChange(event => {
 
   const object = event.data; // The Storage object.
 
@@ -194,4 +234,4 @@ exports.generateThumbnail = functions.storage.object('uploads/{imageId}').onChan
 
     })
   }).catch((e)=>console.log(e))
-})
+}) */

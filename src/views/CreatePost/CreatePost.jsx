@@ -13,7 +13,6 @@ import Footer from "components/Footer/Footer.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import Badge from "components/Badge/Badge.jsx";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
@@ -33,8 +32,8 @@ import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
 import { getImgfromStorage } from "actions/helpers.js";
 import Dropzone from "react-dropzone";
+import FooterPostSection from "./Sections/FooterPostSection";
 const dashboardRoutes = [];
-const ReactTags = require("react-tag-autocomplete");
 
 const ENTER_KEY = 13;
 const COMMA_KEY = 188;
@@ -272,7 +271,7 @@ class CreatePost extends React.Component {
         <Parallax filter image={imgUrl}>
           <div className={classes.container}>
             <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem xs={12} sm={12} md={12}>
                 <CustomInput
                   className={classes.input}
                   id="title"
@@ -286,6 +285,8 @@ class CreatePost extends React.Component {
                     value: title
                   }}
                 />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={12}>
                 <CustomInput
                   className={classes.input}
                   id="subtitle"
@@ -299,34 +300,8 @@ class CreatePost extends React.Component {
                     value: subtitle
                   }}
                 />
-                {/*
-                <Button
-                  href="/profile-page"
-                  color="transparent"
-                  className={classes.button}
-                >
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={auth.data.photoURL}
-                    className={classes.avatar}
-                  />
-                  {" " + auth.data.displayName}
-                </Button>
-                */}
               </GridItem>
               <GridItem>
-                {/*tags.map((tag, index) => (
-                  <Button
-                    simple
-                    className={classes.tag}
-                    onClick={this._removeTag(index)}
-                  >
-                    <Badge color="primary" round>
-                      {" "}
-                      {tag}
-                    </Badge>
-                  </Button>
-                ))*/}
                 <div className={classes.form}>
                   <div className={classes.tags}>
                     <ul>
@@ -351,7 +326,7 @@ class CreatePost extends React.Component {
                     Press <code>enter</code> or <code>,</code> to add a tag.
                     Press <code>backspace</code> to edit previous tag.
                   </small>
-                </div>  
+                </div>
                 <br />
               </GridItem>
               <GridItem>
@@ -422,7 +397,7 @@ class CreatePost extends React.Component {
                   return null;
               }
             })}
-
+            <FooterPostSection ownerUid={post.data.ownerUid ||[auth.data.uid]} />
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <Button
@@ -443,8 +418,18 @@ class CreatePost extends React.Component {
                   </DialogTitle>
                   {post.isFetching ? (
                     <DialogContent className={classes.progressSubmit}>
-                      <CircularProgress className={classes.progress} value={post.isUpload.filter((up)=>up===true).length/post.isUpload.length}/>
-                      <h3>{post.isUpload.filter((up)=>up===true).length+" / "+post.isUpload.length}</h3>
+                      <CircularProgress
+                        className={classes.progress}
+                        value={
+                          post.isUpload.filter(up => up === true).length /
+                          post.isUpload.length
+                        }
+                      />
+                      <h3>
+                        {post.isUpload.filter(up => up === true).length +
+                          " / " +
+                          post.isUpload.length}
+                      </h3>
                     </DialogContent>
                   ) : (
                     <div>
@@ -488,7 +473,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   sendPost,
   fetchPost,
-  clearPost
+  clearPost,
 };
 
 export default compose(

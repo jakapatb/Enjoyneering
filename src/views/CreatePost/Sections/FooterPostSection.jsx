@@ -20,7 +20,8 @@ class FooterPostSection extends Component {
         this.setState({ owners: owners });
       }))
   }
-
+//! เพิ่ม ปุ่มกดเพิ่ม ผู้เร่วมขียน (กดเพื่อลดได้)
+//? แล้วต้องทำขออนุญาติไหม ?
   render() {
     const { classes } = this.props;
     const { owners } = this.state;

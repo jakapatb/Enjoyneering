@@ -1,4 +1,10 @@
-import { FETCH_LIST, FETCH_LIST_FAIL, FETCH_LIST_RECENT, FETCH_LIST_POPULAR} from '../constants'
+import {
+  FETCH_LIST,
+  FETCH_LIST_FAIL,
+  FETCH_LIST_RECENT,
+  FETCH_LIST_POPULAR,
+  FETCH_LIST_CLEAR
+} from "../constants";
 const initialState = {
     recent:[],
     popular:[],
@@ -20,6 +26,7 @@ export default (state = initialState, action) => {
          isFetching: false, hasRecent: true };
       case FETCH_LIST_POPULAR:
         return { ...state, popular: action.popular, isFetching: false, hasPop: true };
+      case FETCH_LIST_CLEAR: return initialState
       case FETCH_LIST_FAIL:
         return { ...state, isError: true, isFetching: false, hasList: false };
       default:

@@ -9,7 +9,7 @@ import Edit from "@material-ui/icons/Edit";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
-import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
+import articleStyle from "assets/jss/material-kit-react/views/landingPageSections/articleStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 class ArticleSection extends React.Component {
   constructor(props) {
@@ -98,12 +98,19 @@ class ArticleSection extends React.Component {
     } else {
       return (
         <div className={classes.section}>
-          <Button justIcon round color="warning" onClick={this.handleEdit}>
-            <Edit style={{ color: "#FFFFFF" }} />
-          </Button>
-          <Button round color="warning" onClick={this.removeContent}>
-            Remove
-          </Button>
+          <GridContainer className={classes.buttonList} justify="flex-end">
+            <Button
+              justIcon
+              round
+              color="warning"
+              onClick={this.handleEdit}
+            >
+              <Edit style={{ color: "#FFFFFF" }} />
+            </Button>
+            <Button round color="warning" onClick={this.removeContent}>
+              Remove
+            </Button>
+          </GridContainer>
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={8}>
               <h2 className={classes.title}>{title}</h2>
@@ -116,4 +123,4 @@ class ArticleSection extends React.Component {
   }
 }
 
-export default withStyles(productStyle)(ArticleSection);
+export default withStyles(articleStyle)(ArticleSection);

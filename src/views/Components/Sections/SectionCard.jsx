@@ -10,7 +10,6 @@ import CardBody from "components/Card/CardBody.jsx";
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import thumbnail from "assets/img/thumbnail.jpg";
-import { getImgfromStorage } from "actions/helpers.js";
 var moment = require("moment");
 //import * as moment from 'moment';
 const style = {
@@ -40,12 +39,9 @@ const style = {
 class SectionCard extends React.Component {
   constructor(props){
   super(props);
-  this.state={
-    imgUrl:thumbnail
-  }
-  }
-  componentDidMount(){
-    getImgfromStorage(this.props.data.id,'title.jpg').then(imgUrl=>this.setState({imgUrl:imgUrl}))
+  this.state = {
+    imgUrl: props.data.imgUrl || thumbnail
+  };
   }
   render() {
     const { classes,data } = this.props;

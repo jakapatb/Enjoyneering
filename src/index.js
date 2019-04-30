@@ -9,7 +9,6 @@ import reducers from "configs/reducers/index.js"
 import "assets/scss/material-kit-react.css?v=1.3.0";
 import { createStore, applyMiddleware } from "redux";
 import {checkAuth } from "actions/helpers.js";
-import Components from "./views/Components/Components";
 export var hist = createBrowserHistory();
 const store = createStore(reducers, applyMiddleware(thunk));
 

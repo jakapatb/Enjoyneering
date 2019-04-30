@@ -7,7 +7,6 @@ import {
   FETCH_POST_PREUPLOAD,
   FETCH_POST_UPLOADED
 } from "../constants";
-import { hist } from "../..";
 
 const initialState = {
   data: {},
@@ -24,7 +23,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_POST:
-      return { ...state, isFetching: true };
+      return { ...state, isFetching: true ,isUpload:[]};
     case FETCH_POST_SUCCESS:
       return {
         ...state,

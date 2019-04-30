@@ -40,7 +40,7 @@ export const getUserFromUid = uid =>
 
 //direct to /search
 export const goToSearch = word => {
-  hist.push("/search?s=" + word);
+  hist.push("/search/" + word);
 };
 
 
@@ -55,13 +55,20 @@ export const checkAuth = (dispatch) => new Promise((resolve, reject) => {
       };
       const userRef = db.collection("users").doc(user.uid);
       db.runTransaction(transaction => {
+        
         transaction.get(userRef).then(userDoc => {
+          payload = {
+            ...payload,
+            status: userDoc.exists ? userDoc.data().status : "visitor"
+          };
           dispatch({
             type: FETCH_USER_SUCCESS,
             payload: payload,
-            status: userDoc.data().status
+            status: userDoc.exists? userDoc.data().status :"visitor"
           });
+        if(userDoc.exists){
           transaction.update(userRef, payload);
+        }else { userRef.set(payload) }
         });
       });
       //notifications

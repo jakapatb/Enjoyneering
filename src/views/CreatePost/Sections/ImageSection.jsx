@@ -3,13 +3,11 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // @material-ui/icons
-import CustomInput from "components/CustomInput/CustomInput.jsx";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import imageStyle from "assets/jss/material-kit-react/views/landingPageSections/imageStyle.jsx";
 import Button from "components/CustomButtons/Button.jsx";
-import { getImgfromStorage } from "actions/helpers.js"
 import Dropzone from "react-dropzone";
 class ImageSection extends React.Component {
   constructor(props) {
@@ -21,9 +19,6 @@ class ImageSection extends React.Component {
     };
   }
   componentDidMount() {
-    getImgfromStorage(this.props.id, this.props.content.fileName)
-      .then(imgUrl => this.setState({ imgUrl: imgUrl, ready: false }))
-      .catch(e => console.log(e));
   }
   handleChange = files => {
     const { index, submit } = this.props;
@@ -59,7 +54,7 @@ class ImageSection extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { imgUrl, ready } = this.state;
+    const { imgUrl } = this.state;
     return (
       <div className={classes.section}>
         <Button round color="warning" onClick={this.removeContent}>

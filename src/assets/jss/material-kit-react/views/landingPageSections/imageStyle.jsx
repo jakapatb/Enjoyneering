@@ -26,7 +26,6 @@ const productStyle = {
     position: "relative",
     textAlign: "center",
     backgroundPosition: "center center",
-    display: "inline-block",
     maxWidth: "100%",
     width: "auto",
     objectFit: "cover",
@@ -55,7 +54,6 @@ const productStyle = {
     backgroundColor: "#fff",
     opacity: 0.5,
     color: "#000",
-    color: "black"
   }
 };
 

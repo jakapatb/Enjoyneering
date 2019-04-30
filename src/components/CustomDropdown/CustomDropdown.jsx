@@ -57,6 +57,7 @@ class CustomDropdown extends React.Component {
       caret,
       hoverColor,
       left,
+      right,
       rtlActive,
       noLiPadding
     } = this.props;
@@ -110,8 +111,8 @@ class CustomDropdown extends React.Component {
           disablePortal
           placement={
             dropup
-              ? left ? "top-start" : "top"
-              : left ? "bottom-start" : "bottom"
+              ? left ? "top-start" : right? "top-end" : "top" 
+              : left ? "bottom-start" : right? "bottom-end" : "bottom" 
           }
           className={classNames({
             [classes.popperClose]: !open,
@@ -195,6 +196,7 @@ CustomDropdown.propTypes = {
   rtlActive: PropTypes.bool,
   caret: PropTypes.bool,
   left: PropTypes.bool,
+  right: PropTypes.bool,
   noLiPadding: PropTypes.bool,
   // function that retuns the selected item
   onClick: PropTypes.func

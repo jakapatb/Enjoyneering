@@ -73,8 +73,7 @@ class Modal extends React.Component {
                 <Button onClick={() => this.handleClose()}>No</Button>
                 <Button
                   onClick={() => {
-                    submit();
-                    this.handleClose();
+                    submit()
                   }}
                   color="successNoBackground"
                 >

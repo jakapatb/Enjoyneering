@@ -49,10 +49,11 @@ class SectionList extends React.Component {
           </div>
           <GridContainer justify="center">
             <GridList className={classes.gridList} cols={2.5}>
-                {list.hasRecent &&
-                  list[listName].map((post, index) => (
-                    <SectionCard data={post} key={index} />
-                  ))}
+              {list.hasRecent &&
+                Array.isArray(list[listName]) &&
+                list[listName].map((post, index) => (
+                  <SectionCard data={post} key={index} />
+                ))}
             </GridList>
           </GridContainer>
           <Link to="/">

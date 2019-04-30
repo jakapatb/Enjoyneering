@@ -6,8 +6,6 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/icons
 
 // core components
-import image from "assets/img/Carousel.jpg";
-import { getImgfromStorage } from "actions/helpers.js";
 
 const style = {
   imgCard: {
@@ -34,13 +32,11 @@ class SectionChildCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      imgUrl: image
+      imgUrl:  ""
     };
   }
   componentDidMount() {
-    getImgfromStorage(this.props.post.id, "title.jpg").then(imgUrl =>
-      this.setState({ imgUrl: imgUrl })
-    );
+    this.setState({ imgUrl: this.props.post.imgUrl});
   }
 
   render() {

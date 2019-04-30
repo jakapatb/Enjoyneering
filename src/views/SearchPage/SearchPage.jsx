@@ -37,8 +37,10 @@ class SearchPage extends React.Component {
   }
 
   componentDidMount() {
-    const params = new URLSearchParams(this.props.history.location.search);
-    const search = params.get("s");
+    const {
+      match: { params }
+    } = this.props;
+    const search = params.search
     const { type } = this.state;
     this.getList(type, search);
   }
@@ -76,8 +78,9 @@ class SearchPage extends React.Component {
           <header>
             <Parallax filter className={classes.parallax} image={require("assets/img/landing-bg.jpg")}>
               <div className={classes.container}>
-                <GridContainer>
+                <GridContainer xs={12} sm={12} md={12}>
                   <ConnectSearchBox search={search} handleSearch={this.handleSearch} classes={classes} />
+                  <h1>{search}</h1>
                 </GridContainer>
               </div>
             </Parallax>

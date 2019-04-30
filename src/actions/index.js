@@ -3,9 +3,6 @@ import {
   FETCH_LIST_POPULAR,
   FETCH_LIST_RECENT,
   FETCH_LIST,
-  FETCH_POST,
-  FETCH_POST_SUCCESS,
-  FETCH_POST_CLEAR,
   FETCH_POST_ADD_COMMENT,
   FETCH_CONTENT,
   FETCH_CONTENT_CLEAR,
@@ -14,7 +11,6 @@ import {
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
-import { getUserFromUid } from "./helpers";
 const db = firebase.firestore();
 
 /**
@@ -53,6 +49,7 @@ export const fetchListPopPost = () => (dispatch, getState) => {
   const { auth } = getState();
   var listPopPost = [];
   var postsRef = db.collection("posts");
+  //! still bug
   if (!auth.isAuth) {
     postsRef = postsRef.where("public", "==", true);
   }

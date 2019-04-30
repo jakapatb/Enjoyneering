@@ -107,36 +107,52 @@ function HeaderLinks({...props }) {
             }
             buttonProps={{
               className: classes.navLink + " " + classes.imageDropdownButton,
-              color: "transparent"
+              color: "transparent",
             }}
             //? เปลี่ยนสีหลังจาก อ่านแล้ว
             dropdownList={noti.data.map((message, index) => {
               switch (message.type) {
                 case "love":
                   return (
-                    <a
-                      href={"landing-page?post=" + message.postId}
-                      onClick={() =>
-                        markSeenNoti(message.postId, message.notiId)
-                      }
-                      className={classes.dropdownLink}
-                    >
-                      {message.seen && "Seen "}
-                      {message.love} Love Your "{message.title}" post
-                    </a>
+                    <div className={classes.dropdownLink}>
+                      <a
+                        href={
+                          "landing-page/" + message.postId
+                        }
+                        onClick={() =>
+                          markSeenNoti(
+                            message.postId,
+                            message.notiId
+                          )
+                        }
+                        className={classes.textLink}
+                        style={message.seen?({backgroundColor:"#ddd"}):({})}
+                      >
+                        {message.seen && "Seen "}
+                        {message.love} Love Your "
+                        {message.title}" post
+                      </a>
+                    </div>
                   );
                 case "comment":
                   return (
-                    <a
-                      href={"landing-page?post=" + message.postId}
-                      onClick={() =>
-                        markSeenNoti(message.postId, message.notiId)
-                      }
-                      className={classes.dropdownLink}
-                    >
-                      {message.seen && "Seen "} Someone Comment in Your "
-                      {message.title}" post
-                    </a>
+                    <div className={classes.dropdownLink}>
+                      <a
+                        className={classes.textLink}
+                        href={
+                          "landing-page/" + message.postId
+                        }
+                        onClick={() =>
+                          markSeenNoti(
+                            message.postId,
+                            message.notiId
+                          )
+                        }
+                      >
+                        {message.seen && "Seen "} Someone
+                        Comment in Your "{message.title}" post
+                      </a>
+                    </div>
                   );
                 default:
                   return (
@@ -175,8 +191,7 @@ function HeaderLinks({...props }) {
                 to="/profile-page"
               >
                 {auth.data.displayName}
-                    </Link>
-              ,
+              </Link>,
               <Button
                 className={classes.dropdownLink}
                 color="transparent"

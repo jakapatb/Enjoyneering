@@ -105,6 +105,13 @@ const headerLinksStyle = theme => ({
     height: "30px",
     marginLeft: "5px"
   },
+  textLink: {
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      color: "white"
+    }
+  },
   dropdownLink: {
     "&,&:hover,&:focus": {
       color: "inherit",
@@ -156,7 +163,7 @@ const headerLinksStyle = theme => ({
     marginLeft: "5px"
   },
   rootBadge: {
-    display: 'flex',
+    display: "flex"
   },
   margin: {
     margin: theme.spacing.unit * 2
