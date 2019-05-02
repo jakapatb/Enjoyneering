@@ -22,3 +22,5 @@ yarn-error.log*
 src/components/PopupRegister.js
 src/components/PopupRegister.js
 src/assets/scss/material-kit-react.css
+
+yarn\.lock

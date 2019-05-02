@@ -17,9 +17,9 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import managementStyle from "assets/jss/material-kit-react/views/management.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
 import Dashboard from "@material-ui/icons/Dashboard";
-import Schedule from "@material-ui/icons/Schedule";
 import Loader from "components/Loader/Loader.jsx";
-
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import SectionProfile from "./Sections/SectionProfile"
 import SectionClass from "./Sections/SectionClass";
 import {
   fetchClassrooms,
@@ -28,105 +28,129 @@ import {
 } from "actions/index.js";
 
 class Management extends React.Component {
-
-  componentDidMount(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: 0
+    };
+  }
+  componentDidMount() {
+    const {
+      match: { params }
+    } = this.props;
+    let index = 0;
+    switch (params.active) {
+      case "classroom":
+        index = 1;
+        break;
+      case "profile":
+        index = 0;
+        break;
+      default:
+        break;
+    }
+    this.setState({ active: index });
     this.props.fetchClassrooms();
+  }
+
+  componentWillUpdate(nextProps) {
+      if(nextProps.match.params.active!== this.props.match.params.active){
+          const {
+      match: { params }
+    } = this.props;
+    let index = 0;
+    switch (params.active) {
+      case "classroom":
+        index = 0;
+        break;
+      case "profile":
+        index = 1;
+        break;
+      default:
+        break;
+    }
+    this.setState({ active: index });
+      }
   }
   componentWillUnmount() {
     this.props.clearClassrooms();
   }
-  
 
-    render() {
-        const { auth,content, classes, ...rest } = this.props;
-        return (
-          <div>
-            <Header
-              brand="Enjoyneering KMITL"
-              rightLinks={<HeaderLinks user={auth} test="123" />}
-              fixed
-              color="transparent"
-              changeColorOnScroll={{ height: 100, color: "white" }}
-              {...rest}
-            />
-            <Parallax image={require("assets/img/bg2.jpg")}>
-              <div className={classes.container}>
-                <GridContainer>
-                  <GridItem>
-                    <div className={classes.brand}>
-                      <h1 className={classes.title}>
-                        Classrooms Management
-                      </h1>
-                      <h2 className={classes.subtitle}>
-                        {auth.status}
-                      </h2>
-                    </div>
-                  </GridItem>
-                </GridContainer>
-              </div>
-            </Parallax>
-            <div
-              className={classNames(classes.main, classes.mainRaised)}
-            >
-              <div className={classes.container}>
-                <GridContainer justify="center">
-                  {content.hasContent ? (<GridItem s={12} sm={12} md={12}>
-                    <NavPills
-                      color="rose"
-                      horizontal={{
-                        tabsGrid: { s: 12, sm: 2, md: 2 },
-                        contentGrid: { s: 12, sm: 10, md: 10 }
-                      }}
-                      tabs={[
-                        {
-                          tabButton: "Classroom",
-                          tabIcon: Dashboard,
-                          tabContent: (
-                            <span>
-                                <SectionClass
-                                  classroom={content.data.classroom}
-                                  hasContent={content.hasContent}
-                                />
-                                Element type is invalid: expected a
-                                string (for built-in components) or a
-                                class/function (for composite
-                                components) but got: symbol.
-                            </span>
-                          )
-                        },
-                        {
-                          tabButton: "Schedule",
-                          tabIcon: Schedule,
-                          tabContent: (
-                            <span>
-                              <p>
-                                Efficiently unleash cross-media
-                                information without cross-media value.
-                                Quickly maximize timely deliverables for
-                                real-time schemas.
-                              </p>
-                              <br />
-                              <p>
-                                Dramatically maintain clicks-and-mortar
-                                solutions without functional solutions.
-                                Dramatically visualize customer directed
-                                convergence without revolutionary ROI.
-                              </p>
-                            </span>
-                          )
-                        }
-                      ]}
-                    />
-                  </GridItem>):(<Loader/>)
-
-                  }
-                </GridContainer>
-              </div>
-            </div>
-            <Footer />
+  render() {
+    const { auth, content, classes, ...rest } = this.props;
+    const { active } = this.state;
+    return (
+      <div>
+        <Header
+          brand="Enjoyneering KMITL"
+          rightLinks={<HeaderLinks user={auth} test="123" />}
+          fixed
+          color="transparent"
+          changeColorOnScroll={{ height: 100, color: "white" }}
+          {...rest}
+        />
+        <Parallax image={require("assets/img/bg2.jpg")}>
+          <div className={classes.container}>
+            <GridContainer>
+              <GridItem>
+                <div className={classes.brand}>
+                  <h1 className={classes.title}>Classrooms Management</h1>
+                  <h2 className={classes.subtitle}>{auth.status}</h2>
+                </div>
+              </GridItem>
+            </GridContainer>
           </div>
-        );
-    }
+        </Parallax>
+        <div className={classNames(classes.main, classes.mainRaised)}>
+          <div className={classes.container}>
+            <GridContainer justify="center">
+              {content.hasContent ? (
+                <GridItem s={12} sm={12} md={12}>
+                  <NavPills
+                    active={active}
+                    color="rose"
+                    horizontal={{
+                      tabsGrid: { s: 12, sm: 2, md: 2 },
+                      contentGrid: { s: 12, sm: 10, md: 10 }
+                    }}
+                    tabs={[
+                      {
+                        tabButton: "Profile",
+                        tabIcon: AccountCircle,
+                        tabContent: (
+                          <span>
+                            <SectionProfile
+                              classroom={content.data.classroom}
+                              hasContent={content.hasContent}
+                            />
+                          </span>
+                        )
+                      },
+                      {
+                        tabButton: "Classroom",
+                        tabIcon: Dashboard,
+                        tabContent: (
+                          <span>
+                            <SectionClass
+                              classroom={content.data.classroom}
+                              hasContent={content.hasContent}
+                            />
+                          </span>
+                        )
+                      }
+                    ]}
+                  />
+                </GridItem>
+              ) : (
+                <Loader />
+              )}
+            </GridContainer>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 }
 const mapStateToProps = state => ({
     auth: state.auth,

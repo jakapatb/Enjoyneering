@@ -9,13 +9,12 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
 // @material-ui/icons
-import { Apps } from "@material-ui/icons";
+import Avatar from "@material-ui/core/Avatar";
 import SearchIcon from "@material-ui/icons/Search";
 import NotiIcon from "@material-ui/icons/Notifications";
 import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 // core components
-import profileImage from "assets/img/faces/avatar.jpg";
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.jsx";
@@ -24,68 +23,63 @@ import { goToSearch } from "actions/helpers.js";
 
 
 function HeaderLinks({...props }) {
-  const { markSeenNoti,signOut, auth,noti, classes } = props;
-  var Menus = [];
-  if (auth.status !== "visitor"){
-    Menus = [ <Link
-                      className={classes.dropdownLink}
-                      color="transparent"
-                      to="/management"
-                    >
-                      Management
-                    </Link>,
-              <Link
-                      className={classes.dropdownLink}
-                      color="transparent"
-                      to="/create-post"
-                    >
-                      Create Post
-                    </Link>
-                  ]
-  }
+  const { markSeenNoti,signOut, auth,noti, classes,search } = props;
+  var Menus = [
+    <Link
+      className={classes.dropdownLink}
+      color="transparent"
+      to="/management/profile"
+    >
+      Profile
+    </Link>,
+    <Link
+      className={classes.dropdownLink}
+      color="transparent"
+      to="/management/classroom"
+    >
+      Classroom
+    </Link>,
+    auth.status !== "visitor" && (
+      <Link
+        className={classes.dropdownLink}
+        color="transparent"
+        to="/create-post"
+      >
+        Create Post
+      </Link>
+    ),
+
+    <Button
+      className={classes.dropdownLink}
+      color="transparent"
+      onClick={() => signOut()}
+    >
+      Sign out
+    </Button>
+  ];
   return (
     <List className={classes.list}>
-      <ListItem className={classes.listItem}>
-        <div className={classes.searchIcon}>
-          <SearchIcon />
-        </div>
-        <InputBase
-          placeholder="Search…"
-          classes={{ root: classes.inputRoot, input: classes.inputInput }}
-          onKeyPress={e => {
-            if (e.key === "Enter" && e.target.value != null) {
-              goToSearch(e.target.value.trim());
-            }
-          }}
-        />
-      </ListItem>
+      {search === undefined && (
+        <ListItem className={classes.listItem}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{ root: classes.inputRoot, input: classes.inputInput }}
+            onKeyPress={e => {
+              if (e.key === "Enter" && e.target.value != null) {
+                goToSearch(e.target.value.trim());
+              }
+            }}
+          />
+        </ListItem>
+      )}
       <ListItem className={classes.listItem}>
         <Link to="/" color="transparent" className={classes.navLink}>
           Home
         </Link>
       </ListItem>
-      {auth.isAuth ? ( //true
-        <ListItem className={classes.listItem}>
-          <CustomDropdown
-            noLiPadding
-            buttonText="Menus"
-            buttonProps={{ className: classes.navLink, color: "transparent" }}
-            buttonIcon={Apps}
-            dropdownList={Menus}
-          />
-        </ListItem>
-      ) : (
-        //false
-        <ListItem className={classes.listItem}>
-          <Link
-            to="/login-page"
-            color="transparent"
-            className={classes.navLink}
-          >
-            Sign in
-          </Link>
-        </ListItem>
-      )}
       {auth.isAuth && (
         <ListItem className={classes.listItem}>
           <CustomDropdown
@@ -107,7 +101,7 @@ function HeaderLinks({...props }) {
             }
             buttonProps={{
               className: classes.navLink + " " + classes.imageDropdownButton,
-              color: "transparent",
+              color: "transparent"
             }}
             //? เปลี่ยนสีหลังจาก อ่านแล้ว
             dropdownList={noti.data.map((message, index) => {
@@ -116,21 +110,17 @@ function HeaderLinks({...props }) {
                   return (
                     <div className={classes.dropdownLink}>
                       <a
-                        href={
-                          "landing-page/" + message.postId
-                        }
+                        href={"landing-page/" + message.postId}
                         onClick={() =>
-                          markSeenNoti(
-                            message.postId,
-                            message.notiId
-                          )
+                          markSeenNoti(message.postId, message.notiId)
                         }
                         className={classes.textLink}
-                        style={message.seen?({backgroundColor:"#ddd"}):({})}
+                        style={
+                          message.seen ? { backgroundColor: "#ddd" } : {}
+                        }
                       >
                         {message.seen && "Seen "}
-                        {message.love} Love Your "
-                        {message.title}" post
+                        {message.love} Love Your "{message.title}" post
                       </a>
                     </div>
                   );
@@ -139,18 +129,13 @@ function HeaderLinks({...props }) {
                     <div className={classes.dropdownLink}>
                       <a
                         className={classes.textLink}
-                        href={
-                          "landing-page/" + message.postId
-                        }
+                        href={"landing-page/" + message.postId}
                         onClick={() =>
-                          markSeenNoti(
-                            message.postId,
-                            message.notiId
-                          )
+                          markSeenNoti(message.postId, message.notiId)
                         }
                       >
-                        {message.seen && "Seen "} Someone
-                        Comment in Your "{message.title}" post
+                        {message.seen && "Seen "} Someone Comment in Your "
+                        {message.title}" post
                       </a>
                     </div>
                   );
@@ -165,52 +150,37 @@ function HeaderLinks({...props }) {
           />
         </ListItem>
       )}
-      {auth.isAuth && (
+      {auth.isAuth ? ( //true
         <ListItem className={classes.listItem}>
           <CustomDropdown
-            left
             noLiPadding
-            caret={false}
-            hoverColor="black"
-            //   dropdownHeader="Dropdown Header"
             buttonText={
-              <img
-                src={auth.isAuth ? auth.data.photoURL : profileImage}
-                className={classes.img}
-                alt="profile"
-              />
-            }
-            buttonProps={{
-              className: classes.navLink + " " + classes.imageDropdownButton,
-              color: "transparent"
-            }}
-            dropdownList={[
-              <Link
-                className={classes.dropdownLink}
-                color="transparent"
-                to="/profile-page"
-              >
+              <React.Fragment>
+                {" "}
                 {auth.data.displayName}
-              </Link>,
-              <Button
-                className={classes.dropdownLink}
-                color="transparent"
-                onClick={() => signOut()}
-              >
-                Sign out
-              </Button>
-            ]}
+                <Avatar
+                  alt="Remy Sharp"
+                  src={auth.data.photoURL}
+                  className={classes.avatar}
+                />
+              </React.Fragment>
+            }
+            buttonProps={{ className: classes.navLink, color: "transparent" }}
+            dropdownList={Menus}
           />
         </ListItem>
+      ) : (
+        //false
+        <ListItem className={classes.listItem}>
+          <Link
+            to="/login-page"
+            color="transparent"
+            className={classes.navLink}
+          >
+            Sign in
+          </Link>
+        </ListItem>
       )}
-
-      {/* {auth.isAuth && <ListItem className={classes.listItem}>
-          <Tooltip id="instagram-tooltip" title="Your Profile" placement={window.innerWidth > 959 ? "top" : "left"} classes={{ tooltip: classes.tooltip }}>
-            <Button href="/profile-page" color="transparent" className={classes.navLink}>
-              {auth.data.displayName} <Avatar alt="Remy Sharp" src={auth.data.photoURL} className={classes.avatar} />
-            </Button>
-          </Tooltip>
-        </ListItem>} */}
     </List>
   );
 }

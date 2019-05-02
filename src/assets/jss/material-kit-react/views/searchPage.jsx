@@ -1,9 +1,8 @@
 import { container, title } from "assets/jss/material-kit-react.jsx";
-
 const searchPageStyle = theme => ({
-    parallax:{
-        height:"60vh"
-    },
+  parallax: {
+    height: "32vh"
+  },
   container: {
     zIndex: "6",
     color: "#FFFFFF",
@@ -64,15 +63,34 @@ const searchPageStyle = theme => ({
     padding: "0px"
   },
   inputRoot: {
-     color: "inherit", 
-    width: "100%"
+    color: "#fff",
+    fontSize: "1.3rem",
+    lineHeight: "1.15em",
+    width: "100%",
+    "&$cssFocused": {
+      color: "white"
+    }
+  },
+  cssFocused: {},
+  cssOutlinedInput: {
+    "&$cssFocused $notchedOutline": {
+      borderColor: "white"
+    }
+  },
+  notchedOutline: {
+    borderColor: "#fff"
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 10,
+    borderColor: "#fff",
     transition: theme.transitions.create("width"),
+    color: "#FFFFFF",
+    textDecoration: "none",
+    fontSize: "3.3125rem",
+    lineHeight: "1.15em",
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       width: 120,
@@ -80,7 +98,7 @@ const searchPageStyle = theme => ({
         width: 200
       }
     }
-  }, 
+  },
   listItem: {
     float: "left",
     color: "inherit",
@@ -96,8 +114,7 @@ const searchPageStyle = theme => ({
         content: '""',
         display: "block",
         height: "1px",
-        marginLeft: "15px",
-        backgroundColor: "#e5e5e5"
+        marginLeft: "15px"
       }
     }
   },
@@ -106,7 +123,7 @@ const searchPageStyle = theme => ({
     flexWrap: "nowrap",
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: "translateZ(0)"
-  },
+  }
 });
 
 export default searchPageStyle;

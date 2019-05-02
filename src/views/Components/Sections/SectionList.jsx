@@ -40,7 +40,7 @@ class SectionList extends React.Component {
     this.props.fetchListPost(listName,condition);
   }
   render() {
-    const { list, classes,listName } = this.props;
+    const { list, classes, listName, type } = this.props;
     return (
       <div className={classes.section}>
         <div className={classes.container}>
@@ -56,7 +56,7 @@ class SectionList extends React.Component {
                 ))}
             </GridList>
           </GridContainer>
-          <Link to="/">
+          <Link to={"/search?p="+ type[0] + "&r="+type[1]}>
             <Button type="button" color="primary">
               View More »
             </Button>

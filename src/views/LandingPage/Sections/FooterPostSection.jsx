@@ -4,7 +4,7 @@ import Button from "components/CustomButtons/Button.jsx";
 import withStyles from "@material-ui/core/styles/withStyles";
 import footerPostStyle from "assets/jss/material-kit-react/views/landingPageSections/footerPostStyle.jsx";
 import { getUserFromUid } from "../../../actions/helpers";
-
+import GridContainer from "components/Grid/GridContainer.jsx";
 class FooterPostSection extends Component {
   constructor(props) {
     super(props);
@@ -13,25 +13,41 @@ class FooterPostSection extends Component {
     };
   }
   componentDidMount() {
-    this.props.ownerUid.map(uid => 
-      getUserFromUid(uid).then(owner => {
-        let owners = this.state.owners;
-        owners.push(owner);
-        this.setState({ owners: owners });
-      }))
+    this.mappingUid(this.props.ownerUid);
   }
+  componentWillReceiveProps(nextProps) {
+    this.mappingUid(nextProps.ownerUid);
+  }
+  mappingUid = ownerUid => {
+    let promises = ownerUid.map(async uid => await getUserFromUid(uid));
+
+    Promise.all(promises).then(owners => {
+      console.log(owners);
+      this.setState({ owners: owners });
+    });
+  };
 
   render() {
     const { classes } = this.props;
     const { owners } = this.state;
-    return owners.map((user, key) => (
-      <div key={key}>
-        <Button href="/profile-page/" className={classes.button}>
-          <Avatar alt="Owner" src={user.photoURL} className={classes.avatar} />
-          {" " + user.displayName + " "}
-        </Button>
-      </div>
-    ));
+    return (
+      <GridContainer
+        justify={"flex-start"}
+        alignItems={"center"}
+        direction={"row"}
+      >
+        {owners.map((user, key) => (
+          <Button href="/profile-page/" className={classes.button}>
+            <Avatar
+              alt="Owner"
+              src={user.photoURL}
+              className={classes.avatar}
+            />
+            {" " + user.displayName + " "}
+          </Button>
+        ))}
+      </GridContainer>
+    );
   }
 }
 

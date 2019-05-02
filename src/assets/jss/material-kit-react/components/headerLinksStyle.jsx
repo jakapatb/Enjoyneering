@@ -138,9 +138,9 @@ const headerLinksStyle = theme => ({
     width: "100%"
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
+    paddingTop: 15,
     paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: 15,
     paddingLeft: theme.spacing.unit * 10,
     transition: theme.transitions.create("width"),
     width: "100%",

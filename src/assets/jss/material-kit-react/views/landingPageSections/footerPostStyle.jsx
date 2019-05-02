@@ -1,4 +1,4 @@
-const footerPostStyle = {
+const footerPostStyle = theme => ({
   avatar: {
     width: "50px",
     height: "50px",
@@ -11,10 +11,19 @@ const footerPostStyle = {
     borderRadius: "0.5rem",
     color: "black",
     backgroundColor: "transparent",
-    '&:hover':{
+    "&:hover": {
       backgroundColor: "crimson"
+    },
+    fab: {
+      margin: theme.spacing.unit
+    },
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      left:0,
+      right:0
     }
   }
-};
+});
 
 export default footerPostStyle;

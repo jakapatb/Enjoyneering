@@ -49,34 +49,37 @@ class SectionPost extends React.Component {
     );
   }
   render() {
-    const { classes, hit } = this.props;
+    const { classes, hit,isPublic ,recommend } = this.props;
     return (
-      <Link
-        to={{
-          pathname: "/landing-page/",
-          search: "post=" + hit.id,
-          state: { id: hit.id }
-        }}
-      >
-        <Card className={classes.card}>
-          <CardHeader className={classes.cardHeader}>
-            <img
-              className={classes.imgCardTop}
-              src={this.state.imgUrl}
-              alt="Card-img-cap"
-            />
-          </CardHeader>
-          <CardBody>
-            <h4 className={classes.cardTitle}>{hit.title}</h4>
-            <p>{hit.subtitle}</p>
-            <p>
-              <small className={classes.textMuted}>
-                {moment(hit.date).fromNow()}
-              </small>
-            </p>
-          </CardBody>
-        </Card>
-      </Link>
+      (isPublic ? hit.public === isPublic : true) 
+        && (recommend ? (hit.recommend&&recommend):(true))&& (
+        <Link
+          to={{
+            pathname: "/landing-page/",
+            search: hit.id,
+            state: { id: hit.id }
+          }}
+        >
+          <Card className={classes.card}>
+            <CardHeader className={classes.cardHeader}>
+              <img
+                className={classes.imgCardTop}
+                src={this.state.imgUrl}
+                alt="Card-img-cap"
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>{hit.title}</h4>
+              <p>{hit.subtitle}</p>
+              <p>
+                <small className={classes.textMuted}>
+                  {moment(hit.date).fromNow()}
+                </small>
+              </p>
+            </CardBody>
+          </Card>
+        </Link>
+      )
     );
   }
 };

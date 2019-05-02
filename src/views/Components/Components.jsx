@@ -39,7 +39,9 @@ class Components extends React.Component {
               <GridItem>
                 <div className={classes.brand}>
                   <h1 className={classes.title}>Enjoyneering KMITL</h1>
-                  <h3 className={classes.subtitle}>Make KMITL better again.</h3>
+                  <h3 className={classes.subtitle}>
+                    Make KMITL better again.
+                  </h3>
                 </div>
               </GridItem>
             </GridContainer>
@@ -48,6 +50,7 @@ class Components extends React.Component {
         <div className={classNames(classes.main, classes.mainRaised)}>
           <SectionCarousel />
           <SectionList
+            type={[1,1]}
             listName={"recommend"}
             title={"Recommend from Teacher"}
             condition={{
@@ -57,7 +60,7 @@ class Components extends React.Component {
               value: true
             }}
           />
-          <SectionList listName={"recent"} title={"What's New?"} />
+          <SectionList listName={"recent"} title={"What's New?"} type={[1,0]} />
           {/**
           <SectionList
             listName={"test"}

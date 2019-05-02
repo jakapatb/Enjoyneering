@@ -28,19 +28,18 @@ export const getUserFromUid = uid =>
       .doc(uid)
       .get()
       .then((userRef) => {
+        if(!userRef.exists) return reject("not found")
         return resolve(userRef.data());
       })
       .catch(error => {
         console.log(error);
-        return reject({
-          displayName: "?????"
-        });
+        return reject("error");
       })
   );
 
 //direct to /search
 export const goToSearch = word => {
-  hist.push("/search/" + word);
+  hist.push("/search?s=" + word);
 };
 
 

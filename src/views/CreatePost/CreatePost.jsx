@@ -52,7 +52,8 @@ class CreatePost extends React.Component {
       tags: [],
       value: "",
       isChangeTitleImg: false,
-      deletedContents: []
+      deletedContents: [],
+      ownerUid: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -61,15 +62,17 @@ class CreatePost extends React.Component {
   }
 
   componentDidMount = async () => {
-    const { history, fetchPost } = this.props;
+    const { history, fetchPost,auth } = this.props;
     if (history.location.search.includes("?edit=")) {
       //หากมีการแก้ไข
       //! เข้าได้เฉพาะเจ้าของเท่านั้น
       const postId = history.location.search.split("?edit=")[1];
       this.setState({ postId: postId });
       const image = await getImgfromStorage(postId, "title.jpg");
-      await fetchPost(postId);
+      await fetchPost(postId)
       this.setState({ imgUrl: image });
+    }else {
+      this.setState({ ownerUid: [auth.data.uid] });
     }
   };
 
@@ -83,7 +86,8 @@ class CreatePost extends React.Component {
         tags: nextProps.post.data.tags,
         title: nextProps.post.data.title,
         subtitle: nextProps.post.data.subtitle,
-        imgUrl: nextProps.post.data.imgUrl
+        imgUrl: nextProps.post.data.imgUrl,
+        ownerUid: nextProps.post.data.ownerUid
       });
     }
   };
@@ -241,6 +245,17 @@ class CreatePost extends React.Component {
 
     this.setState({ tags, value: tag });
   }
+  addOwnerUid = (ownerUid) => new Promise((resolve, reject) => {
+      this.setState(state => {
+        let newOwners = state.ownerUid;
+        if(newOwners.includes(ownerUid)) return reject()
+        
+        newOwners.push(ownerUid)
+        this.setState({ ownerUid: newOwners });
+        return resolve(newOwners)
+      });
+  })
+  
 
   render() {
     const { post, auth, classes, ...rest } = this.props;
@@ -397,7 +412,10 @@ class CreatePost extends React.Component {
                   return null;
               }
             })}
-            <FooterPostSection ownerUid={post.data.ownerUid ||[auth.data.uid]} />
+            <FooterPostSection
+              ownerUid={this.state.ownerUid}
+              addUid={this.addOwnerUid}
+            />
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <Button

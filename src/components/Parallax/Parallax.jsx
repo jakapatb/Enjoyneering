@@ -89,7 +89,7 @@ class Parallax extends React.Component {
                    className={parallaxClasses}
                    style={{
                      ...style,
-                     backgroundImage: "url(" + image + ")",
+                     backgroundImage: ("url(" + image + ")"),
                      ...this.state
                    }}
                    ref={imageLoadedElem =>
