@@ -22,6 +22,7 @@ import Loader from "components/Loader/Loader.jsx";
 import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx";
 
 // Sections for this page
+import TitleSection from "./Sections/TitleSection.jsx"
 import ArticleSection from "./Sections/ArticleSection.jsx";
 import YoutubeSection from "./Sections/YoutubeSection.jsx";
 import ImageSection from "./Sections/ImageSection.jsx";
@@ -33,7 +34,13 @@ import CustomDropdown from "components/CustomDropdown/CustomDropdown.jsx";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { fetchPost, clearPost, deletePost } from "actions/post.js";
-import { fetchComments, pressLove, allowPublic } from "actions/index.js";
+import {
+  fetchComments,
+  pressLove,
+  allowPublic,
+  recommedPost,
+  markSeenNoti
+} from "actions/index.js";
 import Modal from "components/Modal/Modal.jsx";
 const dashboardRoutes = [];
 
@@ -41,8 +48,7 @@ class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deleteModal: false,
-      modal: false,
+      modal: [false, false, false],
       love: false,
       number: 0,
       postId: ""
@@ -50,31 +56,62 @@ class LandingPage extends React.Component {
   }
   componentDidMount = async () => {
     const {
-      fetchPost,
-      fetchComments,
-      history,
       match: { params }
     } = this.props;
+    await this.handleFetchPost(params);
+  };
+  componentWillReceiveProps = nextProps => {
+    const {
+      match: { params }
+    } = nextProps;
+    if (this.props.match.params !== params) {
+      this.handleFetchPost(params);
+    }
+  };
+
+  handleFetchPost = async params => {
+    const { fetchPost, fetchComments,markSeenNoti, history } = this.props;
+    const subParams = new URLSearchParams(history.location.search);
     window.scrollTo(0, 0);
     this.setState({ postId: params.post });
     await fetchPost(params.post).catch(() => {
       history.push("/");
     });
     await fetchComments(params.post);
+    
+    if (subParams.get("scroll")) {
+      switch (subParams.get("scroll")) {
+        case "0":
+          await this.scrollTo("love");
+          break;
+        case "1":
+          await this.scrollTo("comment");
+          break;
+        default:
+          break;
+      }
+    }
+    if (subParams.get("notiId")) {
+      console.log("nofi Work");
+      await markSeenNoti(this.state.postId, subParams.get("notiId"));
+    }
   };
-
   componentWillUpdate(nextProps) {
     const { post, auth } = nextProps;
     if (post.hasPost && !this.props.post.hasPost) {
-      this.setState({
-        modal: auth.data.status === "administrator" && !post.public
-      });
       if (post.data.love.includes(auth.data.uid)) {
         this.setState({ love: true });
       }
       this.setState({ number: post.data.love.length });
     }
   }
+  scrollTo = type => {
+    if (type === "love") {
+      this.loveEnd.scrollIntoView({ behavior: "smooth" });
+    } else if (type === "comment") {
+      this.commentEnd.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   handleLove = async () => {
     const { love, number } = this.state;
@@ -85,19 +122,25 @@ class LandingPage extends React.Component {
       number: !love ? number + 1 : number - 1
     });
   };
-  handleModal = e => {
-    var payload = { modal: !this.state.modal };
-    if (e!==undefined) {
-      if(e.target.id ==="deteleBtn"){
-        payload = {
-          deleteModal: !this.state.deleteModal
-        };
-      }
+
+  //! เปลี่ยนไใช้ state modal  เป็น อาเรย์ดีกว่า
+  handleModal = index => {
+    var thisModal = this.state.modal;
+
+    if (thisModal.some(obj => obj === true)) {
+      const allClose = [false, false, false];
+      this.setState({ modal: allClose });
+    } else {
+      thisModal[index] = true;
+      this.setState({ modal: thisModal });
     }
-    this.setState(payload);
   };
+
   handleAllow = () => {
-    this.props.allowPublic(this.state.postId, true);
+    this.props.allowPublic(this.state.postId, !this.props.post.public);
+  };
+  handleRecommend = () => {
+    this.props.recommedPost(!this.props.post.recommend);
   };
 
   componentWillUnmount = () => {
@@ -105,11 +148,13 @@ class LandingPage extends React.Component {
   };
 
   _handleDeletePost = () => {
-    this.props.deletePost(this.state.postId).then(()=>this.props.history.push("/"))
+    this.props
+      .deletePost(this.props.post.id)
+      .then(() => this.props.history.push("/"));
   };
   render() {
     const { auth, post, classes, ...rest } = this.props;
-    const { postId, modal, deleteModal } = this.state;
+    const { postId, modal } = this.state;
     return (
       <div>
         <Header
@@ -130,10 +175,7 @@ class LandingPage extends React.Component {
                 <ul>
                   {post.hasPost &&
                     post.data.tags.map((tag, i) => (
-                      <Link
-                        to={"/search/?s=" + tag}
-                        style={{ color: "#FFF" }}
-                      >
+                      <Link to={"/search/?s=" + tag} style={{ color: "#FFF" }}>
                         <li key={tag + i} className={classes.tag}>
                           {tag}
                         </li>
@@ -144,16 +186,17 @@ class LandingPage extends React.Component {
                 {post.hasPost && (
                   <div>
                     <Modal
-                      isOpen={modal}
+                      isOpen={modal[0]}
                       handleModal={this.handleModal}
-                      id="publicPermission"
+                      number={0}
                       submit={this.handleAllow}
                       title={"Public Permission"}
                       content={"คุณต้องการเปิด Public บทความนี้หรือไม่"}
                     />
+
                     <Modal
-                      isOpen={deleteModal}
-                      id="detelePost"
+                      isOpen={modal[1]}
+                      number={1}
                       handleModal={this.handleModal}
                       submit={this._handleDeletePost}
                       title={"Detele this post"}
@@ -164,6 +207,14 @@ class LandingPage extends React.Component {
                           "คุณต้องการลบโพสนี้หรือไม่"
                         )
                       }
+                    />
+                    <Modal
+                      isOpen={modal[2]}
+                      handleModal={this.handleModal}
+                      number={2}
+                      submit={this.handleRecommend}
+                      title={"Recommend this post"}
+                      content={"คุณต้องการRecommend บทความนี้หรือไม่"}
                     />
                   </div>
                 )}
@@ -185,8 +236,7 @@ class LandingPage extends React.Component {
                   auth.status === "administrator"
                     ? {
                         name: "Public Permission",
-                        id: "publicBtn",
-                        onClick: this.handleModal
+                        onClick: () => this.handleModal(0)
                       }
                     : undefined
                 }
@@ -222,8 +272,21 @@ class LandingPage extends React.Component {
                     <Button
                       color="transparent"
                       className={classes.navLink}
-                      onClick={this.handleModal}
-                      id="deteleBtn"
+                      onClick={() => this.handleModal(0)}
+                    >
+                      {post.public ? "set to private" : "set to public"}
+                    </Button>,
+                    <Button
+                      color="transparent"
+                      className={classes.navLink}
+                      onClick={() => this.handleModal(2)}
+                    >
+                      {post.recommend ? "unrecommend" : "recommend"}
+                    </Button>,
+                    <Button
+                      color="transparent"
+                      className={classes.navLink}
+                      onClick={() => this.handleModal(1)}
                     >
                       Delete this Post
                     </Button>
@@ -240,14 +303,14 @@ class LandingPage extends React.Component {
                   })
                   .map(content => {
                     switch (content.type) {
+                      case "Title":
+                        return <TitleSection content={content} />;
                       case "Article":
                         return <ArticleSection content={content} />;
                       case "Youtube":
                         return <YoutubeSection content={content} />;
                       case "Image":
-                        return (
-                          <ImageSection content={content} id={postId} />
-                        );
+                        return <ImageSection content={content} id={postId} />;
                       default:
                         return null;
                     }
@@ -256,6 +319,11 @@ class LandingPage extends React.Component {
                 <Loader />
               )}
               {/* Footer */}
+              <div
+                ref={el => {
+                  this.loveEnd = el;
+                }}
+              />
               {post.hasPost && (
                 <GridItem xs={12} sm={12} md={6}>
                   <Button
@@ -273,6 +341,11 @@ class LandingPage extends React.Component {
               {post.hasComments && (
                 <CommentListSection comments={post.comments} id={postId} />
               )}
+              <span
+                ref={el => {
+                  this.commentEnd = el;
+                }}
+              />
             </div>
           </div>
         ) : (
@@ -294,7 +367,9 @@ const mapDispatchToProps = {
   clearPost,
   pressLove,
   allowPublic,
-  deletePost
+  deletePost,
+  recommedPost,
+  markSeenNoti
 };
 
 export default compose(

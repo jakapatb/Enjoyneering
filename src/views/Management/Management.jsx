@@ -31,7 +31,8 @@ class Management extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: 0
+      active: 0,
+      uid:""
     };
   }
   componentDidMount() {
@@ -89,7 +90,7 @@ class Management extends React.Component {
           changeColorOnScroll={{ height: 100, color: "white" }}
           {...rest}
         />
-        <Parallax image={require("assets/img/bg2.jpg")}>
+        <Parallax image={require("assets/img/bg2.jpg")} className={classes.parallax} >
           <div className={classes.container}>
             <GridContainer>
               <GridItem>
@@ -115,7 +116,7 @@ class Management extends React.Component {
                     }}
                     tabs={[
                       {
-                        tabButton: "Profile",
+                        tabButton: "Edit Profile",
                         tabIcon: AccountCircle,
                         tabContent: (
                           <span>

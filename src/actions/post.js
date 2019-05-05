@@ -4,7 +4,7 @@ import {
   FETCH_POST_CLEAR,
   FETCH_POST_UPLOADED,
   FETCH_POST_PREUPLOAD,
-  FETCH_POST_FAIL,
+  FETCH_POST_FAIL
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 const db = firebase.firestore();
@@ -20,7 +20,7 @@ export const sendPost = post => (dispatch, getState) => {
   const details = {
     title: post.title,
     subtitle: post.subtitle,
-    ownerUid: [auth.data.uid],
+    ownerUid: post.ownerUid,
     tags: post.tags,
     public: auth.status === "student" ? false : true,
     recommend: false
@@ -236,10 +236,14 @@ const updateContent = (content, postId) =>
         }
       );
     } else {
-      if (content.type === "Article") {
+      if (content.type === "Title") {
         outPutContent = {
           ...outPutContent,
           title: content.title,
+        };
+      } else if (content.type === "Article") {
+        outPutContent = {
+          ...outPutContent,
           content: content.content
         };
       } else if (content.type === "Youtube") {
@@ -266,43 +270,44 @@ const updateContent = (content, postId) =>
   });
 
 // fetch Post when coming to Post.
-export const fetchPost = postId => dispatch =>
+export const fetchPost = postId => (dispatch, getState) =>
   new Promise((resolve, reject) => {
+    const { auth } = getState();
     dispatch({
       type: FETCH_POST
     });
     const postRef = db.collection("posts").doc(postId);
     postRef.get().then(post => {
-      if(post.exists){
-postRef
-  .collection("contents")
-  .get()
-  .then(contentsRef => {
-    var contents = [];
-    contentsRef.forEach(content =>
-      contents.push({
-        ...content.data(),
-        id: content.id
-      })
-    );
-    dispatch({
-      type: FETCH_POST_SUCCESS,
-      public: post.data().public,
-      id: post.id,
-      payload: {
-        ...post.data(),
-        id: post.id,
-        //imgUrl: imgUrl,
-        contents: contents
-      }
-    });
-    return resolve();
-  });
-      }else {
-        dispatch({type:FETCH_POST_FAIL})
+      if (post.exists && (post.data().public || auth.status !== "visitor")) {
+        postRef
+          .collection("contents")
+          .get()
+          .then(contentsRef => {
+            var contents = [];
+            contentsRef.forEach(content =>
+              contents.push({
+                ...content.data(),
+                id: content.id
+              })
+            );
+            dispatch({
+              type: FETCH_POST_SUCCESS,
+              public: post.data().public,
+              id: post.id,
+              payload: {
+                ...post.data(),
+                id: post.id,
+                //imgUrl: imgUrl,
+                contents: contents
+              }
+            });
+            return resolve();
+          });
+      } else {
+        dispatch({ type: FETCH_POST_FAIL });
         return reject();
       }
-    })
+    });
   });
 
 //Clear data when exit this Post.
@@ -310,24 +315,65 @@ export const clearPost = () => dispatch => {
   dispatch({ type: FETCH_POST_CLEAR });
 };
 
-export const deletePost = postId => (dispatch, getState) => new Promise((resolve, reject) => {
-  {
-    dispatch({type:FETCH_POST})
-         const { auth } = getState();
-         const postRef = db.collection("posts").doc(postId);
-         db.runTransaction(async transaction => {
-           const postDoc = await transaction.get(postRef);
-           console.log(postDoc.data().ownerUid);
-           if (
-             postDoc.data().ownerUid.includes(auth.data.uid) ||
-             auth.state === "administrator"
-           ) {
-             transaction.delete(postRef)
-           }
-         }).finally(()=>{
-           dispatch({type: FETCH_POST_CLEAR})
-           return resolve()
-         })
-       };
-})
+export const deletePost = (postId, reason = "blank") => (dispatch) =>
+  new Promise((resolve, reject) => {
+    //dispatch({type:FETCH_POST})
+    const postRef = db.collection("posts").doc(postId);
+    //update reason why delete
+    postRef
+      .update({ reason: reason })
+      .then(async () => {
+        //delete subCollection
+        await deleteCollection(postRef.collection("contents"));
+        await deleteCollection(postRef.collection("comments"));
+        await postRef.delete();
+      })
+      .then(() => {
+        dispatch({ type: FETCH_POST_CLEAR });
+        return resolve();
+      })
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
+  });
 
+function deleteCollection(collectionRef) {
+  var query = collectionRef;
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(query, resolve, reject);
+  });
+}
+
+function deleteQueryBatch(query, resolve, reject) {
+  query
+    .get()
+    .then(snapshot => {
+      // When there are no documents left, we are done
+      if (snapshot.size === 0) {
+        return 0;
+      }
+
+      // Delete documents in a batch
+      var batch = db.batch();
+      snapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      return batch.commit().then(() => {
+        return snapshot.size;
+      });
+    })
+    .then(numDeleted => {
+      if (numDeleted === 0) {
+        resolve();
+        return;
+      }
+      // Recurse on the next process tick, to avoid
+      // exploding the stack.
+      process.nextTick(() => {
+        deleteQueryBatch(query, resolve, reject);
+      });
+    })
+    .catch(reject);
+}

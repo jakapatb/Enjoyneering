@@ -25,6 +25,7 @@ class SnackbarContent extends React.Component {
             key="undo"
             color="secondary"
             size="small"
+            value={button.value}
             onClick={button.onClick}
           >
             {button.name}

@@ -7,7 +7,8 @@ import {
   FETCH_CONTENT,
   FETCH_CONTENT_CLEAR,
   FETCH_CONTENT_SUCCESS,
-  FETCH_CONTENT_ADD_MODAL
+  FETCH_CONTENT_ADD_MODAL,
+  FETCH_LIST_CLEAR
 } from "../configs/constants";
 import firebase from "../configs/firebase";
 import { hist } from "../index.js";
@@ -20,6 +21,7 @@ const db = firebase.firestore();
 
 // mark seen in notifications
 export const markSeenNoti = (postId, notiId) => (dispatch, getState) => {
+  console.log("Mark work")
   const { auth } = getState();
   var batch = db.batch();
   const uid = auth.data.uid;
@@ -29,7 +31,7 @@ export const markSeenNoti = (postId, notiId) => (dispatch, getState) => {
     .collection("notifications")
     .doc(notiId);
   batch.update(notiRef, { seen: true });
-  batch.commit().then(() => hist.push("/landing-page/" + postId));
+  batch.commit()
 };
 
 //SignOut and delete from store
@@ -110,6 +112,10 @@ export const fetchListPost = (listName, condition = { type: "recent" }) => (
       });
     });
 };
+
+export const clearListPost = () => (dispatch)=> {
+  dispatch({type:FETCH_LIST_CLEAR})
+}
 
 // * Post
 
@@ -229,6 +235,17 @@ export const allowPublic = (postId, isPublic) => (dispatch, getState) => {
     });
 };
 
+export const recommedPost = (recomend) => (dispatch,getState)=> {
+  const {post:{id}} = getState()
+  db.collection("posts")
+    .doc(id)
+    .update({ recommend: recomend })
+    .then(() => {
+      hist.go(0);
+    });
+
+}
+
 // ############################## Classrooms #######################################
 
 export const fetchClassrooms = () => (dispatch, getState) => {
@@ -300,3 +317,15 @@ export const promoteStatus = yourCode => (dispatch, getState) => {
       });
   });
 };
+
+
+export const editComment = (content,commentId) => (dispatch,getState)=> {
+  const { post } = getState() 
+  db.collection('posts').doc(post.id).collection('comments').doc(commentId).update({content:content , updated:new Date()})
+}
+
+export const deleteComment = (commentId) => (dispatch,getState)=> {
+  const { post } = getState() 
+  db.collection('posts').doc(post.id).collection('comments').doc(commentId).delete()
+}
+

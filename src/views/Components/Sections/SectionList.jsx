@@ -15,7 +15,7 @@ import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchListPost } from "actions/index.js";
+import { fetchListPost, clearListPost } from "actions/index.js";
 import SectionCard from "./SectionCard.jsx";
 const style = {
   gridList: {
@@ -38,6 +38,9 @@ class SectionList extends React.Component {
   componentDidMount() {
     const { listName, condition} = this.props;
     this.props.fetchListPost(listName,condition);
+  }
+  componentWillUnmount(){
+    this.props.clearListPost()
   }
   render() {
     const { list, classes, listName, type } = this.props;
@@ -72,7 +75,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  fetchListPost
+  fetchListPost,
+  clearListPost
 };
 
 export default compose(

@@ -10,6 +10,8 @@ import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 // core components
 
@@ -23,10 +25,10 @@ import Avatar from "@material-ui/core/Avatar";
 import * as moment from 'moment';
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import { getUserFromUid } from "actions/helpers.js";
-import { fetchSubComments } from "actions/index.js";
+import { fetchSubComments, editComment ,deleteComment} from "actions/index.js";
 import SubCommentsSection from "./SubCommentsSection";
 import { connect } from "react-redux";
-
+import TextField from "@material-ui/core/TextField";
 const style = {
   cardTitle,
   textCenter: {
@@ -43,12 +45,16 @@ const style = {
   }
 };
 
-class ArticleSection extends React.Component {
+class CommentSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      comment : props.content.content,
       open: [false],
-      subComments:[],
+      subComments: [],
+      anchorEl: false,
+      edit: false,
+      error:false,
       owner: {
         displayName: ""
       }
@@ -56,11 +62,21 @@ class ArticleSection extends React.Component {
   }
 
   handleClick = key => () => {
-        const { fetchSubComments, id } = this.props;
+    const { fetchSubComments, id } = this.props;
+
     this.setState(state => (state.open[key] = !state.open[key]));
-    if(!this.state.open[key]) fetchSubComments(id).then((subCom)=>{
-      this.setState(state => (state.subComments=subCom))
-    })
+    if (!this.state.open[key])
+      fetchSubComments(id).then(subCom => {
+        this.setState(state => (state.subComments = subCom));
+      });
+  };
+
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: false });
   };
 
   componentDidMount() {
@@ -70,11 +86,34 @@ class ArticleSection extends React.Component {
         owner: owner
       })
     );
-    
+  }
+  handleDelete = () => {
+    const {deleteComment, id} =this.props
+    deleteComment(id)
+    this.setState({ anchorEl: false });
+  }
+  handleOpenEdit =() => {
+    this.setState({ edit: true, anchorEl: false });
+  }
+  handelEdit=(event)=> {
+   
+    this.setState({comment: event.target.value})
+
+  }
+  handleEditSubmit=event => {
+     const { editComment, id } = this.props;
+    if (event.key === "Enter") {
+      if (event.target.value.trim() !== "") {
+        editComment(event.target.value.trim(), id);
+        this.setState({ edit: false });
+      } else {
+        this.setState({ error: true });
+      }
+    }
   }
   render() {
-    const { content, classes} = this.props;
-    const { owner, open ,subComments} = this.state;
+    const { content, classes ,auth} = this.props;
+    const { owner, open, subComments, anchorEl, edit , comment} = this.state;
     return (
       <GridItem xs={12} sm={12} md={8}>
         <Card className={classes.textCenter}>
@@ -88,16 +127,61 @@ class ArticleSection extends React.Component {
             }
             action={
               <IconButton>
-                <MoreVertIcon />
+                <MoreVertIcon onClick={this.handleClick} />
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={this.handleClose}
+                >
+                  {auth.isAuth && auth.data.uid === content.ownerUid && (
+                    <React.Fragment>
+                      <MenuItem onClick={this.handleOpenEdit}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem onClick={this.handleDelete}>
+                        Delete comment
+                      </MenuItem>
+                    </React.Fragment>
+                  )}
+                </Menu>
               </IconButton>
             }
             title={owner.displayName}
             subheader={moment(content.date.toDate()).fromNow()}
           />
           <CardBody>
-            <p>{content.content}</p>
+            {// edit
+            edit ? (
+              <TextField
+                id="outlined-dense"
+                label="Editing..."
+                margin="dense"
+                variant="outlined"
+                InputProps={{
+                  onChange: this.handelEdit,
+                  onKeyPress: this.handleEditSubmit,
+                  value: comment,
+                  classes: {
+                    root: classes.cssOutlinedInput,
+                    focused: classes.cssFocused,
+                    notchedOutline: classes.notchedOutline
+                  }
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: classes.inputRoot,
+                    focused: classes.cssFocused
+                  }
+                }}
+              />
+            ) : (
+              <p>{comment}</p>
+            )}
           </CardBody>
-          {subComments.length!== 0 && (
+
+          {//undone feature
+          subComments.length !== 0 && (
             <List component="nav" className={classes.root} disablePadding>
               <div key={0}>
                 <ListItem button onClick={this.handleClick(0)}>
@@ -124,12 +208,14 @@ class ArticleSection extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  
+  auth: state.auth
 })
 
 const mapDispatchToProps = {
-  fetchSubComments
+  fetchSubComments,
+  editComment,
+  deleteComment
 };
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(ArticleSection));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(CommentSection));

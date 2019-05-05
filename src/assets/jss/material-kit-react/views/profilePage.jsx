@@ -56,6 +56,10 @@ const profilePageStyle = {
   navWrapper: {
     margin: "20px auto 50px auto",
     textAlign: "center"
+  },
+  avatar:{
+    width: 250,
+    height: 250,
   }
 };
 

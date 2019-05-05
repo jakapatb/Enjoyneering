@@ -9,13 +9,11 @@ import CardBody from "components/Card/CardBody.jsx";
 
 import imagesStyles from "assets/jss/material-kit-react/imagesStyles.jsx";
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
-import thumbnail from "assets/img/thumbnail.jpg";
-import { getImgfromStorage } from "actions/helpers.js";
-import * as moment from 'moment';
+import * as moment from "moment";
 const style = {
   card: {
     width: 250,
-    height: 400,
+    height: 400
   },
   ...imagesStyles,
   cardTitle,
@@ -23,12 +21,11 @@ const style = {
     color: "#6c757d"
   },
   imgCardTop: {
-    objectFit: 'cover',
+    objectFit: "cover",
     width: 250,
-    maxHeight: '100%'
+    maxHeight: "100%"
   },
   cardHeader: {
-
     width: 250,
     height: 175,
     padding: 0,
@@ -37,34 +34,21 @@ const style = {
 };
 
 class SectionPost extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      imgUrl: thumbnail
-    };
-  }
-  componentDidMount() {
-    getImgfromStorage(this.props.hit.objectID, "title.jpg").then(imgUrl =>
-      this.setState({ imgUrl: imgUrl })
-    );
-  }
   render() {
-    const { classes, hit,isPublic ,recommend } = this.props;
+    const { classes, hit, isPublic, recommend } = this.props;
     return (
-      (isPublic ? hit.public === isPublic : true) 
-        && (recommend ? (hit.recommend&&recommend):(true))&& (
+      (isPublic ? hit.public === isPublic : true) &&
+      (recommend ? hit.recommend && recommend : true) && (
         <Link
           to={{
-            pathname: "/landing-page/",
-            search: hit.id,
-            state: { id: hit.id }
+            pathname: "/landing-page/" + hit.objectID
           }}
         >
           <Card className={classes.card}>
             <CardHeader className={classes.cardHeader}>
               <img
                 className={classes.imgCardTop}
-                src={this.state.imgUrl}
+                src={hit.imgUrl}
                 alt="Card-img-cap"
               />
             </CardHeader>
@@ -82,7 +66,6 @@ class SectionPost extends React.Component {
       )
     );
   }
-};
-
+}
 
 export default withStyles(style)(SectionPost);

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link } from "react-router-dom"
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
@@ -275,21 +276,29 @@ export class SectionClass extends Component {
                              )
                              .map(member => {
                                return (
-                                 <ListItem
-                                   button
-                                   className={classes.nested}
-                                 >
-                                   <ListItemIcon>
-                                     <Avatar
-                                       alt="member"
-                                       src={member.photoURL}
+                                 <Link to={"/profile/?uid="+member.uid}>
+                                   <ListItem
+                                     button
+                                     className={
+                                       classes.nested
+                                     }
+                                   >
+                                     <ListItemIcon>
+                                       <Avatar
+                                         alt="member"
+                                         src={
+                                           member.photoURL
+                                         }
+                                       />
+                                     </ListItemIcon>
+                                     <ListItemText
+                                       inset
+                                       primary={
+                                         member.displayName
+                                       }
                                      />
-                                   </ListItemIcon>
-                                   <ListItemText
-                                     inset
-                                     primary={member.displayName}
-                                   />
-                                 </ListItem>
+                                   </ListItem>
+                                 </Link>
                                );
                              })}
                        </List>

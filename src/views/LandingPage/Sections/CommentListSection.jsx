@@ -37,30 +37,33 @@ class ArticleSection extends React.Component {
     this.setState({content:event.target.value})
   }
   render() {
-    const { classes, comments } = this.props;
+    const { comments } = this.props;
     const { content } = this.state
     return (
-      <div className={classes.section}>
-        <GridContainer justify="center">
-          {comments.map((comment, index) => (
-              <CommentSection key={index} content={comment.content} id={comment.id} />
-            ))}
-          <GridItem xs={12} sm={12} md={8}>
-            <TextField
-              placeholder="MultiLine with rows: 5 and rowsMax: 10"
-              id="content"
-              multiline={true}
-              onKeyPress={this.handleSubmit}
-              onChange={this.handleChange}
-              fullWidth={true}
-              rows={5}
-              rowsMax={20}
-              value={content}
-            />
-          </GridItem>
-        </GridContainer>
-        <div />
-      </div>
+      <GridContainer justify="center">
+        {comments.map((comment, index) => (
+          <CommentSection
+            key={index}
+            content={comment.content}
+            id={comment.id}
+          />
+        ))}
+        <GridItem xs={12} sm={12} md={12} />
+        <TextField
+          placeholder="..."
+          label="MultiLine with rows: 5 and rowsMax: 10"
+          id="content"
+          multiline={true}
+          margin="dense"
+          variant="outlined"
+          onKeyPress={this.handleSubmit}
+          onChange={this.handleChange}
+          fullWidth={true}
+          rows={5}
+          rowsMax={20}
+          value={content}
+        />
+      </GridContainer>
     );
   }
 }

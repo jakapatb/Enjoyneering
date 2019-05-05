@@ -17,7 +17,7 @@ const headerLinksStyle = theme => ({
     float: "left",
     color: "inherit",
     position: "relative",
-    display: "block",
+    display: "flex",
     width: "auto",
     margin: "0",
     padding: "0",
@@ -134,19 +134,24 @@ const headerLinksStyle = theme => ({
     justifyContent: "center"
   },
   inputRoot: {
-    color: "inherit",
     width: "100%"
   },
   inputInput: {
     paddingTop: 15,
     paddingRight: theme.spacing.unit,
     paddingBottom: 15,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing.unit,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: 120,
+    [theme.breakpoints.up("xs")]: {
+      width:150
+    },
+    [theme.breakpoints.up("md")]: {
+      width: 0,
       "&:focus": {
+        backgroundColor: "#fff",
+        opacity: 0.8,
+        borderRadius: 10,
         width: 200
       }
     }

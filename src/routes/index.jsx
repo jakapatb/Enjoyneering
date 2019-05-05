@@ -4,7 +4,7 @@ import LoginPage from "views/LoginPage/LoginPage.jsx";
 import CreatePost from "views/CreatePost/CreatePost.jsx";
 import SearchPage from "views/SearchPage/SearchPage.jsx";
 import Management from "views/Management/Management.jsx";  
-
+import ProfilePage from "views/ProfilePage/ProfilePage.jsx"
 var indexRoutes = [
   {
     path: "/landing-page/:post",
@@ -29,6 +29,12 @@ var indexRoutes = [
     name: "SearchPage",
     component: SearchPage,
     private: false
+  },
+  {
+    path:"/profile",
+    name:"Profile",
+    component:ProfilePage,
+    private:false
   },
   {
     path: "/management/:active(classroom|profile)",

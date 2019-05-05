@@ -22,7 +22,6 @@ class FooterPostSection extends Component {
     let promises = ownerUid.map(async uid => await getUserFromUid(uid));
 
     Promise.all(promises).then(owners => {
-      console.log(owners);
       this.setState({ owners: owners });
     });
   };
@@ -37,7 +36,7 @@ class FooterPostSection extends Component {
         direction={"row"}
       >
         {owners.map((user, key) => (
-          <Button href="/profile-page/" className={classes.button}>
+          <Button href={"/profile/?uid="+user.uid}className={classes.button}>
             <Avatar
               alt="Owner"
               src={user.photoURL}

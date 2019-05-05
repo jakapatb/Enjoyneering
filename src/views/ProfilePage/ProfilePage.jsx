@@ -4,42 +4,52 @@ import classNames from "classnames";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/icons
-import Camera from "@material-ui/icons/Camera";
-import Palette from "@material-ui/icons/Palette";
-import Favorite from "@material-ui/icons/Favorite";
 // core components
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
-import Button from "components/CustomButtons/Button.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
-import NavPills from "components/NavPills/NavPills.jsx";
 import Parallax from "components/Parallax/Parallax.jsx";
 
-import studio1 from "assets/img/examples/studio-1.jpg";
-import studio2 from "assets/img/examples/studio-2.jpg";
-import studio3 from "assets/img/examples/studio-3.jpg";
-import studio4 from "assets/img/examples/studio-4.jpg";
-import studio5 from "assets/img/examples/studio-5.jpg";
-import work1 from "assets/img/examples/olu-eletu.jpg";
-import work2 from "assets/img/examples/clem-onojeghuo.jpg";
-import work3 from "assets/img/examples/cynthia-del-rio.jpg";
-import work4 from "assets/img/examples/mariya-georgieva.jpg";
-import work5 from "assets/img/examples/clem-onojegaw.jpg";
-
+import { getUserFromUid } from "actions/helpers.js";
 import profilePageStyle from "assets/jss/material-kit-react/views/profilePage.jsx";
-import {connect} from "react-redux";
-import {compose} from "redux"
+import { connect } from "react-redux";
+import { compose } from "redux";
 class ProfilePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      uid: "",
+      displayName: "",
+      photoURL: "",
+      email:""
+    };
+  }
+  componentDidMount = () => {
+    const {auth, history} = this.props
+    const subParams = new URLSearchParams(this.props.history.location.search);
+    if (subParams.get("uid")) {
+      getUserFromUid(subParams.get("uid")).then(user => {
+        this.setState({ uid: subParams.get("uid"), ...user });
+      }).catch(()=>history.push("/profile"))
+    }else{
+      if(!auth.isAuth){
+         history.push("/");
+      }else{
+        this.setState({...auth.data}) 
+      }
+    }
+  };
+
   render() {
     const { classes, ...rest } = this.props;
+    const { photoURL, displayName, email } = this.state;
     const imageClasses = classNames(
       classes.imgRaised,
       classes.imgRoundedCircle,
       classes.imgFluid
     );
-    const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
     return (
       <div>
         <Header
@@ -55,18 +65,57 @@ class ProfilePage extends React.Component {
         />
         <Parallax small filter image={require("assets/img/profile-bg.jpg")} />
         <div className={classNames(classes.main, classes.mainRaised)}>
-        
+          <div>
+            <div className={classes.container}>
+              <GridContainer justify="center">
+                <GridItem xs={12} sm={12} md={6}>
+                  <div className={classes.profile}>
+                    <div>
+                      <img
+                        src={photoURL}
+                        alt="..."
+                        className={imageClasses}
+                      />
+                    </div>
+                    <div className={classes.name}>
+                      <h3 className={classes.title}>
+                        {displayName}
+                      </h3>
+                      <h6>{email}</h6>
+                    </div>
+                  </div>
+                </GridItem>
+              </GridContainer>
+              <div className={classes.description}>
+                <p>
+                  An artist of considerable range, Chet Faker — the name taken
+                  by Melbourne-raised, Brooklyn-based Nick Murphy — writes,
+                  performs and records all of his own music, giving it a warm,
+                  intimate feel with a solid groove structure.{" "}
+                </p>
+              </div>
+              <GridContainer justify="center">
+                <GridItem xs={12} sm={12} md={8} className={classes.navWrapper}>
+                </GridItem>
+              </GridContainer>
+            </div>
+          </div>
+        </div>
         <Footer />
       </div>
     );
   }
 }
-const mapStateToProps = (state) => ({
-  auth:state.auth
-})
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
-const mapDispatchToProps = {
-  
-}
+const mapDispatchToProps = {};
 
-export default compose(withStyles(profilePageStyle), connect(mapStateToProps,mapDispatchToProps))(ProfilePage);
+export default compose(
+  withStyles(profilePageStyle),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProfilePage);

@@ -25,6 +25,7 @@ exports.addFirestoreDataToAlgolia = functions.https.onRequest((req, res) => {
           title: data.title,
           subtitle: data.subtitle,
           tags: data.tags,
+          imgUrl: data.imgUrl,
           objectID: doc.id,
           date: data.date,
           recommend: data.recommend,
@@ -54,10 +55,11 @@ exports.onNoteCreated = functions.firestore
       title: data.title,
       subtitle: data.subtitle,
       tags: data.tags,
+      imgUrl:data.imgUrl,
       objectID: doc.id,
       date: data.date,
-      recommend:data.recommend,
-      public:data.public,
+      recommend: data.recommend,
+      public: data.public
     };
 
     // Write to the algolia index
@@ -69,35 +71,86 @@ exports.onNoteCreated = functions.firestore
     });
   });
 
-
+//! bug
 exports.onNoteUpdated = functions.firestore
   .document("posts/{postId}")
   .onUpdate((doc, context) => {
     // Get the note document
-    let data = doc.data();
-    let post = [
-      {
-        title: data.title,
-        subtitle: data.subtitle,
-        tags: data.tags,
-        objectID: doc.id,
-        date: data.date,
-        recommend: data.recommend,
-        public: data.public
+    let data = doc.after.data();
+    let oldValue = doc.before.data()
+    const postId = context.params.postId;
+    let post = {
+      title: data.title,
+      subtitle: data.subtitle,
+      tags: data.tags,
+      imgUrl: data.imgUrl,
+      objectID: doc.after.id,
+      date: data.date,
+      recommend: data.recommend,
+      public: data.public
+    };
+    data.ownerUid.forEach(uid => {
+      var ownerRef = admin
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .collection("notifications");
+      //add Love Notification to Post Owner
+      if (oldValue.love.length !== data.love.length) {
+        ownerRef.doc(postId + "L").set({
+          type: "love",
+          title: data.title,
+          love: data.love.length,
+          postId: postId,
+          seen: false,
+          date: new Date()
+        });
       }
-    ];
+      //เปลี่ยนแปลง public
+      if(oldValue.public!== data.public){
+        ownerRef.doc(postId + "P").set({
+          type: "public",
+          title: data.title,
+          public: data.public,
+          postId: postId,
+          seen: false,
+          date: new Date()
+        });
+      }
+      //เปลี่ยนแปลง recommend
+      if (oldValue.recommend !== data.recommend) {
+        ownerRef.doc(postId + "R").set({
+          type: "recommend",
+          title: data.title,
+          recommend: data.recommend,
+          postId: postId,
+          seen: false,
+          date: new Date()
+        });
+      }
+      //เปลี่ยนแปลง ownerUid
+      if (oldValue.ownerUid.length < data.ownerUid.length) {
+        ownerRef.doc(postId + "O").set({
+          type: "newOwner",
+          title: data.title,
+          newOwner: data.ownerUid.filter(
+            owner => !oldValue.ownerUid.includes(owner)
+          ),
+          postId: postId,
+          seen: false,
+          date: new Date()
+        });
+      }
+    });
 
     // Write to the algolia index
     const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
     const index = client.initIndex(ALGOLIA_INDEX_NAME);
-    index.partialUpdateObjects(post, (err, content) => {
+    return index.partialUpdateObject(post, (err, content) => {
       if (err) throw err;
       console.log(content);
     });
   });
-
-
-
 
 exports.onNoteDelete = functions.firestore
   .document("posts/{postId}")
@@ -105,6 +158,7 @@ exports.onNoteDelete = functions.firestore
     // Get the note document
     var objectID = snap.id;
 
+    
     // Write to the algolia index
     const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
     const index = client.initIndex(ALGOLIA_INDEX_NAME);
@@ -115,29 +169,30 @@ exports.onNoteDelete = functions.firestore
   });
 
 // Notification when someone love your post
-exports.updateLoveNotification = functions.firestore
+//TODO tell reason why delete this post
+exports.updateDeletePostNotification = functions.firestore
   .document("posts/{postId}")
-  .onUpdate((change, context) => {
-    const newValue = change.after.data();
-    const oldValue = change.before.data();
+  .onDelete((change, context) => {
+    const deletedValue = change.data();
     const postId = context.params.postId;
-    var ownerRef = admin
-      .firestore()
-      .collection("users")
-      .doc(newValue.ownerUid)
-      .collection("notifications");
-    //add Love Notification to Post Owner
-    if (oldValue.love.length !== newValue.love.length) {
-      return ownerRef.doc(postId + "L").set({
-        type: "love",
-        title: newValue.title,
-        love: newValue.love.length,
+    deletedValue.ownerUid.forEach(uid => {
+      var ownerRef = admin
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .collection("notifications");
+      ownerRef.doc(postId + "D").set({
+        type: "delete",
+        title: deletedValue.title,
         postId: postId,
         seen: false,
         date: new Date()
       });
-    }
+    });
+  //TODO delete Image from storage
   });
+
+
 // Notification when someone Comment your post
 exports.updateCommentNotification = functions.firestore
   .document("posts/{postId}/comments/{commentId}")
@@ -152,38 +207,44 @@ exports.updateCommentNotification = functions.firestore
       .doc(postId);
     return postRef.get().then(snap => {
       const postData = snap.data();
-      var ownerRef = admin
-        .firestore()
-        .collection("users")
-        .doc(postData.ownerUid)
-        .collection("notifications");
-      return ownerRef.doc(postId + "C").set({
-        type: "comment",
-        title: postData.title,
-        comment: newValue.ownerUid,
-        postId: postId,
-        seen: false,
-        date: new Date()
+      return postData.ownerUid.forEach(uid => {
+        var ownerRef = admin
+          .firestore()
+          .collection("users")
+          .doc(uid)
+          .collection("notifications");
+        return ownerRef.doc(postId + "C").set({
+          type: "comment",
+          title: postData.title,
+          comment: newValue.ownerUid,
+          postId: postId,
+          seen: false,
+          date: new Date()
+        });
       });
     });
   });
 
-  //Generate Password for Promote Status
-exports.generatePassword=functions.https.onRequest((req,res)=>{
-var length = 8,
-  charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  retVal = "";
-for (var i = 0, n = charset.length; i < length; ++i) {
-  retVal += charset.charAt(Math.floor(Math.random() * n));
-}
-var infoUpdate={}
-infoUpdate['promoteStatus.password'] = retVal
-admin.firestore().collection("systems").doc("classroom").update(infoUpdate)
-})
+//Generate Password for Promote Status
+exports.generatePassword = functions.https.onRequest((req, res) => {
+  var length = 8,
+    charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    retVal = "";
+  for (var i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  var infoUpdate = {};
+  infoUpdate["promoteStatus.password"] = retVal;
+  admin
+    .firestore()
+    .collection("systems")
+    .doc("classroom")
+    .update(infoUpdate);
+});
 
-exports.getPassword = functions.https.onRequest((req,res)=>{
-res.send(req.params.id)
-})
+exports.getPassword = functions.https.onRequest((req, res) => {
+  res.send(req.params.id);
+});
 
 /**exports.generateThumbnail = functions.storage.object('post/{postId}/{imageId}').onChange(event => {
 

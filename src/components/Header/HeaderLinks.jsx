@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 // react components for routing our app without refresh
 import { Link } from "react-router-dom";
 import { compose } from "redux";
@@ -18,12 +18,15 @@ import Badge from "@material-ui/core/Badge";
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.jsx";
-import { signOut, markSeenNoti} from "actions/index.js"
+import { signOut, markSeenNoti } from "actions/index.js";
 import { goToSearch } from "actions/helpers.js";
+import IconButton from "@material-ui/core/IconButton";
+import Divider from "@material-ui/core/Divider";
+function HeaderLinks({ ...props }) {
+  const { signOut, auth, noti, classes, search } = props;
 
-
-function HeaderLinks({...props }) {
-  const { markSeenNoti,signOut, auth,noti, classes,search } = props;
+  const [state, setstate] = useState(null)
+  let textInput = React.createRef();
   var Menus = [
     <Link
       className={classes.dropdownLink}
@@ -57,22 +60,44 @@ function HeaderLinks({...props }) {
       Sign out
     </Button>
   ];
+
+  function handleClick(e) {
+    if(state==null){
+      try {
+         textInput.current.focus();
+      } catch (error) {
+        console.log(error)
+      }
+    }else {
+       goToSearch(state);
+    }
+  }
+
+
   return (
     <List className={classes.list}>
       {search === undefined && (
         <ListItem className={classes.listItem}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
           <InputBase
             placeholder="Search…"
             classes={{ root: classes.inputRoot, input: classes.inputInput }}
+            inputProps={{ ref: textInput }}
+            onChange={e => setstate(e.target.value)}
             onKeyPress={e => {
               if (e.key === "Enter" && e.target.value != null) {
                 goToSearch(e.target.value.trim());
               }
             }}
           />
+          <IconButton
+            className={classes.iconButton}
+            onClick={handleClick}
+            color="inherit"
+            aria-label="Search"
+          >
+            <SearchIcon />
+          </IconButton>
+          <Divider className={classes.divider} />
         </ListItem>
       )}
       <ListItem className={classes.listItem}>
@@ -91,7 +116,7 @@ function HeaderLinks({...props }) {
               <div className={classes.rootBadge}>
                 <Badge
                   badgeContent={noti.length > 0 && noti.length}
-                  invisible={noti.length > 0}
+                  invisible={noti.length <= 0}
                   color={noti.length > 0 ? "secondary" : "default"}
                   className={classes.margin}
                 >
@@ -108,37 +133,107 @@ function HeaderLinks({...props }) {
               switch (message.type) {
                 case "love":
                   return (
-                    <div className={classes.dropdownLink}>
-                      <a
-                        href={"landing-page/" + message.postId}
-                        onClick={() =>
-                          markSeenNoti(message.postId, message.notiId)
-                        }
-                        className={classes.textLink}
-                        style={
-                          message.seen ? { backgroundColor: "#ddd" } : {}
-                        }
-                      >
+                    <Link
+                      to={
+                        "/landing-page/" +
+                        message.postId +
+                        "?notiId=" +
+                        message.notiId +
+                        "&scroll=0"
+                      }
+                      className={classes.textLink}
+                      style={
+                        message.seen
+                          ? { backgroundColor: "#ddd" }
+                          : {}
+                      }
+                    >
+                      <div className={classes.dropdownLink}>
                         {message.seen && "Seen "}
-                        {message.love} Love Your "{message.title}" post
-                      </a>
-                    </div>
+                        {message.love} Love Your "{message.title}"
+                        post
+                      </div>
+                    </Link>
                   );
                 case "comment":
                   return (
-                    <div className={classes.dropdownLink}>
-                      <a
-                        className={classes.textLink}
-                        href={"landing-page/" + message.postId}
-                        onClick={() =>
-                          markSeenNoti(message.postId, message.notiId)
-                        }
-                      >
-                        {message.seen && "Seen "} Someone Comment in Your "
-                        {message.title}" post
-                      </a>
-                    </div>
+                    <Link
+                      className={classes.textLink}
+                      to={
+                        "/landing-page/" +
+                        message.postId +
+                        "?notiId=" +
+                        message.notiId +
+                        "&scroll=1"
+                      }
+                    >
+                      <div className={classes.dropdownLink}>
+                        {message.seen && "Seen "} Someone Comment
+                        in Your "{message.title}" post
+                      </div>
+                    </Link>
                   );
+                case "delete":
+                  return (
+                    <Link
+                      className={classes.textLink}
+                      to={"/" /*! จะเช็คว่าอ่านแล้วยังไง? */}
+                    >
+                      <div className={classes.dropdownLink}>
+                        {message.seen && "Seen "} "{message.title}" has deleted
+                      </div>
+                    </Link>
+                  );
+                case "public":
+                  return (
+                    <Link
+                      className={classes.textLink}
+                      to={
+                        "/landing-page/" +
+                        message.postId +
+                        "?notiId=" +
+                        message.notiId
+                      }
+                    >
+                      <div className={classes.dropdownLink}>
+                        {message.seen && "Seen "} "{message.title}" move to {message.public?("Public"):("Private")}
+                      </div>
+                    </Link>
+                  );
+                case "recommend":
+                  return (
+                    <Link
+                      className={classes.textLink}
+                      to={
+                        "/landing-page/" +
+                        message.postId +
+                        "?notiId=" +
+                        message.notiId
+                      }
+                    >
+                      <div className={classes.dropdownLink}>
+                        {message.seen && "Seen "} "{message.title}" move to {message.recommend?("Recommended"):("Unrecommended")}
+                      </div>
+                    </Link>
+                  );
+                case "newOwner":
+                  return (
+                    <Link
+                      className={classes.textLink}
+                      to={
+                        "/landing-page/" +
+                        message.postId +
+                        "?notiId=" +
+                        message.notiId +
+                        "&scroll=0"
+                      }
+                    >
+                      <div className={classes.dropdownLink}>
+                        {message.seen && "Seen "} someone has owner "{message.title}" post
+                      </div>
+                    </Link>
+                  );
+                //TODO Delete Notification  {go to dashboard}
                 default:
                   return (
                     <Link to="/" className={classes.dropdownLink}>
@@ -185,17 +280,20 @@ function HeaderLinks({...props }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  auth:state.auth,
-  noti:state.notifications
-})
+const mapStateToProps = state => ({
+  auth: state.auth,
+  noti: state.notifications
+});
 
 const mapDispatchToProps = {
-  signOut, markSeenNoti
-}
-
+  signOut,
+  markSeenNoti
+};
 
 export default compose(
   withStyles(headerLinksStyle),
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(HeaderLinks);

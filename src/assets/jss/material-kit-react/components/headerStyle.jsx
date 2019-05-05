@@ -144,7 +144,7 @@ const headerStyle = {
     paddingRight: "0px",
     paddingLeft: "0",
     ...transition
-  }
+  },
 };
 
 export default headerStyle;

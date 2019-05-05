@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -20,7 +20,7 @@ import { InstantSearch,connectSearchBox ,connectHits } from "react-instantsearch
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
 // Sections for this page
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -32,58 +32,44 @@ const dashboardRoutes = [];
 class SearchPage extends React.Component {
   constructor(props) {
     super(props);
+    const params = new URLSearchParams(this.props.history.location.search);
+    const search = params.get("s");
     this.state = {
       type: "title",
-      search: null,
+      search: search,
       searching: false,
       checkedA: false,
-      checkedB: false
+      checkedB: false,
+      seePrivate: false
     };
   }
 
   componentDidMount() {
     const params = new URLSearchParams(this.props.history.location.search);
     const search = params.get("s");
-    if(params.get("p")!==undefined){
-      this.setState({checkedA:params.get("p")==1?(true):(false)})
+    this.setState({search:search})
+    console.log(params.get("p"),params.get("r"))
+    if (this.props.auth.status !== "visitor") {
+      this.setState({seePrivate:true})
+      if (params.get("p") !== undefined) {
+        this.setState({ checkedA: params.get("p") === "1" ? true : false });
+      }
     }
     if (params.get("r") !== undefined) {
-      this.setState({ checkedB: params.get("r") == 1 ? true : false });
+      this.setState({ checkedB: params.get("r") === "1" ? true : false });
     }
-    const { type } = this.state;
-    this.getList(type, search);
   }
 
-  getList = (type, search) => {
-    var condition = [];
-    console.log(search);
-    if (search !== null && search !== "") {
-      if (type === "tags") {
-        condition[1] = "array-contains";
-      } else {
-        condition[1] = "==";
-      }
-      condition[0] = type;
-      condition[2] = search.toUpperCase();
-    } else {
-      condition = ["date", "<=", new Date()];
-    }
-    this.setState({
-      search: search
-    });
-    this.props.fetchListPost(condition, 5);
-  };
-
-  handleSearch = event => {
-    this.setState({ search: event.target.value, searching: true });
+  handleSearch = value => {
+    this.setState({ search: value ,searching: true });
   };
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
 
   render() {
-    const { list, classes, ...rest } = this.props;
-    const { search, checkedA, checkedB } = this.state;
+    const { auth, classes, ...rest } = this.props;
+    const { search, checkedA, checkedB ,seePrivate } = this.state;
     return (
       <div>
         <Header
@@ -108,24 +94,20 @@ class SearchPage extends React.Component {
             >
               <div className={classes.container}>
                 <GridContainer xs={12} sm={12} md={12}>
-                  <ConnectSearchBox
-                    search={search}
-                    handleSearch={this.handleSearch}
-                    classes={classes}
-                  />
-
                   <GridItem>
                     <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={this.state.checkedA}
-                            onChange={this.handleChange("checkedA")}
-                            value="checkedA"
-                          />
-                        }
-                        label="Public only"
-                      />
+                      {seePrivate && (
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={this.state.checkedA}
+                              onChange={this.handleChange("checkedA")}
+                              value="checkedA"
+                            />
+                          }
+                          label="Public only"
+                        />
+                      )}
                       <FormControlLabel
                         control={
                           <Switch
@@ -135,10 +117,15 @@ class SearchPage extends React.Component {
                             color="primary"
                           />
                         }
-                        label="Primary"
+                        label="Recommend"
                       />
                     </FormGroup>
                   </GridItem>
+                  <ConnectSearchBox
+                    search={search}
+                    handleSearch={this.handleSearch}
+                    classes={classes}
+                  />
                 </GridContainer>
               </div>
             </Parallax>
@@ -174,6 +161,9 @@ const Hits =({hits ,isPublic ,recommend }) => {
 
 //TODO Change CSS 
 const SearchBox = ({refine, search, handleSearch,classes }) => {
+useEffect(() => {
+  refine(search);
+},[]);
   return (
     <ListItem className={classes.listItem}>
       <TextField
@@ -181,17 +171,21 @@ const SearchBox = ({refine, search, handleSearch,classes }) => {
         label="Search"
         margin="dense"
         variant="outlined"
-        inputProps={{
-          className: classes.inputInput
-        }}
         InputProps={{
           value: search,
-          onChange: handleSearch,
-          startAdornment: (
-            <InputAdornment position="end">
-              <SearchIcon fontSize="large" color="disabled" />
-            </InputAdornment>
+          endAdornment: (
+            <IconButton
+              className={classes.iconButton}
+              color="inherit"
+              aria-label="Search"
+              onClick={()=>{
+                refine(search);
+              }}
+            >
+              <SearchIcon fontSize="large" />
+            </IconButton>
           ),
+          className: classes.inputInput,
           classes: {
             root: classes.cssOutlinedInput,
             focused: classes.cssFocused,
@@ -204,10 +198,10 @@ const SearchBox = ({refine, search, handleSearch,classes }) => {
             focused: classes.cssFocused
           }
         }}
+        onChange={event=>handleSearch(event.target.value)}
         onKeyPress={event => {
           if (event.key === "Enter" && event.target.value !== null) {
             refine(search);
-            handleSearch(event);
           }
         }}
       />
@@ -218,7 +212,7 @@ const ConntectHits = connectHits(Hits);
 const ConnectSearchBox = connectSearchBox(SearchBox);
 
 const mapStateToProps = state => ({
-    list: state.listPost,
+    auth: state.auth
 });
 
 const mapDispatchToProps = {

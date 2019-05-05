@@ -30,7 +30,7 @@ import { sendPost, fetchPost, clearPost } from "actions/post.js";
 import YoutubeSection from "./Sections/YoutubeSection";
 import ImageSection from "./Sections/ImageSection";
 import ArticleSection from "./Sections/ArticleSection";
-import { getImgfromStorage } from "actions/helpers.js";
+import TitleSection from "./Sections/TitleSection";
 import Dropzone from "react-dropzone";
 import FooterPostSection from "./Sections/FooterPostSection";
 const dashboardRoutes = [];
@@ -38,7 +38,7 @@ const dashboardRoutes = [];
 const ENTER_KEY = 13;
 const COMMA_KEY = 188;
 const BACKSPACE_KEY = 8;
-
+//! ownerUid เพิ่มไม่ขึ้น
 class CreatePost extends React.Component {
   constructor(props) {
     super(props);
@@ -62,16 +62,14 @@ class CreatePost extends React.Component {
   }
 
   componentDidMount = async () => {
-    const { history, fetchPost,auth } = this.props;
+    const { history, fetchPost, auth,post } = this.props;
     if (history.location.search.includes("?edit=")) {
       //หากมีการแก้ไข
       //! เข้าได้เฉพาะเจ้าของเท่านั้น
       const postId = history.location.search.split("?edit=")[1];
-      this.setState({ postId: postId });
-      const image = await getImgfromStorage(postId, "title.jpg");
-      await fetchPost(postId)
-      this.setState({ imgUrl: image });
-    }else {
+      await fetchPost(postId);
+      this.setState({ postId: postId, imgUrl:post.data.imgUrl });
+    } else {
       this.setState({ ownerUid: [auth.data.uid] });
     }
   };
@@ -91,7 +89,7 @@ class CreatePost extends React.Component {
       });
     }
   };
-  
+
   componentWillUnmount() {
     this.props.clearPost();
   }
@@ -146,7 +144,7 @@ class CreatePost extends React.Component {
   //for handle dialog Submit
   _handleSubmitDialog = () => {
     if (this.state.submitDialog) {
-      if(!this.props.post.isFetching){
+      if (!this.props.post.isFetching) {
         this.setState({ submitDialog: false });
       }
     } else {
@@ -162,6 +160,7 @@ class CreatePost extends React.Component {
       imgUrl,
       tags,
       postId,
+      ownerUid,
       deletedContents
     } = this.state;
     const { sendPost } = this.props;
@@ -173,6 +172,7 @@ class CreatePost extends React.Component {
       file: file,
       imgUrl: imgUrl,
       tags: tags,
+      ownerUid:ownerUid,
       deletedContents: deletedContents
     };
     sendPost(post);
@@ -222,9 +222,10 @@ class CreatePost extends React.Component {
     }
   }
 
-  addTag() {
+  addTag = () => {
     const { tags, value } = this.state;
-    let tag = value.trim().toUpperCase();
+    if(value!==undefined){
+      let tag = value.trim().toUpperCase();
 
     tag = tag.replace(/,/g, "");
 
@@ -236,42 +237,42 @@ class CreatePost extends React.Component {
       tags: [...tags, tag],
       value: ""
     });
-  }
+    }
+  };
 
-  editPrevTag() {
+  editPrevTag(tag) {
     let { tags } = this.state;
-
-    const tag = tags.pop();
-
+    if ((tag === undefined)) tag = tags.pop();
+    else tags = tags.filter(obj => obj !== tag);
     this.setState({ tags, value: tag });
   }
-  addOwnerUid = (ownerUid) => new Promise((resolve, reject) => {
+  
+  addOwnerUid = ownerUid =>
+    new Promise((resolve, reject) => {
       this.setState(state => {
         let newOwners = state.ownerUid;
-        if(newOwners.includes(ownerUid)) return reject()
-        
-        newOwners.push(ownerUid)
+        if (newOwners.includes(ownerUid)) return reject();
+
+        newOwners.push(ownerUid);
         this.setState({ ownerUid: newOwners });
-        return resolve(newOwners)
+        return resolve(newOwners);
       });
-  })
-  
+    });
 
   render() {
     const { post, auth, classes, ...rest } = this.props;
-    const { imgUrl, tags, title, subtitle,value } = this.state;
-               if (
-                 this.props.post.isUpload.length > 0 &&
-                 this.props.post.isUpload.every(
-                   upload => upload === true
-                 )
-               ) return(
-                   <Redirect
-                     to={{
-                       pathname: "/landing-page/"+post.id,
-                     }}
-                   />
-                 );
+    const {imgUrl, tags, title, subtitle, value } = this.state;
+    if (
+      this.props.post.isUpload.length > 0 &&
+      this.props.post.isUpload.every(upload => upload === true)
+    )
+      return (
+        <Redirect
+          to={{
+            pathname: "/landing-page/" + post.id
+          }}
+        />
+      );
     return (
       <div>
         <Header
@@ -280,7 +281,7 @@ class CreatePost extends React.Component {
           brand="Enjoyneering KMITL"
           rightLinks={<HeaderLinks />}
           fixed
-          changeColorOnScroll={{ height: 400, color: "white" }}
+          changeColorOnScroll={{ height: 400}}
           {...rest}
         />
         <Parallax filter image={imgUrl}>
@@ -321,7 +322,11 @@ class CreatePost extends React.Component {
                   <div className={classes.tags}>
                     <ul>
                       {tags.map((tag, i) => (
-                        <li key={tag + i} className={classes.tag}>
+                        <li
+                          key={tag + i}
+                          className={classes.tag}
+                          onClick={() => this.editPrevTag(tag)}
+                        >
                           {tag}
                         </li>
                       ))}
@@ -333,6 +338,7 @@ class CreatePost extends React.Component {
                       onChange={this.handleChange}
                       ref="tag"
                       className={classes.tag_input}
+                      onBlur={this.addTag}
                       onKeyUp={this.handleKeyUp}
                       onKeyDown={this.handleKeyDown}
                     />
@@ -372,11 +378,18 @@ class CreatePost extends React.Component {
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
           <div className={classes.container}>
-            <Button onClick={this._handleList("Article")}>Article</Button>
-            <Button onClick={this._handleList("Image")}>Image</Button>
-            <Button onClick={this._handleList("Youtube")}>Youtube</Button>
             {this.state.contents.map((content, index) => {
               switch (content.type) {
+                case "Title":
+                  return (
+                    <TitleSection
+                      key={content.id}
+                      index={index}
+                      remove={this._removeContent}
+                      submit={this._handleChildSubmit}
+                      content={content}
+                    />
+                  );
                 case "Article":
                   return (
                     <ArticleSection
@@ -412,12 +425,22 @@ class CreatePost extends React.Component {
                   return null;
               }
             })}
-            <FooterPostSection
-              ownerUid={this.state.ownerUid}
-              addUid={this.addOwnerUid}
-            />
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
+            {auth.isAuth && (
+              <div>
+                <Button onClick={this._handleList("Title")}>
+                  Title
+                </Button>
+                <Button onClick={this._handleList("Article")}>
+                  Article
+                </Button>
+                <Button onClick={this._handleList("Image")}>Image</Button>
+                <Button onClick={this._handleList("Youtube")}>
+                  Youtube
+                </Button>
+                <FooterPostSection
+                  ownerUid={this.state.ownerUid}
+                  addUid={this.addOwnerUid}
+                />
                 <Button
                   variant="outlined"
                   color="primary"
@@ -425,57 +448,57 @@ class CreatePost extends React.Component {
                 >
                   Submit
                 </Button>
-                <Dialog
-                  open={this.state.submitDialog}
-                  onClose={this._handleSubmitDialog}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"คุณแน่ใจแล้วใช่ไหม"}
-                  </DialogTitle>
-                  {post.isFetching ? (
-                    <DialogContent className={classes.progressSubmit}>
-                      <CircularProgress
-                        className={classes.progress}
-                        value={
-                          post.isUpload.filter(up => up === true).length /
-                          post.isUpload.length
-                        }
-                      />
-                      <h3>
-                        {post.isUpload.filter(up => up === true).length +
-                          " / " +
-                          post.isUpload.length}
-                      </h3>
-                    </DialogContent>
-                  ) : (
-                    <div>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                          กรุณาตรวจสอบโพสของคุณ
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={this._handleSubmitDialog}
-                          color="primary"
-                        >
-                          Close
-                        </Button>
-                        <Button
-                          onClick={this._handleSubmit}
-                          color="primary"
-                          autoFocus
-                        >
-                          Submit
-                        </Button>
-                      </DialogActions>
-                    </div>
-                  )}
-                </Dialog>
-              </GridItem>
-            </GridContainer>
+              </div>
+            )}
+            <Dialog
+              open={this.state.submitDialog}
+              onClose={this._handleSubmitDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"คุณแน่ใจแล้วใช่ไหม"}
+              </DialogTitle>
+              {post.isFetching ? (
+                <DialogContent className={classes.progressSubmit}>
+                  <CircularProgress
+                    className={classes.progress}
+                    value={
+                      post.isUpload.filter(up => up === true).length /
+                      post.isUpload.length
+                    }
+                  />
+                  <h3>
+                    {post.isUpload.filter(up => up === true).length +
+                      " / " +
+                      post.isUpload.length}
+                  </h3>
+                </DialogContent>
+              ) : (
+                <div>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      กรุณาตรวจสอบโพสของคุณ
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={this._handleSubmitDialog}
+                      color="primary"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      onClick={this._handleSubmit}
+                      color="primary"
+                      autoFocus
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </div>
+              )}
+            </Dialog>
           </div>
         </div>
         <Footer />
