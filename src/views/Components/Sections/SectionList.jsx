@@ -7,26 +7,35 @@ import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import withStyles from "@material-ui/core/styles/withStyles";
 import GridList from "@material-ui/core/GridList";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 // @material-ui/icons
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
-import GridItem from "components/Grid/GridItem.jsx";
-import Button from "components/CustomButtons/Button.jsx";
 import listStyle from "assets/jss/material-kit-react/views/landingPageSections/listStyle.jsx";
 import GridListTile from "@material-ui/core/GridListTile";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { fetchListPost, clearListPost } from "actions/index.js";
+import { fetchListPost, clearListPost, fetchMorePost } from "actions/index.js";
 import SectionCard from "./SectionCard.jsx";
 
 class SectionList extends React.Component {
-  componentDidMount() {
-    const { listName, condition} = this.props;
-    this.props.fetchListPost(listName,condition);
+  constructor(props){
+    super(props)
+    this.state={
+      end:false
+    }
   }
-  componentWillUnmount(){
-    this.props.clearListPost()
+  componentDidMount() {
+    const { listName, condition } = this.props;
+    this.props.fetchListPost(listName, condition);
+  }
+  componentWillUnmount() {
+    this.props.clearListPost();
+  }
+  handleMorePost=()=>{
+    const { listName, fetchMorePost } = this.props;
+    fetchMorePost(listName).catch(()=>this.setState({end:true}))
   }
   render() {
     const { list, classes, listName, type } = this.props;
@@ -42,7 +51,11 @@ class SectionList extends React.Component {
               {this.props.title}
             </Typography>
             <Link to={"/search?p=" + type[0] + "&r=" + type[1]}>
-              <Typography component="h3" variant="h5" className={classes.view}>
+              <Typography
+                component="h3"
+                variant="h5"
+                className={classes.view}
+              >
                 View more ›
               </Typography>
             </Link>
@@ -80,11 +93,15 @@ class SectionList extends React.Component {
                 ))}
             </GridList>
           </GridContainer>
-          {/**        <Link to={"/search?p=" + type[0] + "&r=" + type[1]}>
-            <Button type="button" color="primary">
+          {!this.state.end && (
+            <Button
+              type="button"
+              color="primary"
+              onClick={this.handleMorePost}
+            >
               View More »
             </Button>
-          </Link> */}
+          )}
         </div>
       </div>
     );
@@ -97,7 +114,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchListPost,
-  clearListPost
+  clearListPost,
+  fetchMorePost
 };
 
 export default compose(

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
-
 // @material-ui/icons
 
 // core components
@@ -175,7 +174,10 @@ class LandingPage extends React.Component {
                 <ul>
                   {post.hasPost &&
                     post.data.tags.map((tag, i) => (
-                      <Link to={"/search/?s=" + tag} style={{ color: "#FFF" }}>
+                      <Link
+                        to={"/search/?s=" + tag}
+                        style={{ color: "#FFF" }}
+                      >
                         <li key={tag + i} className={classes.tag}>
                           {tag}
                         </li>
@@ -213,7 +215,10 @@ class LandingPage extends React.Component {
                       handleModal={this.handleModal}
                       number={2}
                       submit={this.handleRecommend}
-                      title={(post.recommend?"Unrecommend":"Recommend ") +"this post"}
+                      title={
+                        (post.recommend ? "Unrecommend" : "Recommend ") +
+                        "this post"
+                      }
                       content={"คุณต้องการRecommend บทความนี้หรือไม่"}
                     />
                   </div>
@@ -274,7 +279,9 @@ class LandingPage extends React.Component {
                       className={classes.navLink}
                       onClick={() => this.handleModal(0)}
                     >
-                      {post.data.public ? "set to private" : "set to public"}
+                      {post.data.public
+                        ? "set to private"
+                        : "set to public"}
                     </Button>,
                     <Button
                       color="transparent"
@@ -310,7 +317,9 @@ class LandingPage extends React.Component {
                       case "Youtube":
                         return <YoutubeSection content={content} />;
                       case "Image":
-                        return <ImageSection content={content} id={postId} />;
+                        return (
+                          <ImageSection content={content} id={postId} />
+                        );
                       default:
                         return null;
                     }

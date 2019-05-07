@@ -5,7 +5,8 @@ const listStyle = theme => ({
     ...container,
     zIndex: "2",
     position: "relative",
-    padding: "60 0 60 0",
+    margin:"auto",
+    padding: "60px 60px 60px 60px",
     color: "#000"
   },
   root: {

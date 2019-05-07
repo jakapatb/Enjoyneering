@@ -25,7 +25,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { fetchListPost} from "actions/index.js";
-import SectionPost from "./Sections/SectionPost";
+
+import SectionList from "./Sections/SectionList";
 import TextField from "@material-ui/core/TextField";
 const dashboardRoutes = [];
 
@@ -152,9 +153,9 @@ class SearchPage extends React.Component {
 }
 
 const Hits =({hits ,isPublic ,recommend }) => {
-  return hits.map(hit => (
-    <SectionPost hit={hit} key={hit.objectID} isPublic={isPublic} recommend={recommend} />
-  ));
+  return (
+    <SectionList hits={hits} isPublic={isPublic} recommend={recommend} />
+  );
 }
 
 

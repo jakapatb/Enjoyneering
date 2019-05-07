@@ -21,7 +21,7 @@ const db = firebase.firestore();
 
 // mark seen in notifications
 export const markSeenNoti = (postId, notiId) => (dispatch, getState) => {
-  console.log("Mark work")
+  console.log("Mark work");
   const { auth } = getState();
   var batch = db.batch();
   const uid = auth.data.uid;
@@ -31,7 +31,7 @@ export const markSeenNoti = (postId, notiId) => (dispatch, getState) => {
     .collection("notifications")
     .doc(notiId);
   batch.update(notiRef, { seen: true });
-  batch.commit()
+  batch.commit();
 };
 
 //SignOut and delete from store
@@ -112,10 +112,37 @@ export const fetchListPost = (listName, condition = { type: "recent" }) => (
       });
     });
 };
+export const fetchMorePost = listName => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    const { listPost } = getState();
+    var postsRef = db.collection("posts").orderBy("date", "desc");
+    let endPost = listPost.recent[listPost.recent.length - 1];
 
-export const clearListPost = () => (dispatch)=> {
-  dispatch({type:FETCH_LIST_CLEAR})
-}
+    postsRef
+      .startAfter(endPost.date).limit(9)
+      .get()
+      .then(snapPosts => {
+        var newListPost = [];
+        snapPosts.forEach(post => {
+          newListPost.push({ ...post.data(), id: post.id });
+        });
+        let sumList = listPost.recent.concat(newListPost);
+        dispatch({
+          type: FETCH_LIST_RECENT,
+          listName: listName,
+          listPost: sumList,
+          hasRecent: true
+        });
+        if (snapPosts.size <9) {
+          return reject();
+        }
+        return resolve();
+      });
+  });
+
+export const clearListPost = () => dispatch => {
+  dispatch({ type: FETCH_LIST_CLEAR });
+};
 
 // * Post
 
@@ -126,15 +153,15 @@ export const sendComment = comment => (dispatch, getState) => {
   commentsRef.collection("comments").add(comment);
 };
 
-
 //fetch Comments
-export const fetchComments = postId => dispatch =>
+export const fetchComments = (postId, after = 0) => dispatch =>
   new Promise((resolve, reject) => {
     const commentsRef = db
       .collection("posts")
       .doc(postId)
-      .collection("comments");
-    commentsRef.onSnapshot(snap => {
+      .collection("comments")
+      .orderBy("date", "desc");
+    commentsRef.limit(5).onSnapshot(snap => {
       var comments = [];
       snap.forEach(comment => {
         comments.push({
@@ -142,9 +169,7 @@ export const fetchComments = postId => dispatch =>
           content: comment.data()
         });
       });
-      comments = comments.sort((a, b) => {
-        return a.date - b.date;
-      });
+      comments.reverse();
       dispatch({
         type: FETCH_POST_ADD_COMMENT,
         payload: comments
@@ -179,8 +204,6 @@ export const fetchSubComments = id => (dispatch, getState) =>
     return reject("error");
   });
 
-
-
 //กดLove / อันLove
 export const pressLove = isLove => (dispatch, getState) => {
   const { post, auth } = getState();
@@ -208,7 +231,6 @@ export const pressLove = isLove => (dispatch, getState) => {
   });
 };
 
-
 //? คือไรวะ
 export const fetchSections = () => (dispatch, getState) => {
   const { auth } = getState();
@@ -235,16 +257,17 @@ export const allowPublic = (postId, isPublic) => (dispatch, getState) => {
     });
 };
 
-export const recommedPost = (recomend) => (dispatch,getState)=> {
-  const {post:{id}} = getState()
+export const recommedPost = recomend => (dispatch, getState) => {
+  const {
+    post: { id }
+  } = getState();
   db.collection("posts")
     .doc(id)
     .update({ recommend: recomend })
     .then(() => {
       hist.go(0);
     });
-
-}
+};
 
 // ############################## Classrooms #######################################
 
@@ -318,14 +341,20 @@ export const promoteStatus = yourCode => (dispatch, getState) => {
   });
 };
 
+export const editComment = (content, commentId) => (dispatch, getState) => {
+  const { post } = getState();
+  db.collection("posts")
+    .doc(post.id)
+    .collection("comments")
+    .doc(commentId)
+    .update({ content: content, updated: new Date() });
+};
 
-export const editComment = (content,commentId) => (dispatch,getState)=> {
-  const { post } = getState() 
-  db.collection('posts').doc(post.id).collection('comments').doc(commentId).update({content:content , updated:new Date()})
-}
-
-export const deleteComment = (commentId) => (dispatch,getState)=> {
-  const { post } = getState() 
-  db.collection('posts').doc(post.id).collection('comments').doc(commentId).delete()
-}
-
+export const deleteComment = commentId => (dispatch, getState) => {
+  const { post } = getState();
+  db.collection("posts")
+    .doc(post.id)
+    .collection("comments")
+    .doc(commentId)
+    .delete();
+};
