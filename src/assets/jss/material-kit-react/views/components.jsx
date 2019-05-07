@@ -2,6 +2,13 @@ import { container } from "assets/jss/material-kit-react.jsx";
 
 const componentsStyle = {
   container,
+  parallax: {},
+  particles: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    zIndex: -5
+  },
   brand: {
     color: "#FFFFFF",
     textAlign: "left"
@@ -23,6 +30,7 @@ const componentsStyle = {
     zIndex: "3"
   },
   mainRaised: {
+    background: "#FFFFFF",
     margin: "-60px 15px 0px",
     borderRadius: "6px",
     boxShadow:

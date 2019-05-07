@@ -8,8 +8,14 @@ const signupPageStyle = {
     paddingTop: "20vh",
     color: "#FFFFFF"
   },
+  particles: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    zIndex: 0
+  },
   cardHidden: {
-    opacity: "0",
+    opacity: "0"
   },
   pageHeader: {
     minHeight: "100vh",
@@ -39,7 +45,7 @@ const signupPageStyle = {
     "& footer": {
       position: "absolute",
       bottom: "0",
-      width: "100%",
+      width: "100%"
     }
   },
   form: {

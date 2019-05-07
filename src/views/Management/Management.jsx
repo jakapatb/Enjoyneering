@@ -90,7 +90,7 @@ class Management extends React.Component {
           changeColorOnScroll={{ height: 100, color: "white" }}
           {...rest}
         />
-        <Parallax image={require("assets/img/bg2.jpg")} className={classes.parallax} >
+        <Parallax className={classes.parallax} >
           <div className={classes.container}>
             <GridContainer>
               <GridItem>

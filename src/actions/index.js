@@ -98,7 +98,7 @@ export const fetchListPost = (listName, condition = { type: "recent" }) => (
   }
 
   postsRef
-    .limit(5)
+    .limit(9)
     .get()
     .then(snapPosts => {
       snapPosts.forEach(post => {

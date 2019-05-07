@@ -213,7 +213,7 @@ class LandingPage extends React.Component {
                       handleModal={this.handleModal}
                       number={2}
                       submit={this.handleRecommend}
-                      title={"Recommend this post"}
+                      title={(post.recommend?"Unrecommend":"Recommend ") +"this post"}
                       content={"คุณต้องการRecommend บทความนี้หรือไม่"}
                     />
                   </div>
@@ -274,14 +274,14 @@ class LandingPage extends React.Component {
                       className={classes.navLink}
                       onClick={() => this.handleModal(0)}
                     >
-                      {post.public ? "set to private" : "set to public"}
+                      {post.data.public ? "set to private" : "set to public"}
                     </Button>,
                     <Button
                       color="transparent"
                       className={classes.navLink}
                       onClick={() => this.handleModal(2)}
                     >
-                      {post.recommend ? "unrecommend" : "recommend"}
+                      {post.data.recommend ? "unrecommend" : "recommend"}
                     </Button>,
                     <Button
                       color="transparent"

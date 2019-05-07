@@ -12,6 +12,13 @@ const parallaxStyle = {
     display: "flex",
     alignItems: "center"
   },
+  particles: {
+     background: "linear-gradient(to bottom, #ff7043, #b24e2e)",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    zIndex: 0
+  },
   filter: {
     "&:before": {
       background: "rgba(0, 0, 0, 0.5)"
@@ -49,8 +56,8 @@ const parallaxStyle = {
     left: 0,
     "z-index": 2,
     opacity: 1,
-    backgroundSize: "cover",
-  },
+    backgroundSize: "cover"
+  }
 };
 
 export default parallaxStyle;

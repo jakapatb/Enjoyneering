@@ -19,12 +19,14 @@ import SectionList from "./Sections/SectionList.jsx";
  import SectionCarousel from "./Sections/SectionCarousel.jsx";  
 import componentsStyle from "assets/jss/material-kit-react/views/components.jsx";
 
+
+
 class Components extends React.Component {
   
   render() {
     const { auth, classes, ...rest } = this.props;
     return (
-      <div>
+      <div style={{ background: "#b24e2e" }}>
         <Header
           brand="Enjoyneering KMITL"
           rightLinks={<HeaderLinks user={auth} test="123" />}
@@ -33,7 +35,7 @@ class Components extends React.Component {
           changeColorOnScroll={{ height: 400, color: "white" }}
           {...rest}
         />
-        <Parallax image={require("assets/img/concert.jpg")}>
+        <Parallax className={classes.parallax}>
           <div className={classes.container}>
             <GridContainer>
               <GridItem>
@@ -50,17 +52,11 @@ class Components extends React.Component {
         <div className={classNames(classes.main, classes.mainRaised)}>
           <SectionCarousel />
           <SectionList
-            type={[1,1]}
-            listName={"recommend"}
-            title={"Recommend from Teacher"}
-            condition={{
-              type: "where",
-              name: "recommend",
-              operator: "==",
-              value: true
-            }}
+            listName={"recent"}
+            title={"What's New?"}
+            type={[1, 0]}
           />
-          <SectionList listName={"recent"} title={"What's New?"} type={[1,0]} />
+
           {/**
           <SectionList
             listName={"test"}

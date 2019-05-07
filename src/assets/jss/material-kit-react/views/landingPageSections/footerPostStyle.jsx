@@ -1,8 +1,6 @@
 const footerPostStyle = theme => ({
-  avatar: {
-    width: "50px",
-    height: "50px",
-    marginRight: "5px"
+  chip: {
+    margin: theme.spacing.unit
   },
   button: {
     padding: "12px 10px 12px 10px",
@@ -20,8 +18,8 @@ const footerPostStyle = theme => ({
     textField: {
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
-      left:0,
-      right:0
+      left: 0,
+      right: 0
     }
   }
 });

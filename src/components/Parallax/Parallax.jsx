@@ -7,7 +7,9 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import parallaxStyle from "assets/jss/material-kit-react/components/parallaxStyle.jsx";
+import Particles from "react-particles-js";
 
+const particlesOpt = require("configs/particlesjs-config.json");
 class Parallax extends React.Component {
   constructor(props) {
     super(props);
@@ -63,33 +65,17 @@ class Parallax extends React.Component {
                [classes.small]: small,
                [className]: className !== undefined
              });
-             /**
- *                  const preloadParallaxClasses = ({
-      [classes.parallax]: true,
-      [classes.preload]: true,
-      [classes.filter]: filter,
-      [classes.small]: small,
-      [className]: className !== undefined
-    })
- */
              return (
                <div className={parallaxOnly} ref="parallax">
-                 {/*
-             <div
-          className={preloadParallaxClasses}
-          style={{
-            ...style,
-            ...this.state,
-             }}
-            >
-            {children}
-        </div>
-*/}
+                 <Particles
+                   params={particlesOpt}
+                   className={classes.particles}
+                 />
                  <div
                    className={parallaxClasses}
                    style={{
                      ...style,
-                     backgroundImage: ("url(" + image + ")"),
+                     backgroundImage: "url(" + image + ")",
                      ...this.state
                    }}
                    ref={imageLoadedElem =>

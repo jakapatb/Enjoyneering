@@ -90,7 +90,7 @@ class SearchPage extends React.Component {
             <Parallax
               filter
               className={classes.parallax}
-              image={require("assets/img/bg.jpg")}
+         
             >
               <div className={classes.container}>
                 <GridContainer xs={12} sm={12} md={12}>

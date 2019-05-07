@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "components/CustomButtons/Button.jsx";
+import {Link } from "react-router-dom"
 import withStyles from "@material-ui/core/styles/withStyles";
 import footerPostStyle from "assets/jss/material-kit-react/views/landingPageSections/footerPostStyle.jsx";
 import { getUserFromUid } from "../../../actions/helpers";
 import GridContainer from "components/Grid/GridContainer.jsx";
+import Chip from "@material-ui/core/Chip";
 class FooterPostSection extends Component {
   constructor(props) {
     super(props);
@@ -36,14 +37,16 @@ class FooterPostSection extends Component {
         direction={"row"}
       >
         {owners.map((user, key) => (
-          <Button href={"/profile/?uid="+user.uid}className={classes.button}>
-            <Avatar
-              alt="Owner"
-              src={user.photoURL}
-              className={classes.avatar}
+          <Link to={"/profile/?uid=" + user.uid}>
+            <Chip
+              avatar={<Avatar alt="Owner" src={user.photoURL} />}
+              label={user.displayName}
+              className={classes.chip}
+              variant="outlined"
+              color="primary"
+              clickable
             />
-            {" " + user.displayName + " "}
-          </Button>
+          </Link>
         ))}
       </GridContainer>
     );

@@ -31,7 +31,7 @@ function HeaderLinks({ ...props }) {
     <Link
       className={classes.dropdownLink}
       color="transparent"
-      to="/management/profile"
+      to="/profile"
     >
       Profile
     </Link>,

@@ -14,7 +14,7 @@ import Button from "components/CustomButtons/Button.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
-
+import Particles from "react-particles-js";
 import loginPageStyle from "assets/jss/material-kit-react/views/loginPage.jsx";
 import { connect } from "react-redux";
 import { signOut } from "actions/index.js";
@@ -22,6 +22,7 @@ import image from "assets/img/bg7.jpg";
 
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "configs/firebase";
+const particlesOpt = require("configs/particlesjs-config2.json");
 class LoginPage extends React.Component {
   uiConfig = {
     signInFlow: "popup",
@@ -101,18 +102,24 @@ class LoginPage extends React.Component {
             backgroundPosition: "top center"
           }}
         >
+          <Particles params={particlesOpt} className={classes.particles} />
           <div className={classes.container}>
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={4}>
                 <Card className={classes[this.state.cardAnimaton]}>
-                  <CardHeader color="primary" className={classes.cardHeader}>
+                  <CardHeader
+                    color="primary"
+                    className={classes.cardHeader}
+                  >
                     <h4>Login</h4>
                   </CardHeader>
                   <CardBody>
                     {this.props.auth.isAuth ? (
                       <div>
                         <h1>{this.props.auth.data.displayName}</h1>
-                        <Button onClick={this.handleSignOut}>Sign Out</Button>
+                        <Button onClick={this.handleSignOut}>
+                          Sign Out
+                        </Button>
                       </div>
                     ) : (
                       <StyledFirebaseAuth
