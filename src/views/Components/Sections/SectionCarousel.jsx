@@ -26,7 +26,7 @@ class SectionCarousel extends React.Component {
     };
     const { list } = this.props;
     return (<GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
+      <GridItem xs={12} sm={12} md={12} style={{padding:"0 0 0 0 "}}>
         <Card>
           <Carousel {...settings}>
             {list.hasPop && list.popular.map((post,index)=><SectionChildCarousel key={index} post={post}/>)}

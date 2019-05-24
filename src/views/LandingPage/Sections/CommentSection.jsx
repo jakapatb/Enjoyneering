@@ -26,13 +26,18 @@ import * as moment from 'moment';
 import { cardTitle } from "assets/jss/material-kit-react.jsx";
 import { getUserFromUid } from "actions/helpers.js";
 import { fetchSubComments, editComment ,deleteComment} from "actions/index.js";
+import Grow from "@material-ui/core/Grow";
 import SubCommentsSection from "./SubCommentsSection";
 import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
-const style = {
+import Divider from "@material-ui/core/Divider";
+const style = theme => ({
   cardTitle,
+  root: {
+  },
   textCenter: {
-    textAlign: "justify"
+    textAlign: "justify",
+    margin: "0 0 0 0"
   },
   textMuted: {
     color: "#6c757d"
@@ -43,23 +48,28 @@ const style = {
   inline: {
     display: "inline"
   }
-};
+});
 
 class CommentSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment : props.content.content,
+      comment: props.content.content,
       open: [false],
       subComments: [],
       anchorEl: false,
       edit: false,
-      error:false,
+      error: false,
       owner: {
         displayName: ""
       }
     };
   }
+  componentWillReceiveProps = nextProps => {
+    this.setState({
+      comment: nextProps.content.content,
+    });
+  };
 
   handleClick = key => () => {
     const { fetchSubComments, id } = this.props;
@@ -88,99 +98,105 @@ class CommentSection extends React.Component {
     );
   }
   handleDelete = () => {
-    const {deleteComment, id} =this.props
-    deleteComment(id)
-    this.setState({ anchorEl: false });
-  }
-  handleOpenEdit =() => {
+    const { deleteComment, id } = this.props;
+    deleteComment(id).then(() => {
+      this.setState({ anchorEl: false });
+    });
+  };
+  handleOpenEdit = () => {
     this.setState({ edit: true, anchorEl: false });
-  }
-  handelEdit=(event)=> {
-   
-    this.setState({comment: event.target.value})
-
-  }
-  handleEditSubmit=event => {
-     const { editComment, id } = this.props;
-    if (event.key === "Enter") {
-      if (event.target.value.trim() !== "") {
-        editComment(event.target.value.trim(), id);
-        this.setState({ edit: false });
-      } else {
-        this.setState({ error: true });
-      }
+  };
+  handelEdit = event => {
+    this.setState({ comment: event.target.value });
+  };
+  handleEditSubmit = event => {
+    const { editComment, id } = this.props;
+    if (event.target.value.trim() !== "") {
+      editComment(event.target.value.trim(), id);
+      this.setState({ edit: false });
+    } else {
+      this.setState({ error: true });
     }
-  }
+  };
   render() {
-    const { content, classes ,auth} = this.props;
-    const { owner, open, subComments, anchorEl, edit , comment} = this.state;
+    const { content, classes, auth } = this.props;
+    const {
+      owner,
+      open,
+      subComments,
+      anchorEl,
+      edit,
+      comment,
+  
+    } = this.state;
     return (
-      <GridItem xs={12} sm={12} md={8}>
-        <Card className={classes.textCenter}>
-          <CardHeader
-            avatar={
-              <Avatar
-                alt="Owner"
-                src={owner.photoURL}
-                className={classes.avatar}
-              />
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon onClick={this.handleClick} />
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={this.handleClose}
-                >
-                  {auth.isAuth && auth.data.uid === content.ownerUid && (
-                    <React.Fragment>
-                      <MenuItem onClick={this.handleOpenEdit}>
-                        Edit
-                      </MenuItem>
-                      <MenuItem onClick={this.handleDelete}>
-                        Delete comment
-                      </MenuItem>
-                    </React.Fragment>
-                  )}
-                </Menu>
-              </IconButton>
-            }
-            title={owner.displayName}
-            subheader={moment(content.date.toDate()).fromNow()}
-          />
-          <CardBody>
-            {// edit
-            edit ? (
-              <TextField
-                id="outlined-dense"
-                label="Editing..."
-                margin="dense"
-                variant="outlined"
-                InputProps={{
-                  onChange: this.handelEdit,
-                  onKeyPress: this.handleEditSubmit,
-                  value: comment,
-                  classes: {
-                    root: classes.cssOutlinedInput,
-                    focused: classes.cssFocused,
-                    notchedOutline: classes.notchedOutline
-                  }
-                }}
-                InputLabelProps={{
-                  classes: {
-                    root: classes.inputRoot,
-                    focused: classes.cssFocused
-                  }
-                }}
-              />
-            ) : (
-              <p>{comment}</p>
-            )}
-          </CardBody>
+        <ListItem divider className={classes.root}>
+          <Card className={classes.textCenter}>
+            <CardHeader
+              avatar={
+                <Avatar
+                  alt="Owner"
+                  src={owner.photoURL}
+                  className={classes.avatar}
+                />
+              }
+              action={
+                <IconButton>
+                  <MoreVertIcon onClick={this.handleClick} />
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                  >
+                    {auth.isAuth && auth.data.uid === content.ownerUid && (
+                      <React.Fragment>
+                        <MenuItem onClick={this.handleOpenEdit}>Edit</MenuItem>
+                        <MenuItem onClick={this.handleDelete}>
+                          Delete comment
+                        </MenuItem>
+                      </React.Fragment>
+                    )}
+                  </Menu>
+                </IconButton>
+              }
+              title={owner.displayName}
+              subheader={moment(content.date.toDate()).fromNow()}
+            />
+            <CardBody>
+              {// edit
+              edit ? (
+                <TextField
+                  id="outlined-dense"
+                  label="Editing..."
+                  margin="dense"
+                  variant="outlined"
+                  autoFocus
+                  InputProps={{
+                    onChange: this.handelEdit,
+                    onBlur: this.handleEditSubmit,
+                    onKeyPress: e => e.key === "Enter" && this.handleEditSubmit,
+                    value: comment,
+                    classes: {
+                      root: classes.cssOutlinedInput,
+                      focused: classes.cssFocused,
+                      notchedOutline: classes.notchedOutline
+                    }
+                  }}
+                  InputLabelProps={{
+                    classes: {
+                      root: classes.inputRoot,
+                      focused: classes.cssFocused
+                    }
+                  }}
+                />
+              ) : (
+                <p>{comment}</p>
+              )}
+            </CardBody>
 
-          {//undone feature
+            {/**
+          //!undone feature
           subComments.length !== 0 && (
             <List component="nav" className={classes.root} disablePadding>
               <div key={0}>
@@ -200,9 +216,9 @@ class CommentSection extends React.Component {
                 </Collapse>
               </div>
             </List>
-          )}
-        </Card>
-      </GridItem>
+          )*/}
+          </Card>
+        </ListItem>
     );
   }
 }

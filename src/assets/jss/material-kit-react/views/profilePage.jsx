@@ -2,7 +2,7 @@ import { container, title } from "assets/jss/material-kit-react.jsx";
 
 import imagesStyle from "assets/jss/material-kit-react/imagesStyles.jsx";
 
-const profilePageStyle = {
+const profilePageStyle = theme => ({
   container,
   profile: {
     textAlign: "center",
@@ -57,10 +57,13 @@ const profilePageStyle = {
     margin: "20px auto 50px auto",
     textAlign: "center"
   },
-  avatar:{
+  avatar: {
     width: 250,
-    height: 250,
+    height: 250
+  },
+  chipWrapper: {
+    marginRight: theme.spacing.unit 
   }
-};
+});
 
 export default profilePageStyle;

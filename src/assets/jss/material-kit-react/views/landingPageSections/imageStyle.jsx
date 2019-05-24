@@ -19,7 +19,21 @@ const productStyle = {
     display: "block",
     maxWidth: "100%",
     width: "auto",
+    objectFit: "contain",
+  },
+  zone: {
+    position: "relative",
+    textAlign: "center",
+    backgroundPosition: "center center",
+    maxWidth: "100%",
+    width: "auto",
     objectFit: "cover",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    outline: "none",
+    transition: "border .24s ease-in-out"
   },
   dropZone: {
     padding:"50px 0",

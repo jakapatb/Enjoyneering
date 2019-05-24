@@ -30,9 +30,10 @@ const componentsStyle = {
     zIndex: "3"
   },
   mainRaised: {
+    ...container,
     background: "#FFFFFF",
-    margin: "-60px 15px 0px",
-    borderRadius: "6px",
+    margin: "0 30px 30px",
+    borderRadius: "10px",
     boxShadow:
       "0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)"
   },

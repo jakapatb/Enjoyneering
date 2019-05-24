@@ -31,11 +31,14 @@ class SectionList extends React.Component {
             <GridList
               className={classes.gridList}
               cellHeight={"auto"}
-              spacing={32}
               cols={isWidthUp("sm", this.props.width) ? 2 : 1}
             >
               {hits.map((post, index) => (
-                <GridListTile key={index} cols={1} rows={1}>
+                <GridListTile
+                  key={index}
+                  cols={index % 5 === 0 ? 2 : 1}
+                  rows={index % 5 === 0 ? 2 : 1}
+                >
                   <SectionPost
                     hit={post}
                     key={index}

@@ -1,6 +1,6 @@
 import { container, title } from "assets/jss/material-kit-react.jsx";
 
-const landingPageStyle =(theme)=> ({
+const landingPageStyle = theme => ({
   container: {
     zIndex: "12",
     color: "#FFFFFF",
@@ -26,8 +26,10 @@ const landingPageStyle =(theme)=> ({
     zIndex: "3"
   },
   mainRaised: {
-    margin: "-60px 15px 0px",
-    borderRadius: "6px",
+    ...container,
+    background: "#FFFFFF",
+    margin: "0 30px 30px",
+    borderRadius: "10px",
     boxShadow:
       "0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)"
   },
@@ -122,7 +124,7 @@ const landingPageStyle =(theme)=> ({
     padding: "0.9375rem",
     fontWeight: "400",
     fontSize: "12px",
-    width:"100%",
+    width: "100%",
     textTransform: "uppercase",
     borderRadius: "3px",
     lineHeight: "20px",
@@ -131,7 +133,7 @@ const landingPageStyle =(theme)=> ({
     display: "block",
     background: "rgba(200, 200, 200, 0.2)",
     "&:hover,&:focus": {
-      color: "black",
+      color: "black"
     },
     [theme.breakpoints.down("sm")]: {
       width: "calc(100% - 30px)",
@@ -144,6 +146,6 @@ const landingPageStyle =(theme)=> ({
       }
     }
   }
-})
+});
 
 export default landingPageStyle;

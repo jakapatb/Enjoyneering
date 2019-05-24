@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
-import Slide from "@material-ui/core/Slide";
+import Grow from "@material-ui/core/Grow";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -17,7 +17,7 @@ import Button from "components/CustomButtons/Button.jsx";
 import modalStyle from "assets/jss/material-kit-react/modalStyle.jsx";
 
 function Transition(props) {
-    return <Slide direction="down" {...props} />;
+    return <Grow direction="down" {...props} />;
 }
 //Modal for Admin only!
 //for make this post to public

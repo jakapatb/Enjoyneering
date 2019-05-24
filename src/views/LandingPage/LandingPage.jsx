@@ -21,7 +21,7 @@ import Loader from "components/Loader/Loader.jsx";
 import landingPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx";
 
 // Sections for this page
-import TitleSection from "./Sections/TitleSection.jsx"
+import TitleSection from "./Sections/TitleSection.jsx";
 import ArticleSection from "./Sections/ArticleSection.jsx";
 import YoutubeSection from "./Sections/YoutubeSection.jsx";
 import ImageSection from "./Sections/ImageSection.jsx";
@@ -69,7 +69,7 @@ class LandingPage extends React.Component {
   };
 
   handleFetchPost = async params => {
-    const { fetchPost, fetchComments,markSeenNoti, history } = this.props;
+    const { fetchPost, fetchComments, markSeenNoti, history } = this.props;
     const subParams = new URLSearchParams(history.location.search);
     window.scrollTo(0, 0);
     this.setState({ postId: params.post });
@@ -77,7 +77,7 @@ class LandingPage extends React.Component {
       history.push("/");
     });
     await fetchComments(params.post);
-    
+
     if (subParams.get("scroll")) {
       switch (subParams.get("scroll")) {
         case "0":
@@ -228,105 +228,107 @@ class LandingPage extends React.Component {
           </div>
         </Parallax>
         {post.hasPost ? (
-          <div className={classNames(classes.main, classes.mainRaised)}>
-            {!post.public && (
-              <SnackbarContent
-                message={
-                  <span>
-                    <b>INFO ALERT:</b> บทความนี้ยังไม่เปิด Public
-                  </span>
-                }
-                close
-                button={
-                  auth.status === "administrator"
-                    ? {
-                        name: "Public Permission",
-                        onClick: () => this.handleModal(0)
-                      }
-                    : undefined
-                }
-                color="warning"
-                icon="info_outline"
-              />
-            )}
-            <Clearfix />
-            {(auth.status === "administrator" ||
-              post.data.ownerUid.includes(auth.data.uid)) && (
-              <GridContainer
-                direction="column"
-                justify="flex-end"
-                alignItems="flex-end"
-                style={{ paddingRight: "30px" }}
-              >
-                <CustomDropdown
-                  right
-                  noLiPadding
-                  caret={false}
-                  buttonProps={{
-                    className: classes.navLink
-                    //fontSize: "inherit"
-                  }}
-                  buttonIcon={MoreVertIcon}
-                  dropdownList={[
-                    <Link
-                      className={classes.navLink}
-                      to={"/create-post/?edit=" + postId}
-                    >
-                      Edit
-                    </Link>,
-                    <Button
-                      color="transparent"
-                      className={classes.navLink}
-                      onClick={() => this.handleModal(0)}
-                    >
-                      {post.data.public
-                        ? "set to private"
-                        : "set to public"}
-                    </Button>,
-                    <Button
-                      color="transparent"
-                      className={classes.navLink}
-                      onClick={() => this.handleModal(2)}
-                    >
-                      {post.data.recommend ? "unrecommend" : "recommend"}
-                    </Button>,
-                    <Button
-                      color="transparent"
-                      className={classes.navLink}
-                      onClick={() => this.handleModal(1)}
-                    >
-                      Delete this Post
-                    </Button>
-                  ]}
+          <React.Fragment>
+            <div className={classNames(classes.main, classes.mainRaised)}>
+              {!post.public && (
+                <SnackbarContent
+                  message={
+                    <span>
+                      <b>INFO ALERT:</b> บทความนี้ยังไม่เปิด Public
+                    </span>
+                  }
+                  close
+                  button={
+                    auth.status === "administrator"
+                      ? {
+                          name: "Public Permission",
+                          onClick: () => this.handleModal(0)
+                        }
+                      : undefined
+                  }
+                  color="warning"
+                  icon="info_outline"
                 />
-              </GridContainer>
-            )}
-            <div className={classes.container}>
-              {/* Content */}
-              {post.hasPost ? (
-                Object.values(post.data.contents)
-                  .sort((a, b) => {
-                    return a.index - b.index;
-                  })
-                  .map(content => {
-                    switch (content.type) {
-                      case "Title":
-                        return <TitleSection content={content} />;
-                      case "Article":
-                        return <ArticleSection content={content} />;
-                      case "Youtube":
-                        return <YoutubeSection content={content} />;
-                      case "Image":
-                        return (
-                          <ImageSection content={content} id={postId} />
-                        );
-                      default:
-                        return null;
-                    }
-                  })
-              ) : (
-                <Loader />
               )}
+              <Clearfix />
+              {(auth.status === "administrator" ||
+                post.data.ownerUid.includes(auth.data.uid)) && (
+                <GridContainer
+                  direction="column"
+                  justify="flex-end"
+                  alignItems="flex-end"
+                  style={{ paddingRight: "30px" }}
+                >
+                  <CustomDropdown
+                    right
+                    noLiPadding
+                    caret={false}
+                    buttonProps={{
+                      className: classes.navLink
+                      //fontSize: "inherit"
+                    }}
+                    buttonIcon={MoreVertIcon}
+                    dropdownList={[
+                      <Link
+                        className={classes.navLink}
+                        to={"/create-post/?edit=" + postId}
+                      >
+                        Edit
+                      </Link>,
+                      <Button
+                        color="transparent"
+                        className={classes.navLink}
+                        onClick={() => this.handleModal(0)}
+                      >
+                        {post.data.public
+                          ? "set to private"
+                          : "set to public"}
+                      </Button>,
+                      <Button
+                        color="transparent"
+                        className={classes.navLink}
+                        onClick={() => this.handleModal(2)}
+                      >
+                        {post.data.recommend ? "unrecommend" : "recommend"}
+                      </Button>,
+                      <Button
+                        color="transparent"
+                        className={classes.navLink}
+                        onClick={() => this.handleModal(1)}
+                      >
+                        Delete this Post
+                      </Button>
+                    ]}
+                  />
+                </GridContainer>
+              )}
+              <div className={classes.container}>
+                {/* Content */}
+                {post.hasPost ? (
+                  Object.values(post.data.contents)
+                    .sort((a, b) => {
+                      return a.index - b.index;
+                    })
+                    .map(content => {
+                      switch (content.type) {
+                        case "Title":
+                          return <TitleSection content={content} />;
+                        case "Article":
+                          return <ArticleSection content={content} />;
+                        case "Youtube":
+                          return <YoutubeSection content={content} />;
+                        case "Image":
+                          return (
+                            <ImageSection content={content} id={postId} />
+                          );
+                        default:
+                          return null;
+                      }
+                    })
+                ) : (
+                  <Loader />
+                )}
+              </div>
               {/* Footer */}
               <div
                 ref={el => {
@@ -347,6 +349,8 @@ class LandingPage extends React.Component {
                   <FooterPostSection ownerUid={post.data.ownerUid} />
                 </GridItem>
               )}
+            </div>
+            <div className={classNames(classes.main, classes.mainRaised)}>
               {post.hasComments && (
                 <CommentListSection comments={post.comments} id={postId} />
               )}
@@ -356,7 +360,7 @@ class LandingPage extends React.Component {
                 }}
               />
             </div>
-          </div>
+          </React.Fragment>
         ) : (
           <Loader />
         )}

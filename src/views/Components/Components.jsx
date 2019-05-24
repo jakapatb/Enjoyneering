@@ -51,23 +51,14 @@ class Components extends React.Component {
         </Parallax>
         <div className={classNames(classes.main, classes.mainRaised)}>
           <SectionCarousel />
+        </div>
+        <div className={classNames(classes.main, classes.mainRaised)}>
           <SectionList
             listName={"recent"}
             title={"What's New?"}
             type={[1, 0]}
+            
           />
-
-          {/**
-          <SectionList
-            listName={"test"}
-            title={"testTest"}
-            condition={{
-              type: "where",
-              name: "tags",
-              operator: "array-contains",
-              value: "TEST"
-            }}
-          /> */}
         </div>
         <Footer />
       </div>
@@ -76,7 +67,6 @@ class Components extends React.Component {
 }
 const mapStateToProps = state => ({
   auth: state.auth,
-  post: state.post
 });
 
 const mapDispatchToProps = {

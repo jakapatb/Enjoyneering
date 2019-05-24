@@ -19,7 +19,7 @@ import NavPills from "components/NavPills/NavPills.jsx";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Loader from "components/Loader/Loader.jsx";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import SectionProfile from "./Sections/SectionProfile"
+import SectionList from "./Sections/SectionList";
 import SectionClass from "./Sections/SectionClass";
 import {
   fetchClassrooms,
@@ -90,7 +90,7 @@ class Management extends React.Component {
           changeColorOnScroll={{ height: 100, color: "white" }}
           {...rest}
         />
-        <Parallax className={classes.parallax} >
+        <Parallax className={classes.parallax}>
           <div className={classes.container}>
             <GridContainer>
               <GridItem>
@@ -116,13 +116,20 @@ class Management extends React.Component {
                     }}
                     tabs={[
                       {
-                        tabButton: "Edit Profile",
+                        tabButton: "Your Post",
                         tabIcon: AccountCircle,
                         tabContent: (
                           <span>
-                            <SectionProfile
-                              classroom={content.data.classroom}
-                              hasContent={content.hasContent}
+                            <SectionList
+                              listName={"recent"}
+                              title={"Your Post"}
+                              type={[1, 0]}
+                              condition={{
+                                type: "where",
+                                name: "ownerUid",
+                                operator: "array-contains",
+                                value: auth.data.uid
+                              }}
                             />
                           </span>
                         )

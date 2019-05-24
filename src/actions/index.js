@@ -3,7 +3,10 @@ import {
   FETCH_LIST_POPULAR,
   FETCH_LIST_RECENT,
   FETCH_LIST,
+  FETCH_POST_SET_COMMENT,
   FETCH_POST_ADD_COMMENT,
+  FETCH_POST_OLD_COMMENT,
+  FETCH_POST_DELETE_COMMENT,
   FETCH_CONTENT,
   FETCH_CONTENT_CLEAR,
   FETCH_CONTENT_SUCCESS,
@@ -75,51 +78,63 @@ export const fetchListPost = (listName, condition = { type: "recent" }) => (
   dispatch,
   getState
 ) => {
-  dispatch({
-    type: FETCH_LIST
-  });
-  const { auth } = getState();
-  var postsRef = db.collection("posts");
-  var listPost = [];
-  if (!auth.isAuth || auth.status === "visitor") {
-    //  visitor & notAuth only see public post
-    postsRef = postsRef.where("public", "==", true);
-  }
+       dispatch({
+         type: FETCH_LIST
+       });
+       const { auth } = getState();
+       var postsRef = db.collection("posts");
+       var listPost = [];
+       // ! ใช้ไม่ได้ งงชิบ
+       if (!auth.isAuth || auth.status === "visitor") {
+         //  visitor & notAuth only see public post
+         postsRef = postsRef.where("public", "==", true);
+       }
 
-  // ! ใช้ไม่ได้ งงชิบ
-  if (condition.type === "where") {
-    postsRef = postsRef.where(
-      condition.name,
-      condition.operator,
-      condition.value
-    );
-  } else {
-    postsRef = postsRef.orderBy("date", "desc");
-  }
+       if (condition.type === "where") {
+         console.log(condition);
+         postsRef = postsRef.where(
+           condition.name,
+           condition.operator,
+           condition.value
+         );
+       } else {
+         postsRef = postsRef.orderBy("date", "desc");
+       }
 
-  postsRef
-    .limit(9)
-    .get()
-    .then(snapPosts => {
-      snapPosts.forEach(post => {
-        listPost.push({ ...post.data(), id: post.id });
-      });
-      dispatch({
-        type: FETCH_LIST_RECENT,
-        listName: listName,
-        listPost: listPost,
-        hasRecent: true
-      });
-    });
-};
-export const fetchMorePost = listName => (dispatch, getState) =>
+       postsRef
+         .limit(9)
+         .get()
+         .then(snapPosts => {
+           snapPosts.forEach(post => {
+             listPost.push({ ...post.data(), id: post.id });
+           });
+           dispatch({
+             type: FETCH_LIST_RECENT,
+             listName: listName,
+             listPost: listPost,
+             hasRecent: true
+           });
+         });
+     };
+export const fetchMorePost =  (listName, condition = { type: "recent" })  => (dispatch, getState) =>
   new Promise((resolve, reject) => {
     const { listPost } = getState();
-    var postsRef = db.collection("posts").orderBy("date", "desc");
+    var postsRef = db.collection("posts")
     let endPost = listPost.recent[listPost.recent.length - 1];
 
+    if (condition.type === "where") {
+      console.log(condition);
+      postsRef = postsRef.where(
+        condition.name,
+        condition.operator,
+        condition.value
+      );
+    } else {
+      postsRef = postsRef.orderBy("date", "desc");
+    }
     postsRef
-      .startAfter(endPost.date).limit(9)
+      .startAfter(endPost.date)
+      .limit(9)
       .get()
       .then(snapPosts => {
         var newListPost = [];
@@ -133,7 +148,7 @@ export const fetchMorePost = listName => (dispatch, getState) =>
           listPost: sumList,
           hasRecent: true
         });
-        if (snapPosts.size <9) {
+        if (snapPosts.size < 9) {
           return reject();
         }
         return resolve();
@@ -154,28 +169,90 @@ export const sendComment = comment => (dispatch, getState) => {
 };
 
 //fetch Comments
-export const fetchComments = (postId, after = 0) => dispatch =>
-  new Promise((resolve, reject) => {
+export const fetchComments = (postId, after = 0) => (dispatch, getState) =>
+  new Promise(async (resolve, reject) => {
+    const { post } = getState();
+    let start = null;
     const commentsRef = db
       .collection("posts")
       .doc(postId)
-      .collection("comments")
-      .orderBy("date", "desc");
-    commentsRef.limit(5).onSnapshot(snap => {
-      var comments = [];
-      snap.forEach(comment => {
-        comments.push({
-          id: comment.id,
-          content: comment.data()
+      .collection("comments");
+
+    await commentsRef
+      .orderBy("date", "desc")
+      .limit(5)
+      .get()
+      .then(snap => {
+        let comments = [];
+        if (snap.size !== 0) {
+          start = snap.docs[0];
+          snap.forEach(comment => {
+            comments.push({
+              id: comment.id,
+              content: comment.data()
+            });
+          });
+          comments.reverse();
+          dispatch({
+            type: FETCH_POST_SET_COMMENT,
+            payload: comments
+          });
+        }
+      });
+    commentsRef
+      .orderBy("date", "asc")
+      .startAfter(start)
+      .onSnapshot(snap => {
+        let comments = [];
+        snap.forEach(comment => {
+          let payload = {
+            id: comment.id,
+            content: comment.data()
+          };
+          if (!post.comments.includes(payload)) {
+            comments.push(payload);
+          }
         });
+        dispatch({
+          type: FETCH_POST_ADD_COMMENT,
+          payload: comments
+        });
+        return resolve();
       });
-      comments.reverse();
-      dispatch({
-        type: FETCH_POST_ADD_COMMENT,
-        payload: comments
+  });
+export const fetchOldComments = postId => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    const {
+      post: { comments }
+    } = getState();
+    let start = comments[0].content.date;
+    const commentsRef = db
+      .collection("posts")
+      .doc(postId)
+      .collection("comments");
+    commentsRef
+      .orderBy("date", "desc")
+      .startAfter(start)
+      .limit(5)
+      .get()
+      .then(snap => {
+        let comments = [];
+        snap.forEach(comment => {
+          let payload = {
+            id: comment.id,
+            content: comment.data()
+          };
+          comments.push(payload);
+        });
+
+        comments.reverse();
+        dispatch({
+          type: FETCH_POST_OLD_COMMENT,
+          payload: comments
+        });
+        if (snap.size < 5) return reject();
+        else return resolve();
       });
-      return resolve();
-    });
   });
 
 export const fetchSubComments = id => (dispatch, getState) =>
@@ -350,11 +427,26 @@ export const editComment = (content, commentId) => (dispatch, getState) => {
     .update({ content: content, updated: new Date() });
 };
 
-export const deleteComment = commentId => (dispatch, getState) => {
-  const { post } = getState();
-  db.collection("posts")
-    .doc(post.id)
-    .collection("comments")
-    .doc(commentId)
-    .delete();
-};
+export const deleteComment = commentId => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    const { post } = getState();
+    const commentRef = db
+      .collection("posts")
+      .doc(post.id)
+      .collection("comments")
+      .doc(commentId);
+    commentRef.get().then(doc => {
+      if (doc.exists) {
+        let commentId = doc.id;
+        commentRef.delete();
+        dispatch({
+          type: FETCH_POST_DELETE_COMMENT,
+          payload: commentId
+        });
+        return resolve()
+      }else
+      {
+        return reject()
+      }
+    });
+  });

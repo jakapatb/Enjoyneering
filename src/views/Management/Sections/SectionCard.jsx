@@ -14,7 +14,7 @@ import { getUserFromUid } from "../../../actions/helpers";
 import Avatar from "@material-ui/core/Avatar";
 var moment = require("moment");
 
-//import * as moment from 'moment';
+///import * as moment from 'moment';
 const style = theme => ({
   root: {
     flexGrow: 1
@@ -92,31 +92,32 @@ const style = theme => ({
     }
   }
 });
-
 class SectionCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       imgUrl: props.data.imgUrl || thumbnail,
       owners: [],
-      other:0
+      other: 0
     };
   }
   componentDidMount() {
-    this.mappingUid(this.props.data.ownerUid);
+    //this.mappingUid(this.props.data.ownerUid);
   }
   componentWillReceiveProps(nextProps) {
-    this.mappingUid(nextProps.data.ownerUid);
+    //this.mappingUid(nextProps.data.ownerUid);
   }
-  mappingUid = ownerUid => {
+  /**
+ *   mappingUid = ownerUid => {
     let promises = ownerUid.filter((_,i)=>i<=(this.props.id===0?2:0)).map(async uid => await getUserFromUid(uid));
     Promise.all(promises).then(owners => {
       this.setState({ owners: owners ,other:ownerUid.length-(this.props.id===0?3:1)});
     });
   };
+ */
   render() {
     const { classes, data, id } = this.props;
-    const { imgUrl, owners,other } = this.state;
+    const { imgUrl, owners, other } = this.state;
     return (
       <Link
         to={{
@@ -127,27 +128,22 @@ class SectionCard extends React.Component {
         <Paper className={classes.paper} elevation={3}>
           <Grid container spacing={0} className={classes.gridList}>
             <Grid item className={classes.gridImg}>
-              <ButtonBase
-                className={id === 0 ? classes.bigImage : classes.image}
-              >
+              <ButtonBase className={classes.bigImage}>
                 <img className={classes.img} alt="complex" src={imgUrl} />
               </ButtonBase>
             </Grid>
             <Grid item md={12} sm container className={classes.details}>
               <Grid item xs container direction="column">
                 <Grid item xs spacing={0}>
-                  <Typography variant={"h5"}>
-                    {data.title}
-                  </Typography>
+                  <Typography variant={"h5"}>{data.title}</Typography>
                   <Typography
                     gutterBottom
                     color="textSecondary"
                     paragraph
                     variant="subtitle1"
                   >
-                    {data.subtitle.length > (id === 0 ? 125 : 80)
-                      ? data.subtitle.substring(0, id === 0 ? 125 : 80) +
-                        "..."
+                    {data.subtitle.length > 125
+                      ? data.subtitle.substring(0, 125) + "..."
                       : data.subtitle}
                   </Typography>
                 </Grid>

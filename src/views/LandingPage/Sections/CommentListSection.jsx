@@ -5,21 +5,26 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/icons
 import TextField from "@material-ui/core/TextField";
 // core components
+import Button from "components/CustomButtons/Button.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import CommentSection from "./CommentSection";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { sendComment } from "actions/index.js";
+import { sendComment, fetchOldComments } from "actions/index.js";
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
+import List from '@material-ui/core/List';
 
 class ArticleSection extends React.Component {
   constructor(props){
     super(props)
-    this.state={
-      content:""
-    }
+    this.state = {
+      content: "",
+      hasOldComments: true,
+      checked:true
+    };
   }
+  
   handleSubmit= event => {
     if(event.key === "Enter"){
         this.setState({ content:"Sending..." }) 
@@ -36,18 +41,33 @@ class ArticleSection extends React.Component {
   handleChange = event =>{
     this.setState({content:event.target.value})
   }
+  handleOldComments= () => {
+    this.props
+      .fetchOldComments(this.props.id)
+      .catch(() => this.setState({ hasOldComments: false, checked :true}));
+  }
   render() {
-    const { comments } = this.props;
-    const { content } = this.state
+    const { comments, classes } = this.props;
+    const { content, hasOldComments, checked } = this.state;
     return (
       <GridContainer justify="center">
-        {comments.map((comment, index) => (
-          <CommentSection
-            key={index}
-            content={comment.content}
-            id={comment.id}
-          />
-        ))}
+        <GridItem xs={12} sm={12} md={12}>
+          {hasOldComments && (
+            <Button onClick={this.handleOldComments}>
+              fetchOldComments
+            </Button>
+          )}
+        </GridItem>
+        <List className={classes.commentList}>
+          {comments.map((comment, index) => (
+            <CommentSection
+              key={index}
+              content={comment.content}
+              id={comment.id}
+              checked={checked}
+            />
+          ))}
+        </List>
         <GridItem xs={12} sm={12} md={12} />
         <TextField
           placeholder="..."
@@ -72,8 +92,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  sendComment
-}
+  sendComment,
+  fetchOldComments
+};
 
 export default compose(
   withStyles(productStyle),

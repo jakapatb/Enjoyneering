@@ -7,14 +7,14 @@ const listStyle = theme => ({
     position: "relative",
     margin:"auto",
     padding: "60px 60px 60px 60px",
-    color: "#000"
+    color: "#000",
   },
   root: {
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflow: "hidden",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: "#eeeeee"
   },
   gridList: {
     height: "auto",

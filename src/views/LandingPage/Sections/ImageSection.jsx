@@ -12,7 +12,7 @@ class ImageSection extends React.Component {
     render() {
         const {classes,content } = this.props;
         return <div className={classes.section}>
-            <GridContainer justify="center">
+            <GridContainer justify="center" className={classes.zone}>
                 <img src={content.imgUrl} className={classes.image} alt={"cotent "+content.index}/>
             </GridContainer>
           </div>;

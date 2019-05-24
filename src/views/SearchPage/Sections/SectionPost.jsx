@@ -9,9 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import Chip from "@material-ui/core/Chip";
 import { getUserFromUid } from "../../../actions/helpers";
-import Avatar from "@material-ui/core/Avatar";
 var moment = require("moment");
 
 //import * as moment from 'moment';
@@ -20,75 +18,87 @@ const style = theme => ({
     flexGrow: 1
   },
   paper: {
-    margin: 0,
-    backgroundColor: "#eeeeee"
-    //maxWidth: 500
+    backgroundColor: "#ffffff",
+    minWidth: 480,
+    maxWidth: 1100,
+    height: 200,
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: 20,
+      marginRight: 10
+    },
+    [theme.breakpoints.up("lg")]: {
+      minWidth: 540,
+      marginBottom: 30,
+      marginRight: 15
+    }
+    //
   },
   bigImage: {
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      // width: 500, //! should change
+    width: 500,
+    [theme.breakpoints.up("lg")]: {
+      width: 550 //! should change
       //flex:1,
       // height: 300
     }
   },
   image: {
-    width: "100%",
-    height: "100%",
-    [theme.breakpoints.up("sm")]: {
-      height: 198
+    width: 250,
+    height: 200,
+    [theme.breakpoints.up("lg")]: {
+      width: 270,
+      height: 200
     }
   },
   img: {
-    position: "relative",
-    margin: "auto",
-    display: "block",
-    width: "100%",
-    overflow: "hidden",
-    height: "100%",
-    objectFit: "cover"
+    width: "inherit",
+    minWidth: 250,
+    maxWidth: 500,
+    height: 200,
+    objectPosition: "center",
+    objectFit: "cover",
+    [theme.breakpoints.up("lg")]: {
+      minWidth: 270,
+      maxWidth: 550,
+      height: 200
+    }
   },
   gridList: {
     flexWrap: "warp",
+    width: "inherit",
+    height: "inherit",
     [theme.breakpoints.up("md")]: {
       flexWrap: "inherit"
     }
   },
   gridImg: {
-    width: "100%",
-    height: "100%",
+    width: "inherit"
   },
   details: {
-    [theme.breakpoints.up("md")]: {
-      marginTop: 20
+    marginTop: 10,
+    marginLeft: 10,
+    width: 250,
+    [theme.breakpoints.up("lg")]: {
+      width: 270
     }
   }
 });
+
 
 class SectionPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       imgUrl: props.hit.imgUrl || thumbnail,
-      owners: [],
-      other:0
     };
   }
   componentDidMount() {
-    this.mappingUid(this.props.hit.ownerUid);
   }
   componentWillReceiveProps(nextProps) {
-    this.mappingUid(nextProps.hit.ownerUid);
+    this.setState({ imgUrl: nextProps.hit.imgUrl });
   }
-  mappingUid = ownerUid => {
-    let promises = ownerUid.filter((_,i)=>i<=0).map(async uid => await getUserFromUid(uid));
-    Promise.all(promises).then(owners => {
-      this.setState({ owners: owners ,other:ownerUid.length-1});
-    });
-  };
   render() {
     const { classes, hit,isPublic,recommend } = this.props;
-    const { imgUrl, owners,other } = this.state;
+    const { imgUrl,id } = this.state;
     return (
       (isPublic ? hit.public === isPublic : true) &&
       (recommend ? hit.recommend && recommend : true) && (
@@ -98,55 +108,36 @@ class SectionPost extends React.Component {
             state: { id: hit.objectID }
           }}
         >
-          <Paper className={classes.paper}>
-            <Grid container spacing={16} className={classes.gridList}>
+          <Paper className={classes.paper} elevation={3}>
+            <Grid container className={classes.gridList}>
               <Grid item className={classes.gridImg}>
-                <ButtonBase className={classes.image}>
+                <ButtonBase
+                  className={
+                    id % 5 === 0 ? classes.bigImage : classes.image
+                  }
+                >
                   <img className={classes.img} alt="complex" src={imgUrl} />
                 </ButtonBase>
               </Grid>
-              <Grid
-                item
-                md={12}
-                sm
-                container
-                spacing={16}
-                className={classes.details}
-              >
-                <Grid item xs container direction="column" spacing={16}>
+              <Grid item md={12} sm container className={classes.details}>
+                <Grid item xs container direction="column">
                   <Grid item xs>
-                    <Typography variant={"h5"}>{hit.title}</Typography>
+                    <Typography variant={"h5"}>
+                      {hit.title}
+                    </Typography>
                     <Typography
                       gutterBottom
                       color="textSecondary"
                       paragraph
                       variant="subtitle1"
                     >
-                      {hit.subtitle.length > 150
-                        ? hit.subtitle.substring(150) + "..."
+                      {hit.subtitle.length > (id % 5 === 0 ? 125 : 90)
+                        ? hit.subtitle.substring(id % 5 === 0 ? 125 : 90) +
+                          "..."
                         : hit.subtitle}
                     </Typography>
                   </Grid>
                   <Grid item>
-                    {owners.map((user, key) => (
-                      <Link to={"/profile/?uid=" + user.uid}>
-                        <Chip
-                          avatar={
-                            <Avatar alt="Owner" src={user.photoURL} />
-                          }
-                          label={user.displayName}
-                          className={classes.chip}
-                          variant="outlined"
-                          color="primary"
-                          clickable
-                        />
-                      </Link>
-                    ))}
-                    {other > 0 && (
-                      <Typography color="textSecondary" variant="p" inline>
-                        and {" " + other} more
-                      </Typography>
-                    )}
                     <Typography
                       style={{ cursor: "pointer" }}
                       variant="body2"
